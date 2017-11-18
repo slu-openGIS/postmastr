@@ -1,6 +1,6 @@
 #' Parse House Number
 #'
-#' @details \code{pm_houseNum} parses the house number from a given address string structured in
+#' \code{pm_houseNum} parses the house number from a given address string structured in
 #' the following way - "123 Main St". This function can also process address ranges that
 #' are structured in the following manner - "123-125 Main St"
 #'

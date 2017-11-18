@@ -2,6 +2,7 @@
 
 export("%nin%")
 export(pm_checkData)
+export(pm_houseAlpha)
 export(pm_houseNum)
 export(pw_stSuffix)
 importFrom(dplyr,"%>%")
@@ -12,4 +13,5 @@ importFrom(dplyr,rename)
 importFrom(dplyr,select)
 importFrom(rlang,":=")
 importFrom(stringr,str_extract)
+importFrom(stringr,str_sub)
 importFrom(stringr,word)
