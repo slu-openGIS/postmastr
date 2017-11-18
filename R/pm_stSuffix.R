@@ -1,19 +1,19 @@
 #' Standardized Street Suffixes
 #'
-#' \code{gw_suffix} standardizes a given set of street suffix values to the USPS preferred suffix abbreviation.
+#' \code{pw_stSuffix} standardizes a given set of street suffix values to the USPS preferred suffix abbreviation.
 #'
-#' @usage gw_suffix(.data, suffix, overwrite = TRUE, newSuffix)
+#' @usage pw_stSuffix(.data, suffix, overwrite = TRUE, newSuffix)
 #'
 #' @param .data A tbl
 #' @param suffix A character vector within \code{.data} that contains street suffixes
 #' @param overwrite A logical scalar. Should the output overwrite the given variable?
 #' @param newSuffix A name for a new vector to be created if \code{overwrite = FALSE}
 #'
-#' @return \code{gw_suffix} returns a tibble with the requested output - either the suffix variable has
+#' @return \code{pw_stSuffix} returns a tibble with the requested output - either the suffix variable has
 #'     been overwritten or a new variable with corrected suffix abbreviations has been added.
 #'
-#' @note \code{gw_suffix} requires that a number variable names be unused in the original data - \code{suf_com},
-#'     \code{suf_cor}, \code{suf_pri} and \code{suf_std}. If these names are present, \code{gw_suffix} will
+#' @note \code{pw_stSuffix} requires that a number variable names be unused in the original data - \code{suf_com},
+#'     \code{suf_cor}, \code{suf_pri} and \code{suf_std}. If these names are present, \code{pw_stSuffix} will
 #'     return an error. These variables are created temporarily as part of the matching process.
 #'
 #' @importFrom dplyr %>%
@@ -23,7 +23,7 @@
 #' @importFrom rlang :=
 #'
 #' @export
-gw_suffix <- function(.data, suffix, overwrite = TRUE, newSuffix){
+pw_stSuffix <- function(.data, suffix, overwrite = TRUE, newSuffix){
 
   # ensure no conflicts with user's data:
   if ( any(names(.data) == "suf_com") == TRUE ) {
