@@ -17,10 +17,22 @@
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom dplyr rename
 #' @importFrom dplyr select
+#' @importFrom stringr str_extract
+#' @importFrom stringr word
+#' @importFrom rlang :=
 #'
 #' @export
 pm_houseNum <- function(.data, address, numVar) {
+
+  # prevents R CMD check note for undefined gloabl variable:
+  count <- NULL
+  houseNum <- NULL
+  houseNumL <- NULL
+  houseNumS <- NULL
+  houseNumU <- NULL
+  stFull <- NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
