@@ -1,6 +1,6 @@
-# postmastr 0.1.0
+# postmastr 0.1.0.9000
 
-* Added a `NEWS.md` file to track changes to the package.
+* Initial package creation - this package is a *work in progress* and is not stable at this point.
 
 
 
