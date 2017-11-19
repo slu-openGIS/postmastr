@@ -4,16 +4,16 @@
 #' the following way - "123 Main St". This function can also process address ranges that
 #' are structured in the following manner - "123-125 Main St"
 #'
-#' @usage pm_houseNum(.data, address, numVar)
+#' @usage pm_houseNum(.data, address, output)
 #'
 #' @param .data A tbl
 #' @param address Name of the street address variable containing house numbers
-#' @param numVar Optional root name for output variable(s)
+#' @param output Optional root name for output variable(s)
 #'
 #' @return A tibble with the house number and, if needed in the case of hyphenated address ranges,
 #'    variables representing the upper and lower bounds of the address range. These variables all
 #'    will share the same root, which is \code{houseNum} by default but can be altered with the
-#'    \code{numVar} argument.
+#'    \code{output} argument.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
@@ -24,7 +24,7 @@
 #' @importFrom rlang :=
 #'
 #' @export
-pm_houseNum <- function(.data, address, numVar) {
+pm_houseNum <- function(.data, address, output) {
 
   # prevents R CMD check note for undefined gloabl variable:
   count <- NULL
@@ -47,11 +47,11 @@ pm_houseNum <- function(.data, address, numVar) {
   varQ <- rlang::quo_name(rlang::enquo(var))
 
   # reformat houseNum variable
-  if (!is.null(paramList$numVar)) {
-    if (!is.character(paramList$numVar)) {
-      newVar <- rlang::enquo(numVar)
-    } else if (is.character(paramList$numVar)) {
-      newVar <- rlang::quo(!! rlang::sym(numVar))
+  if (!is.null(paramList$output)) {
+    if (!is.character(paramList$output)) {
+      newVar <- rlang::enquo(output)
+    } else if (is.character(paramList$output)) {
+      newVar <- rlang::quo(!! rlang::sym(output))
     }
 
     newVarQ <- rlang::quo_name(rlang::enquo(newVar))
@@ -81,11 +81,11 @@ pm_houseNum <- function(.data, address, numVar) {
     dplyr::select(-count, -houseNumS) %>%
     dplyr::rename(!!varQ := stFull) -> .data
 
-  if (!is.null(paramList$numVar) & (all(is.na(.data$houseNumU)) == TRUE)) {
+  if (!is.null(paramList$output) & (all(is.na(.data$houseNumU)) == TRUE)) {
     .data %>%
       rename(!!newVarQ := houseNum) %>%
       select(-c(houseNumL, houseNumU)) -> .data
-  } else if (!is.null(paramList$numVar) & (all(is.na(.data$houseNumU)) == FALSE)) {
+  } else if (!is.null(paramList$output) & (all(is.na(.data$houseNumU)) == FALSE)) {
     .data %>%
       rename(!!newVarQ := houseNum) %>%
       rename(!!newVarL := houseNumL) %>%

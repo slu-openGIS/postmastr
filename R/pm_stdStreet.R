@@ -58,17 +58,17 @@ pm_stdStreet <- function(.data, stName, overwrite = TRUE, output) {
 
   # fix St, Nd, Th in street names to all lower case
   output %>%
-    mutate(stName = ifelse(str_detect(str_sub(x$stName, start = -2, end = -1), "St") &
-                             str_detect(str_sub(x$stName, start = -3, end = -3), "[0-9]"),
+    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "St") &
+                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
                            str_replace(stName, "St", "st"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(x$stName, start = -2, end = -1), "Nd") &
-                             str_detect(str_sub(x$stName, start = -3, end = -3), "[0-9]"),
+    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Nd") &
+                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
                            str_replace(stName, "Nd", "nd"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(x$stName, start = -2, end = -1), "Rd") &
-                             str_detect(str_sub(x$stName, start = -3, end = -3), "[0-9]"),
+    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Rd") &
+                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
                            str_replace(stName, "Rd", "rd"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(x$stName, start = -2, end = -1), "Th") &
-                             str_detect(str_sub(x$stName, start = -3, end = -3), "[0-9]"),
+    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Th") &
+                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
                            str_replace(stName, "Th", "th"), stName)) -> output
 
   # return tibble
