@@ -4,7 +4,7 @@
 \alias{pm_stName}
 \title{Extract Street Name}
 \usage{
-pm_stName(.data, address, houseNum = TRUE, stVar)
+pm_stName(.data, address, houseNum = TRUE, output)
 }
 \description{
 Extract Street Name
