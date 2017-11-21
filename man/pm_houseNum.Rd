@@ -4,20 +4,20 @@
 \alias{pm_houseNum}
 \title{Parse House Number}
 \usage{
-pm_houseNum(.data, address, numVar)
+pm_houseNum(.data, address, output)
 }
 \arguments{
 \item{.data}{A tbl}
 
 \item{address}{Name of the street address variable containing house numbers}
 
-\item{numVar}{Optional root name for output variable(s)}
+\item{output}{Optional root name for output variable(s)}
 }
 \value{
 A tibble with the house number and, if needed in the case of hyphenated address ranges,
    variables representing the upper and lower bounds of the address range. These variables all
    will share the same root, which is \code{houseNum} by default but can be altered with the
-   \code{numVar} argument.
+   \code{output} argument.
 }
 \description{
 \code{pm_houseNum} parses the house number from a given address string structured in

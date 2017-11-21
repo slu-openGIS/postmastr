@@ -8,6 +8,15 @@
 #' @param std A logical scalar. Should directional values be standardized?
 #' @param output Optional name for output variable
 #'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr as_tibble
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom stringr str_count
+#' @importFrom stringr word
+#' @importFrom rlang :=
+#'
 #' @export
 pm_stAlpha <- function(.data, stName, std = TRUE, input, output) {
 

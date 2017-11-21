@@ -1,7 +1,29 @@
 #' Standardized Street Names
 #'
+#' \code{pm_stdStreet} standardizes the spelling and formatting of street names. Names like "Second" are
+#' consistently converted to "2nd".
+#'
+#' @usage pm_stdStreet(.data, stName, output)
+#'
+#' @param .data A tbl
+#' @param stName Name of the street name variable
+#' @param output Optional name of output variable
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr as_tibble
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_replace
+#' @importFrom stringr str_sub
+#' @importFrom stringr word
+#' @importFrom rlang :=
+#' @importFrom toOrdinal toOrdinal
+#'
 #' @export
-pm_stdStreet <- function(.data, stName, overwrite = TRUE, output) {
+pm_stdStreet <- function(.data, stName, output) {
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -48,7 +70,7 @@ pm_stdStreet <- function(.data, stName, overwrite = TRUE, output) {
 
   # standardize street names
   numeric$stName <- sapply(numeric$stName, pm_word2num, USE.NAMES = FALSE)
-  numeric$stName <- sapply(numeric$stName, toOrdinal, USE.NAMES = FALSE)
+  numeric$stName <- sapply(numeric$stName, toOrdinal::toOrdinal, USE.NAMES = FALSE)
   numeric$stName <- as.character(numeric$stName)
 
   # combine data
@@ -58,18 +80,23 @@ pm_stdStreet <- function(.data, stName, overwrite = TRUE, output) {
 
   # fix St, Nd, Th in street names to all lower case
   output %>%
-    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "St") &
-                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
-                           str_replace(stName, "St", "st"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Nd") &
-                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
-                           str_replace(stName, "Nd", "nd"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Rd") &
-                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
-                           str_replace(stName, "Rd", "rd"), stName)) %>%
-    mutate(stName = ifelse(str_detect(str_sub(stName, start = -2, end = -1), "Th") &
-                             str_detect(str_sub(stName, start = -3, end = -3), "[0-9]"),
-                           str_replace(stName, "Th", "th"), stName)) -> output
+    mutate(stName = ifelse(stringr::str_detect(stringr::str_sub(stName, start = -2, end = -1), "St") &
+                             stringr::str_detect(stringr::str_sub(stName, start = -3, end = -3), "[0-9]"),
+                           stringr::str_replace(stName, "St", "st"), stName)) %>%
+    mutate(stName = ifelse(stringr::str_detect(stringr::str_sub(stName, start = -2, end = -1), "Nd") &
+                             stringr::str_detect(stringr::str_sub(stName, start = -3, end = -3), "[0-9]"),
+                           stringr::str_replace(stName, "Nd", "nd"), stName)) %>%
+    mutate(stName = ifelse(stringr::str_detect(stringr::str_sub(stName, start = -2, end = -1), "Rd") &
+                             stringr::str_detect(stringr::str_sub(stName, start = -3, end = -3), "[0-9]"),
+                           stringr::str_replace(stName, "Rd", "rd"), stName)) %>%
+    mutate(stName = ifelse(stringr::str_detect(stringr::str_sub(stName, start = -2, end = -1), "Th") &
+                             stringr::str_detect(stringr::str_sub(stName, start = -3, end = -3), "[0-9]"),
+                           stringr::str_replace(stName, "Th", "th"), stName)) -> output
+
+  # rename variable if requested
+  if (!is.null(paramList$output)) {
+    .data <- rename(.data, !!newVarQ := stName)
+  }
 
   # return tibble
   output <- dplyr::as_tibble(output)
