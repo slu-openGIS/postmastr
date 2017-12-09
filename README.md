@@ -1,27 +1,20 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-postmastr
-=========
+postmastr <img src="man/figures/logo.png" align="right" />
+==========================================================
 
-The goal of postmastr is to ...
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/postmastr)](https://cran.r-project.org/package=postmastr)
+
+The goal of postmastr is to provide consistent, tidy parsing of street address data. The package is primarily oriented towards American-style street addresses, e.g. "123 East Main Street". It contains functions for both standardizing address elements (e.g. converting street names like "Second" to "2nd" or converting "AV" to "Ave") and for parsing out intput strings into separate variables for each input element.
 
 Installation
 ------------
 
-You can install postmastr from github with:
+`postmastr` is not available from CRAN yet. In the meantime, you can install the development version of `postmastr` from Github with `devtools`:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("chris-prener/postmastr")
-```
-
-Example
--------
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-## basic example code
 ```
 
 Code of Conduct
