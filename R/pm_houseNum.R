@@ -16,7 +16,10 @@
 #' @return A tibble with the house number and, if needed in the case of hyphenated address ranges,
 #'    variables representing the upper and lower bounds of the address range. These variables all
 #'    will share the same root, which is \code{houseNum} by default but can be altered with the
-#'    \code{output} argument.
+#'    \code{output} argument. For non-hyphenated addresses, the variable returned by default is
+#'    therefor \code{houseNum}. For hyphenated addresses, the variables returned by default are
+#'    \code{houseNum}, \code{houseNumL}, and \code{houseNumU}. If a root is suppled, "L" and "U"
+#'    will be appended to the ends of the root in the case of hyphenated addresses.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr as_tibble
@@ -27,6 +30,15 @@
 #' @importFrom string str_replace_all
 #' @importFrom stringr word
 #' @importFrom rlang :=
+#'
+#' @examples
+#' exampleData <- data.frame(
+#'     id = c(1, 2, 3),
+#'     streetStr = c("225-227 1st St", "486 First St", "4256-4258 MLK Boulevard"),
+#'     stringsAsFactors = FALSE
+#' )
+#'
+#' pm_houseNum(exampleData, streetStr)
 #'
 #' @export
 pm_houseNum <- function(.data, address, output) {
@@ -100,6 +112,5 @@ pm_houseNum <- function(.data, address, output) {
   }
 
   # return
-  .data <- dplyr::as_tibble(.data)
-  return(.data)
+  dplyr::as_tibble(.data)
 }
