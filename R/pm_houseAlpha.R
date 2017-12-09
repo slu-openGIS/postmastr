@@ -1,7 +1,8 @@
 #' Parse Alphanumeric Values in House Number
 #'
 #' @description \code{pm_houseAlpha} parses the house number for included alphanumeric ranges.
-#' This function is in development - it currently only identifies "F" (front) and "R" (rear) addresses.
+#'     This function is in development - it currently only identifies "F" (front) and "R" (rear)
+#'     addresses.
 #'
 #' @usage pm_houseAlpha(.data, houseNum, alphaVar)
 #'
