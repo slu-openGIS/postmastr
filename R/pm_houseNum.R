@@ -1,14 +1,17 @@
 #' Parse House Number
 #'
-#' \code{pm_houseNum} parses the house number from a given address string structured in
-#' the following way - "123 Main St". This function can also process address ranges that
-#' are structured in the following manner - "123-125 Main St"
+#' @description \code{pm_houseNum} parses the house number from a given address string
+#'     structured in the following way - "123 Main St". This function can also process
+#'     address ranges that are structured in the following manner - "123-125 Main St".
 #'
 #' @usage pm_houseNum(.data, address, output)
 #'
 #' @param .data A tbl
 #' @param address Name of the street address variable containing house numbers
 #' @param output Optional root name for output variable(s)
+#'
+#' @source See \href{https://pe.usps.com/text/pub28/28apd_002.htm}{USPS Publication 28 -
+#'     Postal Addressing Standards, Section D1}
 #'
 #' @return A tibble with the house number and, if needed in the case of hyphenated address ranges,
 #'    variables representing the upper and lower bounds of the address range. These variables all
