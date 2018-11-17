@@ -13,7 +13,7 @@ pm_parse <- function(.data, address, houseNum = TRUE, overwrite = TRUE, keepVars
     pm_houseNum(address = streetStr) %>%
     pm_houseAlpha(houseNum = houseNum) %>%
     pm_stName(address = streetStr) %>%
-    pm_stAlpha(stName = stName) %>%
+    pm_stAlpha(stName = stName) %>% # should come after st name
     pm_stPrefixDir(stName = stName) %>%
     pm_stSuffixDir(stName = stName) %>%
     pm_stSuffix(stName = stName) %>%
