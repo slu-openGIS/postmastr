@@ -8,12 +8,6 @@
 #' @param output Optional name for output variable
 #'
 #' @export
-pm_aptsuffix <- function(.data) {
-  # function that parses the unit and associted number in type colume and value colum
-  checker <- ifUnit(.data)
-  return(checker)
-
-}
 
 
 # this function reutrns a  true or false  vecotr if the input address has an apt or unit
@@ -57,83 +51,45 @@ isApt <- function(x){
 
 }
 
-# for running and simple test of code
 
-#checking pm_aptsuffix
-library(dplyr)  # ask about where these go
-library(stringr)
-
-
-test_data2
-length(wordCheck)
-holder1 <-ifUnit(test_data2, streetStr)
-holder1
-str(holder1)
-
-# checking if Unit
-test_data2
-str(test_data2)
-holder2 <- ifUnit(test_data2)
-holder2
-str(holder2)
-
-
-# original fuction
-# look for funciotn in stringger for parssing 12/18/18
-# words funciton
-# stringger spluts based on words()
-
-#sapply(test_data2$streetStr, function(x) stringr::str_detect(x, approvedWords))
-#.data %>%
-#  mutate(approvedWords = suppressWarnings(str_detect(streetStr, pattern = approvedWords)))
-
-# from pm_sName.R
-#if (houseNum == TRUE){
-#  .data %>%
-#    dplyr::rename(stFull := !!varQ) %>%
-#    dplyr::mutate(count = stringr::str_count(stFull, pattern = "\\S+")) %>%
-#    dplyr::mutate(stName = ifelse(count >= 3, stringr::word(stFull, start = 2, end = count), NA)) %>%
-#    dplyr::mutate(stName = stringr::str_to_title(stName)) %>%
-#    dplyr::select(-count) %>%
-#    dplyr::rename(!!varQ := stFull) -> .data
-
+# function that parses out the unit and adds it to a colums vector in data frame
 parseunit <- function(.data) {
-  newve <- stringr::word(tester$streetStr,start = 4, end = 5) # how to soft for different address sizes
+  newve <- stringr::word(.data$streetStr,start = -2, end = -1) # how apt suffix is removed from address
   tester1 <- .data %>%
     dplyr::mutate(isaptsuffix = newve)
-  for( i in  .data$aptsuffx) {
-    if( i   == TRUE){
-      tester1 <- tester1 %>%
-        dplyr::mutate(isaptsuffix = TRUE)
-      stringger::word(.data$streetStr) #to find the suffix
-       #dplyr::mutate(stName = ifelse(count >= 3, stringr::word(stFull, start = 2, end = count), NA)) %>%
-       #     dplyr::mutate(stName = stringr::str_to_title(stName)) %>%
+  count <- 0
+  for(i in tester1$aptsuffx) {
+    count <- count +1
+    if(i  == FALSE) {
+      tester1$isaptsuffix[count] <- NA
     }
   }
   return(tester1)
 }
 
 
+# second funciotn to parse units still not wokring  1/22/19
+test1 <- purrr::map(holder1, fun2)
+
+fun2 <- function(.data){
+  if( x$aptsuffx == TRUE)
+    stringr::word(x$streetStr,start = -2, end = -1)
+}
+
+
+# for running and simple test of code
+library(dplyr)  # ask about where these go
+library(stringr)
+
+test_data2 #  test_data2 comes for testData.R in solutions
+length(wordCheck)
+holder1 <-ifUnit(test_data2, streetStr)
+holder1
 holder2 <-parseunit(holder1)
 holder2
-holder1
-length(holder1$aptsuffx)
 
 
 
-tester <-  holder1  %>%
-       dplyr::mutate(newcolume = TRUE)
-tester
-test2 <- stringr::word(tester$streetStr,start = 4, end = 5)
-test2
-
-holder2$isaptsuffix[2] == FALSE
-
-test3 <- stringr::word(tester$streetStr[5],start = 4, end = 4)
-test3
-
-test3 <- stringr::word(tester$streetStr[1],start = 4, end = 5)
-test3
 
 
 
