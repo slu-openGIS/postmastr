@@ -14,7 +14,7 @@ Installation
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("chris-prener/postmastr")
+devtools::install_github("slu-openGIS/postmastr")
 ```
 
 Code of Conduct
