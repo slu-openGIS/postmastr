@@ -8,33 +8,86 @@
 #' @param output Optional name for output variable
 #'
 #' @export
-pm_aptsuffix <- function(.data) {
-  # function that parses the unit and associted number in type colume and value colum
-  checker <- ifUnit(.data)
-  return(checker)
+
+
+# this function reutrns a  true or false  vecotr if the input address has an apt or unit
+ifUnit <- function(.data, var ) {
+
+    # save parameters to list
+    paramList <- as.list(match.call())
+
+    # nse
+    if (!is.character(paramList$var)) {
+      varQ <- rlang::enquo(var)
+    } else if (is.character(paramList$var)) {
+      varQ <- rlang::quo(!! rlang::sym(var))
+    }
+
+    # create vector through iteration
+    out <- dplyr::mutate(.data, aptsuffx = purrr::map_lgl(!!varQ, isApt))
+
+    # return output
+    return(out)
+
+  }
+
+# define sub function
+isApt <- function(x){
+
+    # create pattern vector
+    patternVector <- c("APT", "BSMT", "BLDG", "DEPT", "FL", "FRNT", "HNGR", "KEY",
+                    "LBBY", "LOT", "LOWR", "OFC", "PH", "PIER", "REAR", "RM",
+                    "SIDE", "SLIP", "SPC", "STOP", "STE", "TRLR", "UNIT", "UPPR")
+
+
+    # iterate over items in pattern vector
+    patternVector %>%
+      base::split(patternVector) %>%
+      purrr::map_lgl( ~ stringr::str_detect(string = x, pattern = .x)) %>%
+      base::any(.) -> out
+
+    # return output
+    return(out)
 
 }
-ifUnit <- function(.data) {
-  # this function reutrns a  true or false  vecotr if the input address has an apt or unit
-  approvedWords <- c("APT", "BSMT", "BLDG", "DEPT", "FL", "FRNT", "HNGR", "KEY",
-       "LBBY", "LOT", "LOWR", "OFC", "PH", "PIER", "REAR", "RM",
-        "SIDE", "SLIP", "SPC", "STOP", "STE", "TRLR", "UNIT", "UPPR")
-  sapply(test_data2$streetStr, function(x) stringr::str_detect(x, approvedWords))
+
+
+# function that parses out the unit and adds it to a colums vector in data frame
+parseunit <- function(.data) {
+  newve <- stringr::word(.data$streetStr,start = -2, end = -1) # how apt suffix is removed from address
+  tester1 <- .data %>%
+    dplyr::mutate(isaptsuffix = newve)
+  count <- 0
+  for(i in tester1$aptsuffx) {
+    count <- count +1
+    if(i  == FALSE) {
+      tester1$isaptsuffix[count] <- NA
+    }
+  }
+  return(tester1)
 }
+
+
+# second funciotn to parse units still not wokring  1/22/19
+test1 <- purrr::map(holder1, fun2)
+
+fun2 <- function(.data){
+  if( x$aptsuffx == TRUE)
+    stringr::word(x$streetStr,start = -2, end = -1)
+}
+
 
 # for running and simple test of code
+library(dplyr)  # ask about where these go
+library(stringr)
 
-#checking pm_aptsuffix
-holder1 <-pm_aptsuffix(test_data2)
+test_data2 #  test_data2 comes for testData.R in solutions
+length(wordCheck)
+holder1 <-ifUnit(test_data2, streetStr)
 holder1
-str(holder1)
-
-# checking if Unit
-test_data2
-str(test_data2)
-holder2 <- ifUnit(test_data2)
+holder2 <-parseunit(holder1)
 holder2
-str(holder2)
+
 
 
 

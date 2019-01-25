@@ -6,7 +6,7 @@ test_data <- data.frame(
 
 test_data2 <- data.frame(
   id = c(1, 2, 3, 4, 5, 6),
-  streetStr = c("225 1st St APT 3E", "225 Rear 1ST St", "4256 MLK Boulevard", "181 RED FOX Blvd LOT", "5768 grand Blvd", "245 SECOND St"),
+  streetStr = c("225 1st St APT 3E", "225 Rear 1ST St", "4256 MLK Boulevard OFC ", "181 RED FOX Blvd LOT", "5768 grand Blvd UPPR", "245 SECOND St"),
   stringsAsFactors = FALSE  # "225 1st St APT 3E
 )
 
