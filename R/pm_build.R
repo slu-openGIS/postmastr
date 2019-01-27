@@ -2,7 +2,7 @@
 #'
 #' This is a work in progress!
 #'
-pm_build <- function(.data, ...){
+pm_build <- function(.data, houseNum, ...){
 
   ldots <- rlang::chr(...)
 
@@ -12,10 +12,21 @@ pm_build <- function(.data, ...){
 
   } else if (rlang::is_empty(ldots) == TRUE){
 
-    .data %>%
-      dplyr::mutate(ADRRESS = paste(houseNum, houseAlpha, houseSuf, stDir, stName, stType, stSufDir, sep = " ", collapse = NULL)) %>%
-      dplyr::mutate(ADRRESS = tm::removeWords(ADRRESS, "NA")) %>%
-      dplyr::mutate(ADRRESS = stringr::str_squish(ADRRESS)) -> out
+    # create address string
+    if (houseNum == TRUE) {
+
+      add <- dplyr::mutate(.data, stFull = paste(houseNum, houseSuf, stPreDir, stName, stType, stSufDir, sep = " "))
+
+    } else if (houseNum == FALSE) {
+
+      add <- dplyr::mutate(.data, stFull = paste(houseSuf, stPreDir, stName, stType, stSufDir, sep = " "))
+
+    }
+
+    # remove NA values
+    add %>%
+      dplyr::mutate(stFull = tm::removeWords(stFull, "NA")) %>%
+      dplyr::mutate(stFull = stringr::str_squish(stFull)) -> out
 
   }
 
