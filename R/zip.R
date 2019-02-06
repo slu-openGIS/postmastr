@@ -50,8 +50,12 @@ pm_isZip <- function(.data, var){
 #'
 #' @description Create a new column containing zip-code data.
 #'
+#' @usage pm_parse_zip(.data, var, locale = "us")
+#'
 #' @param .data A tbl or data frame
 #' @param var A character variable that may contain zip codes
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new column \code{pm.zip} that contains the zip-code.
 #'     If a zip-code is not detected in the string, a value of \code{NA} will be
@@ -68,7 +72,7 @@ pm_isZip <- function(.data, var){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parseZip <- function(.data, var){
+pm_parse_zip <- function(.data, var, locale = "us"){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -80,18 +84,47 @@ pm_parseZip <- function(.data, var){
     varQ <- rlang::quo(!! rlang::sym(var))
   }
 
-  # create pm.origAddress
-  if ("pm.address" %in% names(.data) == FALSE){
+  # check for object and key variables
+  if (pm_is_subset(working_data) == FALSE){
+    stop("Error.")
+  }
 
-    .data <- dplyr::mutate(.data, pm.address := !!varQ)
+  if (pm_has_uid(working_data) == FALSE){
+    stop("Error.")
+  }
 
+  if (pm_has_address(working_data) == FALSE){
+    stop("Error.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
   # identify zip-code
   out <- pm_isZip(.data, "pm.address")
 
   # parse
-  out %>%
+  if (locale == "us"){
+
+    out <- pm_parse_zip_us(out)
+
+  }
+
+  # return output
+  return(out)
+
+}
+
+# parse American zip codes
+pm_parseZip_us <- function(.data){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # parse
+  .data %>%
     dplyr::mutate(pm.zip =
                     ifelse(pm.isZip == TRUE,
                            stringr::word(pm.address, start = -1),
@@ -101,8 +134,5 @@ pm_parseZip <- function(.data, var){
                            stringr::word(pm.address, start = 1, end = -2),
                            pm.address)) %>%
     dplyr::select(-pm.isZip) -> out
-
-  # return output
-  return(out)
 
 }

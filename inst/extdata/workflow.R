@@ -10,12 +10,12 @@ test_data <- data.frame(
   stringsAsFactors = FALSE
 )
 
-test_data %>%
-  pm_parseZip(var = streetStr) %>%
-  pm_parseState(var = pm.address) -> result
+devtools::load_all()
 
-dir <- c("St. Louis", "Saint Louis", "St. Francis")
+test_data_id <- pm_identify(test_data, var = streetStr)
 
-pm_isCity(result, var = pm.address, dictionary = dir)
+working_data <- pm_prep(test_data_id, var = streetStr)
 
-pm_parseCity(result, var = pm.address, dictionary = dir)
+pm_is_subset(working_data)
+pm_has_uid(working_data)
+pm_has_address(working_data)

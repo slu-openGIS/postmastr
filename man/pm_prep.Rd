@@ -2,15 +2,18 @@
 % Please edit documentation in R/prep.R
 \name{pm_prep}
 \alias{pm_prep}
-\title{Prepare Data}
+\title{Create postmastr Object for Parsing}
 \usage{
 pm_prep(.data, var)
 }
 \arguments{
-\item{.data}{A tbl or data frame}
+\item{.data}{A tibble that has already had identification numbers added
+using \link{pm_identify}.}
 
 \item{var}{A character variable containing address data to be parsed}
 }
 \description{
-Prepare Data
+Once identification numbers have been been added, this
+   function creates a subset that will be parsed and then re-applied
+   to the primary data set.
 }
