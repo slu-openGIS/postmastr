@@ -4,12 +4,10 @@
 \alias{pm_parse_zip}
 \title{Parse Zip-Codes}
 \usage{
-pm_parse_zip(.data, var, locale = "us")
+pm_parse_zip(.data, locale = "us")
 }
 \arguments{
-\item{.data}{A tbl or data frame}
-
-\item{var}{A character variable that may contain zip codes}
+\item{.data}{A postmastr object (\code{pm_subset})}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
