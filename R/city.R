@@ -49,7 +49,7 @@ pm_idCity <- function(x, dictionary){
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b"))) %>%
+    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) %>%
     any() -> out
 
   return(out)
@@ -115,7 +115,7 @@ pm_parseCity <- function(.data, var, dictionary){
   }
 
   # identify state
-  pm_isCity(.data, "pm.address") %>%
+  pm_isCity(.data, "pm.address", dictionary = dictionary) %>%
     tibble::rowid_to_column(var = "pm.id") -> isCity
 
   # subset
@@ -136,23 +136,23 @@ pm_parseCity <- function(.data, var, dictionary){
                            stringr::word(pm.address, start = 1, end = -2),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 2,
+                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 2,
                            stringr::word(pm.address, start = 1, end = -3),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 3,
+                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 3,
                            stringr::word(pm.address, start = 1, end = -4),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 4,
+                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 4,
                            stringr::word(pm.address, start = 1, end = -5),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 5,
+                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 5,
                            stringr::word(pm.address, start = 1, end = -6),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 6,
+                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 6,
                            stringr::word(pm.address, start = 1, end = -7),
                            pm.address)) -> yesCity
 
@@ -174,7 +174,7 @@ pm_extractCity <- function(x, dictionary){
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b"))) -> out
+    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) -> out
 
   return(out)
 

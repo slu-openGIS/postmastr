@@ -9,8 +9,12 @@ test_data <- data.frame(
   stringsAsFactors = FALSE
 )
 
-result <- pm_parseZip(test_data, var = streetStr)
+test_data %>%
+  pm_parseZip(var = streetStr) %>%
+  pm_parseState(var = pm.address) -> result
 
 dir <- c("St. Louis", "Saint Louis")
 
-pm_isCity(result, var = streetStr, directory = dir)
+pm_isCity(result, var = pm.address, dictionary = dir)
+
+pm_parseCity(result, var = pm.address, dictionary = dir)

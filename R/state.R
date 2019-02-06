@@ -1,7 +1,7 @@
 #' Detect Presence of State Name or Abbreviation
 #'
 #' @description Determine the presence of state names or abbreviations
-#'     in a string.
+#'     at the end of a string.
 #'
 #' @param .data A tbl or data frame
 #' @param var A character variable that may contain city names
@@ -58,7 +58,7 @@ pm_idState <- function(x, dictionary){
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b"))) %>%
+    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) %>%
     any() -> out
 
   return(out)
@@ -177,7 +177,7 @@ pm_extractState <- function(x, dictionary){
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b"))) -> out
+    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) -> out
 
   return(out)
 
