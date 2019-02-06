@@ -4,6 +4,8 @@
 #'
 #' @param .data A tbl or data frame
 #' @param var A character variable that may contain city names
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
 #'
 #' @return A tibble with a new logical variable \code{pm.isCity} that is
 #'     \code{TRUE} if a city name is found in the address and \code{FALSE}
@@ -18,7 +20,7 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_isCity <- function(.data, var, directory){
+pm_isCity <- function(.data, var, dictionary){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -32,17 +34,17 @@ pm_isCity <- function(.data, var, directory){
 
   # iterate over observations
   .data %>%
-    dplyr::mutate(pm.isCity = purrr::map(!!varQ, ~pm_idCity(.x, directory = directory))) -> out
+    dplyr::mutate(pm.isCity = purrr::map(!!varQ, ~pm_idCity(.x, dictionary = dictionary))) -> out
 
   return(out)
 
 }
 
 # iterate over directory items to identify city names
-pm_idCity <- function(x, directory){
+pm_idCity <- function(x, dictionary){
 
   # create pattern vector
-  patternVector <- directory
+  patternVector <- dictionary
 
   patternVector %>%
     base::split(patternVector) %>%

@@ -4,12 +4,15 @@
 \alias{pm_isCity}
 \title{Detect Presence of City Name}
 \usage{
-pm_isCity(.data, var, directory)
+pm_isCity(.data, var, dictionary)
 }
 \arguments{
 \item{.data}{A tbl or data frame}
 
 \item{var}{A character variable that may contain city names}
+
+\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
+as a master list for cities.}
 }
 \value{
 A tibble with a new logical variable \code{pm.isCity} that is
