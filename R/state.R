@@ -130,14 +130,6 @@ pm_parseState <- function(.data, var, directory){
     dplyr::arrange(pm.id) %>%
     dplyr::select(-pm.id, -pm.isState) -> out
 
-  # remove names
-  vars <- names(out)
-  vars <- vars[vars != "pm.address" ]
-  vars <- vars[vars != "pm.zip"]
-  vars <- vars[vars != "pm.state"]
-
-  out <- dplyr::select(out, vars, pm.address, pm.state, pm.zip)
-
   # return output
   return(out)
 
