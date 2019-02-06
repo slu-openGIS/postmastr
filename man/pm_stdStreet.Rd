@@ -4,8 +4,16 @@
 \alias{pm_stdStreet}
 \title{Standardized Street Names}
 \usage{
-pm_stdStreet(.data, stName, overwrite = TRUE, output)
+pm_stdStreet(.data, stName, output)
+}
+\arguments{
+\item{.data}{A tbl}
+
+\item{stName}{Name of the street name variable}
+
+\item{output}{Optional name of output variable}
 }
 \description{
-Standardized Street Names
+\code{pm_stdStreet} standardizes the spelling and formatting of street names. Names like "Second" are
+consistently converted to "2nd".
 }

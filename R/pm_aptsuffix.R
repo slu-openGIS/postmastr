@@ -66,3 +66,18 @@ parseunit <- function(.data) {
   }
   return(tester1)
 }
+
+# re-work Bayard's code
+pm_unit_parse <- function(.data, stName){
+
+  varQ <- rlang::quo_name(rlang::enquo(stName))
+
+  # load suffix data
+  correct <- get("stdSuffixTbl")
+
+  .data %>%
+    dplyr::mutate(count = stringr::str_count(stName, pattern = "\\S+")) -> out
+
+  return(out)
+
+}

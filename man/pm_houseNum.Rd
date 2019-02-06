@@ -3,6 +3,10 @@
 \name{pm_houseNum}
 \alias{pm_houseNum}
 \title{Parse House Number}
+\source{
+See \href{https://pe.usps.com/text/pub28/28apd_002.htm}{USPS Publication 28 -
+    Postal Addressing Standards, Section D1}
+}
 \usage{
 pm_houseNum(.data, address, output)
 }
@@ -17,10 +21,23 @@ pm_houseNum(.data, address, output)
 A tibble with the house number and, if needed in the case of hyphenated address ranges,
    variables representing the upper and lower bounds of the address range. These variables all
    will share the same root, which is \code{houseNum} by default but can be altered with the
-   \code{output} argument.
+   \code{output} argument. For non-hyphenated addresses, the variable returned by default is
+   therefor \code{houseNum}. For hyphenated addresses, the variables returned by default are
+   \code{houseNum}, \code{houseNumL}, and \code{houseNumU}. If a root is suppled, "L" and "U"
+   will be appended to the ends of the root in the case of hyphenated addresses.
 }
 \description{
-\code{pm_houseNum} parses the house number from a given address string structured in
-the following way - "123 Main St". This function can also process address ranges that
-are structured in the following manner - "123-125 Main St"
+\code{pm_houseNum} parses the house number from a given address string
+    structured in the following way - "123 Main St". This function can also process
+    address ranges that are structured in the following manner - "123-125 Main St".
+}
+\examples{
+exampleData <- data.frame(
+    id = c(1, 2, 3),
+    streetStr = c("225-227 1st St", "486 First St", "4256-4258 MLK Boulevard"),
+    stringsAsFactors = FALSE
+)
+
+pm_houseNum(exampleData, streetStr)
+
 }

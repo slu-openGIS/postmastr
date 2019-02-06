@@ -27,7 +27,7 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
 #' @importFrom stringr str_extract
-#' @importFrom string str_replace_all
+#' @importFrom stringr str_replace_all
 #' @importFrom stringr word
 #' @importFrom rlang :=
 #'

@@ -22,6 +22,7 @@ A tibble with the alphanumeric value, which is named \code{houseAlpha} by defaul
     but can be altered with the \code{alphaVar} argument.
 }
 \description{
-\code{pm_houseAlpha} parses the house number for included alphanumeric ranges. This function
-is in development - it currently only identifies "F" (front) and "R" (rear) addresses.
+\code{pm_houseAlpha} parses the house number for included alphanumeric ranges.
+    This function is in development - it currently only identifies "F" (front) and "R" (rear)
+    addresses.
 }
