@@ -4,8 +4,29 @@
 \alias{pm_parseState}
 \title{Parse State Names and Abbreviation}
 \usage{
-pm_parseState(.data, var, directory)
+pm_parseState(.data, var, dictionary)
+}
+\arguments{
+\item{.data}{A tbl or data frame}
+
+\item{var}{A character variable that may contain city names}
+
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
+as a master list for states. If none is provided, the \code{states}
+object will be used as the default directory.}
+}
+\value{
+A tibble with a new character variable \code{pm.state} that contains
+    the two-letter abbreviation for the given U.S. state. This follows USPS
+    addressing standards, which require that the state abbreviation be used.
+    If a state name or abbreviation is not detected in the string, a value
+    of \code{NA} will be returned. If it does not yet exist, a copy of the
+    address variable will be created in \code{pm.address} and returned with
+    state name or abbreviation removed.
 }
 \description{
-Parse State Names and Abbreviation
+Parse a state name or abbreviation from a string. These data
+    should be at the end of the string (i.e. the last word or two). If a
+    zip-code follows the, use \link{pm_parseZip} first to remove those
+    data from \code{pm.address}.
 }

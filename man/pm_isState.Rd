@@ -10,6 +10,10 @@ pm_isState(.data, var, directory)
 \item{.data}{A tbl or data frame}
 
 \item{var}{A character variable that may contain city names}
+
+\item{directory}{Optional; a tbl created with \code{pm_directory} to be used
+as a master list for states. If none is provided, the \code{states}
+object will be used as the default directory.}
 }
 \value{
 A tibble with a new logical variable \code{pm.isState} that is
