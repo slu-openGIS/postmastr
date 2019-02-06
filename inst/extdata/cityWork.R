@@ -13,7 +13,7 @@ test_data %>%
   pm_parseZip(var = streetStr) %>%
   pm_parseState(var = pm.address) -> result
 
-dir <- c("St. Louis", "Saint Louis")
+dir <- c("St. Louis", "Saint Louis", "St. Francis")
 
 pm_isCity(result, var = pm.address, dictionary = dir)
 

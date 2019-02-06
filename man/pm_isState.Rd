@@ -22,5 +22,5 @@ A tibble with a new logical variable \code{pm.isState} that is
 }
 \description{
 Determine the presence of state names or abbreviations
-    in a string.
+    at the end of a string.
 }
