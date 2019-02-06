@@ -4,14 +4,14 @@
 \alias{pm_isState}
 \title{Detect Presence of State Name or Abbreviation}
 \usage{
-pm_isState(.data, var, directory)
+pm_isState(.data, var, dictionary)
 }
 \arguments{
 \item{.data}{A tbl or data frame}
 
 \item{var}{A character variable that may contain city names}
 
-\item{directory}{Optional; a tbl created with \code{pm_directory} to be used
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
 as a master list for states. If none is provided, the \code{states}
 object will be used as the default directory.}
 }

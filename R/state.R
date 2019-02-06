@@ -5,7 +5,7 @@
 #'
 #' @param .data A tbl or data frame
 #' @param var A character variable that may contain city names
-#' @param directory Optional; a tbl created with \code{pm_directory} to be used
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
 #'     object will be used as the default directory.
 #'
@@ -22,7 +22,7 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_isState <- function(.data, var, directory){
+pm_isState <- function(.data, var, dictionary){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -35,15 +35,15 @@ pm_isState <- function(.data, var, directory){
   }
 
   # create directory
-  if (missing(directory) == FALSE){
-    fulLDir <- c(datasets::state.abb, datasets::state.name, directory)
-  } else if (missing(directory) == TRUE){
-    fulLDir <- c(datasets::state.abb, datasets::state.name)
+  if (missing(dictionary) == FALSE){
+    fulLDic <- c(datasets::state.abb, datasets::state.name, directory)
+  } else if (missing(dictionary) == TRUE){
+    fulLDic <- c(datasets::state.abb, datasets::state.name)
   }
 
   # iterate over observations
   .data %>%
-    dplyr::mutate(pm.isState = purrr::map(!!varQ, ~pm_idState(.x, directory = fulLDir))) -> out
+    dplyr::mutate(pm.isState = purrr::map(!!varQ, ~pm_idState(.x, dictionary = fulLDic))) -> out
 
   # return output
   return(out)
@@ -51,10 +51,10 @@ pm_isState <- function(.data, var, directory){
 }
 
 # iterate over directory items to identify state names and abbreviations
-pm_idState <- function(x, directory){
+pm_idState <- function(x, dictionary){
 
   # create pattern vector
-  patternVector <- directory
+  patternVector <- dictionary
 
   patternVector %>%
     base::split(patternVector) %>%
