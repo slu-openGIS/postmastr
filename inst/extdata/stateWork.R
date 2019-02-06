@@ -1,6 +1,6 @@
 test_data <- data.frame(
   id = c(1, 2, 3, 4, 5, 6),
-  streetStr = c("225 1st St St. Louis, Missouri 63108",
+  streetStr = c("225 1st St St. Louis, New Jersey 63108",
                 "486 First St St. Louis, MO 63110",
                 "4256-4258 MLK Boulevard St. Louis, Missouri",
                 "181-191 RED FOX Blvd St. Louis",

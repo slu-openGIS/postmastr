@@ -58,7 +58,7 @@ pm_idState <- function(x, dictionary){
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = .x)) %>%
+    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b"))) %>%
     any() -> out
 
   return(out)
@@ -149,11 +149,11 @@ pm_parseState <- function(.data, var, dictionary){
     dplyr::filter(is.na(pm.state) == FALSE) %>%
     dplyr::mutate(pm.state = as.character(pm.state)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, patter = '\\w+') == 1,
+                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 1,
                            stringr::word(pm.address, start = 1, end = -2),
                            pm.address)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, patter = '\\w+') == 2,
+                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 2,
                            stringr::word(pm.address, start = 1, end = -3),
                            pm.address)) %>%
     dplyr::mutate(pm.address = stringr::str_replace(pm.address, ",", "")) %>%
