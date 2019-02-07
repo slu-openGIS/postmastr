@@ -18,7 +18,7 @@ current option is "us" but this is included to facilitate future expansion.}
 \value{
 If \code{scalar = TRUE}, a single logical scalar is returned that is
     \code{TRUE} if the data contain postal codes and \code{FALSE} if they do not.
-    If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.isZip}
+    If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.hasZip}
     that is \code{TRUE} if a zip-code is found in the last word of the address
     and \code{FALSE} otherwise.
 }

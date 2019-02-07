@@ -15,7 +15,7 @@
 #'
 #' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
 #'     \code{TRUE} if the data contain postal codes and \code{FALSE} if they do not.
-#'     If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.isZip}
+#'     If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.hasZip}
 #'     that is \code{TRUE} if a zip-code is found in the last word of the address
 #'     and \code{FALSE} otherwise.
 #'
@@ -53,7 +53,7 @@ pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
 
   # return scalar
   if (scalar == TRUE){
-    out <- any(out$pm.isZip)
+    out <- any(out$pm.hasZip)
   }
 
   # return output
@@ -67,7 +67,7 @@ pm_has_zip_us <- function(.data){
   # detect pattern
   .data %>%
     dplyr::mutate(pm.last = stringr::word(pm.address, -1)) %>%
-    dplyr::mutate(pm.isZip = stringr::str_detect(pm.last, "([0-9]{5})")) %>%
+    dplyr::mutate(pm.hasZip = stringr::str_detect(pm.last, "([0-9]{5})")) %>%
     dplyr::select(-pm.last) -> out
 
   # return output
@@ -137,13 +137,13 @@ pm_parse_zip_us <- function(.data){
   # parse
   .data %>%
     dplyr::mutate(pm.zip =
-                    ifelse(pm.isZip == TRUE,
+                    ifelse(pm.hasZip == TRUE,
                            stringr::word(pm.address, start = -1),
                            NA)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(pm.isZip == TRUE,
+                    ifelse(pm.hasZip == TRUE,
                            stringr::word(pm.address, start = 1, end = -2),
                            pm.address)) %>%
-    dplyr::select(-pm.isZip) -> out
+    dplyr::select(-pm.hasZip) -> out
 
 }
