@@ -6,7 +6,7 @@ test_data <- data.frame(
                 "4256-4258 MLK Boulevard St. Louis, MO",
                 "181-191 RED FOX Blvd St. Louis, MO",
                 "5768 grand Blvd St. Louis, MO 63111",
-                "245 SECOND St St. Francis, MO 63110-1234"),
+                "245 SECOND St St. Francis, 63110-1234"),
   stringsAsFactors = FALSE
 )
 
@@ -16,13 +16,15 @@ test_data_id <- pm_identify(test_data, var = streetStr)
 
 working_data <- pm_prep(test_data_id, var = streetStr)
 
-pm_is_subset(working_data)
 pm_has_uid(working_data)
 pm_has_address(working_data)
 
 pm_has_postal(working_data)
+pm_has_postal(working_data, scalar = FALSE)
 
-pm_parse_postal(working_data)
+(working_data <- pm_parse_postal(working_data))
 
+pm_has_state(working_data)
+pm_has_state(working_data, scalar = FALSE)
 
-
+pm_parse_state(working_data)

@@ -29,10 +29,6 @@
 pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
 
   # check for object and key variables
-  if (pm_is_subset(working_data) == FALSE){
-    stop("Error.")
-  }
-
   if (pm_has_uid(working_data) == FALSE){
     stop("Error.")
   }
@@ -98,10 +94,6 @@ pm_has_zip_us <- function(.data){
 pm_parse_postal <- function(.data, locale = "us"){
 
   # check for object and key variables
-  if (pm_is_subset(working_data) == FALSE){
-    stop("Error.")
-  }
-
   if (pm_has_uid(working_data) == FALSE){
     stop("Error.")
   }

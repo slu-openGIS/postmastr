@@ -96,6 +96,7 @@ pm_identify <- function(.data, var){
 #' @importFrom rlang quo
 #' @importFrom rlang quo_name
 #' @importFrom rlang sym
+#' @importFrom stringr str_replace
 #'
 pm_prep <- function(.data, var){
 
@@ -126,37 +127,11 @@ pm_prep <- function(.data, var){
   .data %>%
     dplyr::distinct(pm.uid, .keep_all = TRUE) %>%
     dplyr::mutate(pm.address := !!varQ) %>%
+    dplyr::mutate(pm.address = stringr::str_replace(pm.address, ",", "")) %>%
     dplyr::select(pm.uid, pm.address) -> out
-
-  # apply new class
-  class(out) <- append(class(out), "pm_subset")
 
   # return output
   return(out)
-
-}
-
-#' Validate postmastr Object
-#'
-#' @description This function tests to see whether an object is of class \code{pm_subset}.
-#'     It is used as part of the parsing functions, and is exported so that it can be used
-#'     interactively as well.
-#'
-#' @usage pm_is_subset(obj)
-#'
-#' @param obj Object to test
-#'
-#' @return A logical scalar that is \code{TRUE} if the given object is of class
-#'     \code{pm_subset}; it will return \code{FALSE} otherwise.
-#'
-#' @export
-pm_is_subset <- function(obj){
-
-  # test
-  result <- "pm_subset" %in% class(obj)
-
-  # return output
-  return(result)
 
 }
 

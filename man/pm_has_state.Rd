@@ -7,7 +7,7 @@
 pm_has_state(.data, dictionary, scalar = TRUE, locale = "us")
 }
 \arguments{
-\item{.data}{A tbl or data frame}
+\item{.data}{A postmastr object (\code{pm_subset})}
 
 \item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
 as a master list for states. If none is provided, the \code{states}

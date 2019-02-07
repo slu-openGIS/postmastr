@@ -5,7 +5,7 @@
 #'
 #' @usage pm_has_state(.data, dictionary, scalar = TRUE, locale = "us")
 #'
-#' @param .data A tbl or data frame
+#' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
 #'     object will be used as the default directory.
@@ -32,16 +32,12 @@
 pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 
   # check for object and key variables
-  if (pm_is_subset(working_data) == FALSE){
-    stop("Error.")
-  }
-
   if (pm_has_uid(working_data) == FALSE){
-    stop("Error.")
+    stop("Error 2.")
   }
 
   if (pm_has_address(working_data) == FALSE){
-    stop("Error.")
+    stop("Error 3.")
   }
 
   # locale issues
@@ -61,7 +57,13 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
   # iterate over observations
   if (locale == "us"){
     .data %>%
-      dplyr::mutate(pm_has_state = purrr::map(!!varQ, ~ pm_has_pattern(.x, dictionary = fulLDic))) -> out
+      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = fulLDic))) %>%
+      dplyr::mutate(pm.hasState = as.logical(pm.hasState)) -> out
+  }
+
+  # return scalar
+  if (scalar == TRUE){
+    out <- any(out$pm.hasState)
   }
 
   # return output
@@ -91,11 +93,14 @@ pm_has_pattern <- function(x, dictionary){
 #'     zip-code follows the, use \link{pm_parseZip} first to remove those
 #'     data from \code{pm.address}.
 #'
-#' @param .data A tbl or data frame
-#' @param var A character variable that may contain city names
+#' @usage pm_parse_state(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
 #'     object will be used as the default directory.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new character variable \code{pm.state} that contains
 #'     the two-letter abbreviation for the given U.S. state. This follows USPS
@@ -112,55 +117,60 @@ pm_has_pattern <- function(x, dictionary){
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom purrr map
-#' @importFrom rlang :=
-#' @importFrom rlang enquo
-#' @importFrom rlang quo
-#' @importFrom rlang sym
 #' @importFrom stringr str_c
 #' @importFrom stringr str_count
 #' @importFrom stringr str_replace
 #' @importFrom stringr word
-#' @importFrom tibble rowid_to_column
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_parseState <- function(.data, var, dictionary){
+pm_parse_state <- function(.data, dictionary, locale = "us"){
 
-  # save parameters to list
-  paramList <- as.list(match.call())
-
-  # unquote
-  if (!is.character(paramList$var)) {
-    varQ <- rlang::enquo(var)
-  } else if (is.character(paramList$var)) {
-    varQ <- rlang::quo(!! rlang::sym(var))
+  # check for object and key variables
+  if (pm_has_uid(working_data) == FALSE){
+    stop("Error 2.")
   }
 
-  # create pm.origAddress
-  if ("pm.address" %in% names(.data) == FALSE){
-
-    .data <- dplyr::mutate(.data, pm.address := !!varQ)
-
+  if (pm_has_address(working_data) == FALSE){
+    stop("Error 3.")
   }
 
-  # identify state
-  pm_isState(.data, "pm.address") %>%
-    tibble::rowid_to_column(var = "pm.id") -> isState
-
-  # subset
-  yesState <- dplyr::filter(isState, pm.isState == TRUE)
-  noState <- dplyr::filter(isState, pm.isState == FALSE)
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
 
   # create directory
   if (missing(dictionary) == FALSE){
-    fulLDic <- c(datasets::state.abb, datasets::state.name, directory)
+    fullDic <- c(datasets::state.abb, datasets::state.name, dictionary)
   } else if (missing(dictionary) == TRUE){
-    fulLDic <- c(datasets::state.abb, datasets::state.name)
+    fullDic <- c(datasets::state.abb, datasets::state.name)
   }
+
+  # identify state
+  # need to figure out dictionary passing
+  isState <- pm_has_state(.data, scalar = FALSE, locale = locale)
+
+  # iterate over observations
+  if (locale == "us"){
+    out <- pm_parse_state_us(isState, dictionary = fullDic)
+  }
+
+  # return output
+  return(out)
+
+}
+
+# parse American states
+pm_parse_state_us <- function(.data, dictionary){
+
+  # subset
+  yesState <- dplyr::filter(.data, pm.hasState == TRUE)
+  noState <- dplyr::filter(.data, pm.hasState == FALSE)
 
   # iterate over observations
   yesState %>%
-    dplyr::mutate(pm.state = purrr::map(!!varQ, ~ pm_extractState(.x, dictionary = fulLDic))) -> yesState
+    dplyr::mutate(pm.state = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesState
 
   # clean address data
   yesState %>%
@@ -168,28 +178,19 @@ pm_parseState <- function(.data, var, dictionary){
     dplyr::filter(is.na(pm.state) == FALSE) %>%
     dplyr::mutate(pm.state = as.character(pm.state)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 1,
-                           stringr::word(pm.address, start = 1, end = -2),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.state, pattern = '\\w+') == 2,
-                           stringr::word(pm.address, start = 1, end = -3),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address = stringr::str_replace(pm.address, ",", "")) %>%
-    pm_stdState(var = pm.state, dictionary = fullDic) -> yesState
+                    stringr::word(pm.address, start = 1,
+                                  end = -1-stringr::str_count(pm.state, pattern = "\\w+"))) %>%
+    pm_stdState(var = pm.state, dictionary = dictionary) -> yesState
 
   # combine with data missing states
   dplyr::bind_rows(yesState, noState) %>%
-    dplyr::arrange(pm.id) %>%
-    dplyr::select(-pm.id, -pm.isState) -> out
-
-  # return output
-  return(out)
+    dplyr::arrange(pm.uid) %>%
+    dplyr::select(-pm.hasState) -> out
 
 }
 
 # iterate over dictionary items per observations
-pm_extractState <- function(x, dictionary){
+pm_extract_pattern <- function(x, dictionary){
 
   # create pattern vector
   patternVector <- dictionary
