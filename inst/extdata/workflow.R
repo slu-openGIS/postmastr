@@ -27,4 +27,8 @@ pm_has_postal(working_data, scalar = FALSE)
 pm_has_state(working_data)
 pm_has_state(working_data, scalar = FALSE)
 
-pm_parse_state(working_data)
+(working_data <- pm_parse_state(working_data))
+
+city.list <- c("St. Louis","St. Francis")
+
+pm_has_city(working_data, dictionary = city.list)

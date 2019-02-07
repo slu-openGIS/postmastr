@@ -7,7 +7,7 @@
 pm_std_states_us(.data, var, dictionary)
 }
 \arguments{
-\item{.data}{A tbl or data frame}
+\item{.data}{A postmastr object (\code{pm_subset})}
 
 \item{var}{A character variable that may contain city names}
 

@@ -2,8 +2,9 @@
 #'
 #' @description Determine the presence of city names in a string.
 #'
-#' @param .data A tbl or data frame
-#' @param var A character variable that may contain city names
+#' @usage pm_has_city(.data, dictionary)
+#'
+#' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
 #'
@@ -14,43 +15,24 @@
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom purrr map
-#' @importFrom rlang :=
-#' @importFrom rlang enquo
-#' @importFrom rlang quo
-#' @importFrom rlang sym
 #' @importFrom stringr str_c
 #'
 #' @export
-pm_isCity <- function(.data, var, dictionary){
+pm_has_city <- function(.data, var, dictionary){
 
-  # save parameters to list
-  paramList <- as.list(match.call())
+  # check for object and key variables
+  if (pm_has_uid(working_data) == FALSE){
+    stop("Error 2.")
+  }
 
-  # unquote
-  if (!is.character(paramList$var)) {
-    varQ <- rlang::enquo(var)
-  } else if (is.character(paramList$var)) {
-    varQ <- rlang::quo(!! rlang::sym(var))
+  if (pm_has_address(working_data) == FALSE){
+    stop("Error 3.")
   }
 
   # iterate over observations
   .data %>%
-    dplyr::mutate(pm.isCity = purrr::map(!!varQ, ~pm_idCity(.x, dictionary = dictionary))) -> out
-
-  return(out)
-
-}
-
-# iterate over directory items to identify city names
-pm_idCity <- function(x, dictionary){
-
-  # create pattern vector
-  patternVector <- dictionary
-
-  patternVector %>%
-    base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) %>%
-    any() -> out
+    dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dictionary))) %>%
+    dplyr::mutate(pm.hasCity = as.logical(pm.hasCity)) -> out
 
   return(out)
 
@@ -65,8 +47,9 @@ pm_idCity <- function(x, dictionary){
 #'     zip-code follows a name, use \link{pm_parseZip} first to remove those
 #'     data from \code{pm.address}.
 #'
-#' @param .data A tbl or data frame
-#' @param var A character variable that may contain city names
+#' @usage pm_parse_city(.data, dictionary)
+#'
+#' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
 #'
@@ -95,7 +78,7 @@ pm_idCity <- function(x, dictionary){
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_parseCity <- function(.data, var, dictionary){
+pm_parse_city <- function(.data, dictionary){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -124,7 +107,7 @@ pm_parseCity <- function(.data, var, dictionary){
 
   # iterate over observations
   yesCity %>%
-    dplyr::mutate(pm.city = purrr::map(!!varQ, ~ pm_extractCity(.x, dictionary = dictionary))) -> yesCity
+    dplyr::mutate(pm.city = purrr::map(!!varQ, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesCity
 
   # clean address data
   yesCity %>%
@@ -162,20 +145,6 @@ pm_parseCity <- function(.data, var, dictionary){
     dplyr::select(-pm.id, -pm.isCity) -> out
 
   # return output
-  return(out)
-
-}
-
-# iterate over dictionary items per observations
-pm_extractCity <- function(x, dictionary){
-
-  # create pattern vector
-  patternVector <- dictionary
-
-  patternVector %>%
-    base::split(patternVector) %>%
-    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) -> out
-
   return(out)
 
 }

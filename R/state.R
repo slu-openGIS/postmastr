@@ -191,7 +191,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #'
 #' @usage pm_std_states_us(.data, var, dictionary)
 #'
-#' @param .data A tbl or data frame
+#' @param .data A postmastr object (\code{pm_subset})
 #' @param var A character variable that may contain city names
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
