@@ -31,6 +31,9 @@
 #' @export
 pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 
+  # save parameters to list
+  paramList <- as.list(match.call())
+
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
     stop("Error 2.")
@@ -48,16 +51,16 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
   # create directory
   if (locale == "us"){
     if (missing(dictionary) == FALSE){
-      fulLDic <- c(datasets::state.abb, datasets::state.name, directory)
+      fullDic <- c(datasets::state.abb, datasets::state.name, directory)
     } else if (missing(dictionary) == TRUE){
-      fulLDic <- c(datasets::state.abb, datasets::state.name)
+      fullDic <- c(datasets::state.abb, datasets::state.name)
     }
   }
 
   # iterate over observations
   if (locale == "us"){
     .data %>%
-      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = fulLDic))) %>%
+      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = fullDic))) %>%
       dplyr::mutate(pm.hasState = as.logical(pm.hasState)) -> out
   }
 
@@ -67,21 +70,6 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
   }
 
   # return output
-  return(out)
-
-}
-
-# iterate over directory items
-pm_has_pattern <- function(x, dictionary){
-
-  # create pattern vector
-  patternVector <- dictionary
-
-  patternVector %>%
-    base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) %>%
-    any() -> out
-
   return(out)
 
 }
@@ -142,18 +130,25 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 
   # create directory
   if (missing(dictionary) == FALSE){
-    fullDic <- c(datasets::state.abb, datasets::state.name, dictionary)
+    default.dictionary <- c(datasets::state.abb, datasets::state.name, dictionary)
   } else if (missing(dictionary) == TRUE){
-    fullDic <- c(datasets::state.abb, datasets::state.name)
+    default.dictionary <- c(datasets::state.abb, datasets::state.name)
   }
 
   # identify state
-  # need to figure out dictionary passing
+  # issues passing dictionary
   isState <- pm_has_state(.data, scalar = FALSE, locale = locale)
 
   # iterate over observations
   if (locale == "us"){
-    out <- pm_parse_state_us(isState, dictionary = fullDic)
+    out <- pm_parse_state_us(isState, dictionary = default.dictionary)
+  }
+
+  # re-order output
+  if (locale == "us"){
+    if ("pm.zip" %in% names(out) == TRUE){
+      out <- dplyr::select(out, pm.uid, pm.address, pm.state, pm.zip)
+    }
   }
 
   # return output
@@ -173,6 +168,7 @@ pm_parse_state_us <- function(.data, dictionary){
     dplyr::mutate(pm.state = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesState
 
   # clean address data
+  # issues passing dictionary to pm_std_states
   yesState %>%
     tidyr::unnest(pm.state) %>%
     dplyr::filter(is.na(pm.state) == FALSE) %>%
@@ -180,7 +176,7 @@ pm_parse_state_us <- function(.data, dictionary){
     dplyr::mutate(pm.address =
                     stringr::word(pm.address, start = 1,
                                   end = -1-stringr::str_count(pm.state, pattern = "\\w+"))) %>%
-    pm_stdState(var = pm.state, dictionary = dictionary) -> yesState
+    pm_std_states(var = pm.state) -> yesState
 
   # combine with data missing states
   dplyr::bind_rows(yesState, noState) %>%
@@ -189,29 +185,19 @@ pm_parse_state_us <- function(.data, dictionary){
 
 }
 
-# iterate over dictionary items per observations
-pm_extract_pattern <- function(x, dictionary){
-
-  # create pattern vector
-  patternVector <- dictionary
-
-  patternVector %>%
-    base::split(patternVector) %>%
-    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) -> out
-
-  return(out)
-
-}
-
 #' Standardize Parsed State Names
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
+#'
+#' @usage pm_std_states_us(.data, var, dictionary)
 #'
 #' @param .data A tbl or data frame
 #' @param var A character variable that may contain city names
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
 #'     object will be used as the default directory.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with an updated variable that contains the two-letter abbreviation
 #'     for the given U.S. state. This follows USPS addressing standards, which require
@@ -228,7 +214,37 @@ pm_extract_pattern <- function(x, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_stdState <- function(.data, var, dictionary){
+pm_std_states <- function(.data, var, dictionary, locale = "us"){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # standardize state names
+  if (locale == "us"){
+    out <- pm_std_states(.data, var = varQN, dictionary = dictionary)
+  }
+
+  # return output
+  return(out)
+
+}
+
+# standardize us states
+pm_std_states <- function(.data, var, dictionary){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -243,8 +259,8 @@ pm_stdState <- function(.data, var, dictionary){
   varQN <- rlang::quo_name(rlang::enquo(var))
 
   # load state data
-  postmastr::states %>%
-    dplyr::rename(!!varQ := stateName) -> stateData
+    postmastr::states %>%
+      dplyr::rename(!!varQ := stateName) -> stateData
 
   # standardize
   .data %>%
@@ -256,4 +272,3 @@ pm_stdState <- function(.data, var, dictionary){
   return(out)
 
 }
-
