@@ -4,18 +4,24 @@
 \alias{pm_has_city}
 \title{Detect Presence of City Name}
 \usage{
-pm_has_city(.data, dictionary)
+pm_has_city(.data, dictionary, scalar = TRUE)
 }
 \arguments{
 \item{.data}{A postmastr object (\code{pm_subset})}
 
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list for cities.}
+
+\item{scalar}{If \code{TRUE}, a single logical scalar is returned; otherwise if
+\code{FALSE}, a logical vector is returned.}
 }
 \value{
-A tibble with a new logical variable \code{pm.isCity} that is
-    \code{TRUE} if a city name is found in the address and \code{FALSE}
-    otherwise.
+If \code{scalar = TRUE}, a single logical scalar is returned that is
+    \code{TRUE} if the data contains a city name from the given dictionary and
+    \code{FALSE} if they do not. If \code{scalar = FALSE} a tibble with a new
+    logical variable \code{pm.hasCity} that is \code{TRUE} if a city name from
+    the given dictionary is found in the last word of the address and
+    \code{FALSE} otherwise.
 }
 \description{
 Determine the presence of city names in a string.

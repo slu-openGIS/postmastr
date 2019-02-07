@@ -2,15 +2,20 @@
 #'
 #' @description Determine the presence of city names in a string.
 #'
-#' @usage pm_has_city(.data, dictionary)
+#' @usage pm_has_city(.data, dictionary, scalar = TRUE)
 #'
 #' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
+#' @param scalar If \code{TRUE}, a single logical scalar is returned; otherwise if
+#'     \code{FALSE}, a logical vector is returned.
 #'
-#' @return A tibble with a new logical variable \code{pm.isCity} that is
-#'     \code{TRUE} if a city name is found in the address and \code{FALSE}
-#'     otherwise.
+#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
+#'     \code{TRUE} if the data contains a city name from the given dictionary and
+#'     \code{FALSE} if they do not. If \code{scalar = FALSE} a tibble with a new
+#'     logical variable \code{pm.hasCity} that is \code{TRUE} if a city name from
+#'     the given dictionary is found in the last word of the address and
+#'     \code{FALSE} otherwise.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
@@ -18,7 +23,7 @@
 #' @importFrom stringr str_c
 #'
 #' @export
-pm_has_city <- function(.data, var, dictionary){
+pm_has_city <- function(.data, dictionary, scalar = TRUE){
 
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
@@ -34,6 +39,12 @@ pm_has_city <- function(.data, var, dictionary){
     dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dictionary))) %>%
     dplyr::mutate(pm.hasCity = as.logical(pm.hasCity)) -> out
 
+  # return scalar
+  if (scalar == TRUE){
+    out <- any(out$pm.hasCity)
+  }
+
+  # return output
   return(out)
 
 }
@@ -47,11 +58,13 @@ pm_has_city <- function(.data, var, dictionary){
 #'     zip-code follows a name, use \link{pm_parseZip} first to remove those
 #'     data from \code{pm.address}.
 #'
-#' @usage pm_parse_city(.data, dictionary)
+#' @usage pm_parse_city(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object (\code{pm_subset})
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new character variable \code{pm.city} that contains
 #'     the city name. If a city name is not detected in the string, a value
@@ -66,48 +79,23 @@ pm_has_city <- function(.data, var, dictionary){
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom purrr map
-#' @importFrom rlang :=
-#' @importFrom rlang enquo
-#' @importFrom rlang quo
-#' @importFrom rlang sym
-#' @importFrom stringr str_c
 #' @importFrom stringr str_count
-#' @importFrom stringr str_replace
 #' @importFrom stringr word
-#' @importFrom tibble rowid_to_column
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_parse_city <- function(.data, dictionary){
+pm_parse_city <- function(.data, dictionary, locale = "us"){
 
-  # save parameters to list
-  paramList <- as.list(match.call())
-
-  # unquote
-  if (!is.character(paramList$var)) {
-    varQ <- rlang::enquo(var)
-  } else if (is.character(paramList$var)) {
-    varQ <- rlang::quo(!! rlang::sym(var))
-  }
-
-  # create pm.origAddress
-  if ("pm.address" %in% names(.data) == FALSE){
-
-    .data <- dplyr::mutate(.data, pm.address := !!varQ)
-
-  }
-
-  # identify state
-  pm_isCity(.data, "pm.address", dictionary = dictionary) %>%
-    tibble::rowid_to_column(var = "pm.id") -> isCity
+  # identify cities
+  isCity <- pm_has_city(.data, dictionary = dictionary, scalar = FALSE)
 
   # subset
-  yesCity <- dplyr::filter(isCity, pm.isCity == TRUE)
-  noCity <- dplyr::filter(isCity, pm.isCity == FALSE)
+  yesCity <- dplyr::filter(isCity, pm.hasCity == TRUE)
+  noCity <- dplyr::filter(isCity, pm.hasCity == FALSE)
 
   # iterate over observations
   yesCity %>%
-    dplyr::mutate(pm.city = purrr::map(!!varQ, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesCity
+    dplyr::mutate(pm.city = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesCity
 
   # clean address data
   yesCity %>%
@@ -115,34 +103,18 @@ pm_parse_city <- function(.data, dictionary){
     dplyr::filter(is.na(pm.city) == FALSE) %>%
     dplyr::mutate(pm.city = as.character(pm.city)) %>%
     dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 1,
-                           stringr::word(pm.address, start = 1, end = -2),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 2,
-                           stringr::word(pm.address, start = 1, end = -3),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 3,
-                           stringr::word(pm.address, start = 1, end = -4),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 4,
-                           stringr::word(pm.address, start = 1, end = -5),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 5,
-                           stringr::word(pm.address, start = 1, end = -6),
-                           pm.address)) %>%
-    dplyr::mutate(pm.address =
-                    ifelse(stringr::str_count(pm.city, pattern = '\\w+') == 6,
-                           stringr::word(pm.address, start = 1, end = -7),
-                           pm.address)) -> yesCity
+                    stringr::word(pm.address, start = 1,
+                                  end = -1-stringr::str_count(pm.city, pattern = "\\w+"))) -> yesCity
 
   # combine with data missing states
   dplyr::bind_rows(yesCity, noCity) %>%
-    dplyr::arrange(pm.id) %>%
-    dplyr::select(-pm.id, -pm.isCity) -> out
+    dplyr::arrange(pm.uid) %>%
+    dplyr::select(-pm.hasCity) -> out
+
+  # re-order output
+  if (locale == "us"){
+    out <- dplyr::select(out, pm.uid, pm.address, pm.city, dplyr::everything())
+  }
 
   # return output
   return(out)
@@ -171,7 +143,7 @@ pm_parse_city <- function(.data, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_stdCity <- function(.data, var, dictionary){
+pm_std_city <- function(.data, var, dictionary){
 
   # save parameters to list
   paramList <- as.list(match.call())

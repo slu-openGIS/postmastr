@@ -6,7 +6,7 @@ test_data <- data.frame(
                 "4256-4258 MLK Boulevard St. Louis, MO",
                 "181-191 RED FOX Blvd St. Louis, MO",
                 "5768 grand Blvd St. Louis, MO 63111",
-                "245 SECOND St St. Francis, 63110-1234"),
+                "245 SECOND St Clayton, 63110-1234"),
   stringsAsFactors = FALSE
 )
 
@@ -29,6 +29,9 @@ pm_has_state(working_data, scalar = FALSE)
 
 (working_data <- pm_parse_state(working_data))
 
-city.list <- c("St. Louis","St. Francis")
+city.list <- c("St. Louis","Clayton")
 
 pm_has_city(working_data, dictionary = city.list)
+pm_has_city(working_data, dictionary = city.list, scalar = FALSE)
+
+(working_data <- pm_parse_city(working_data, dictionary = city.list))

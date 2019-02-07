@@ -146,9 +146,7 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 
   # re-order output
   if (locale == "us"){
-    if ("pm.zip" %in% names(out) == TRUE){
-      out <- dplyr::select(out, pm.uid, pm.address, pm.state, pm.zip)
-    }
+    out <- dplyr::select(out, pm.uid, pm.address, pm.state, dplyr::everything())
   }
 
   # return output

@@ -4,13 +4,16 @@
 \alias{pm_parse_city}
 \title{Parse City Names}
 \usage{
-pm_parse_city(.data, dictionary)
+pm_parse_city(.data, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object (\code{pm_subset})}
 
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list for cities.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \value{
 A tibble with a new character variable \code{pm.city} that contains
