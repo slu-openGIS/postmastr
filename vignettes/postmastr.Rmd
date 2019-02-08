@@ -26,6 +26,74 @@ This flexibility is provided in two ways. First, we utilize "dictionaries" for a
 ## A Grammar of Street Addresses
 
 ## Creating Dictionaries
+### State Dictionaries
+`postmastr` comes with a built-in dictionary of states and their abbreviations that can be expanded and filterd using `pm_dictionary()` and `pm_append()`. On its own, `pm_dictionary()` will return that built-in dictionary:
+
+```r
+> pm_dictionary(locale = "us", type = "state")
+# A tibble: 124 x 2
+   state.output state.input                                     
+   <chr>        <chr>                                           
+ 1 AA           Armed Forces Americas                           
+ 2 AA           AA                                              
+ 3 AE           Armed Forces Europe, the Middle East, and Canada
+ 4 AE           AE                                              
+ 5 AK           AK                                              
+ 6 AK           Alaska                                          
+ 7 AL           AL                                              
+ 8 AL           Alabama                                         
+ 9 AP           Armed Forces Pacific                            
+10 AP           AP                                              
+# … with 114 more rows
+```
+
+If only a subset of states are included in your data, you can improve `postmastr`'s performance by limiting your state dictionary's contents. The `filter` argument can accept scalar or vector inputs of two-letter state abbreviations. For instance, we could construction a state dictionary that contains only the states along the Gulf of Mexico:
+
+```r
+> pm_dictionary(locale = "us", type = "state", filter = c("AL", "FL", "LA", "MS", "TX"))
+# A tibble: 10 x 2
+   state.output state.input
+   <chr>        <chr>      
+ 1 AL           AL         
+ 2 AL           Alabama    
+ 3 FL           FL         
+ 4 FL           Florida    
+ 5 LA           LA         
+ 6 LA           Louisiana  
+ 7 MS           MS         
+ 8 MS           Mississippi
+ 9 TX           TX         
+10 TX           Texas   
+```
+
+The state dictionary can also be expanded. For instance, there are several common abbreviations for Mississippi - "Miss" and "MISS". We can create an appendix with `pm_append()`:
+
+```r
+> miss <- pm_append(locale = "us", type = "state", input = c("Miss", "MISS"), output = c("MS", "MS"))
+```
+
+Once this has been created, we can combine it with the default state dictionary to create our custom dictionary output:
+
+```r
+> pm_dictionary(locale = "us", type = "state", append = miss, filter = c("AL", "FL", "LA", "MS", "TX"))
+# A tibble: 12 x 2
+   state.output state.input
+   <chr>        <chr>      
+ 1 AL           AL         
+ 2 AL           Alabama    
+ 3 FL           FL         
+ 4 FL           Florida    
+ 5 LA           LA         
+ 6 LA           Louisiana  
+ 7 MS           MS         
+ 8 MS           Mississippi
+ 9 MS           Miss       
+10 MS           MISS       
+11 TX           TX         
+12 TX           Texas 
+```
+
+All of the different inputs for Mississippi will now return the same `MS` output.
 
 ## The postmastr Workflow
 To illustrate the core components of the `postmastr` workflow, we'll use some data on sushi resturants in the St. Louis, Missouri region. These are "long" data - some resturants appear multiple times. Here is a quick preview of the data:
