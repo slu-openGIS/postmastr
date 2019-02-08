@@ -3,5 +3,4 @@
 ^\.github
 ^README\.Rmd$
 ^README-.*\.png$
-^CONDUCT\.md$
 ^LICENSE$
