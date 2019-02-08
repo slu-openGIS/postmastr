@@ -242,7 +242,7 @@ pm_std_states <- function(.data, var, dictionary, locale = "us"){
 
   # standardize state names
   if (locale == "us"){
-    out <- pm_std_states(.data, var = varQN, dictionary = dictionary)
+    out <- pm_std_states_us(.data, var = varQN, dictionary = dictionary)
   }
 
   # return output
@@ -251,7 +251,10 @@ pm_std_states <- function(.data, var, dictionary, locale = "us"){
 }
 
 # standardize us states
-pm_std_states <- function(.data, var, dictionary){
+pm_std_states_us <- function(.data, var, dictionary){
+
+  # create bindings for global variables
+  . = stateName = stateAbb = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
