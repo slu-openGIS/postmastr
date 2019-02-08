@@ -24,7 +24,6 @@
 #' str(sushi1)
 #' head(sushi1)
 #'
-#' @export
 "sushi1"
 
 #' Sushi Resturants in the Ciy of St. Louis
@@ -52,5 +51,4 @@
 #' str(sushi2)
 #' head(sushi2)
 #'
-#' @export
 "sushi2"
