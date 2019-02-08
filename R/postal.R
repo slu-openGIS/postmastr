@@ -28,6 +28,9 @@
 #' @export
 pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
 
+  # create bindings for global variables
+  working_data = NULL
+
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
     stop("Error.")
@@ -59,6 +62,9 @@ pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
 
 # identify american zip codes
 pm_has_zip_us <- function(.data){
+
+  # create bindings for global variables
+  pm.address = pm.last = NULL
 
   # detect pattern
   .data %>%
@@ -93,6 +99,9 @@ pm_has_zip_us <- function(.data){
 #' @export
 pm_parse_postal <- function(.data, locale = "us"){
 
+  # create bindings for global variables
+  working_data = NULL
+
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
     stop("Error.")
@@ -122,6 +131,9 @@ pm_parse_postal <- function(.data, locale = "us"){
 
 # parse American zip codes
 pm_parse_zip_us <- function(.data){
+
+  # create bindings for global variables
+  pm.address = pm.hasZip = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
