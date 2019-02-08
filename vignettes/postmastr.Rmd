@@ -33,22 +33,22 @@ To illustrate the core components of the `postmastr` workflow, we'll use some da
 ```r
 > sushi1
 # A tibble: 30 x 3
-   name                            address                                      visit   
-   <chr>                           <chr>                                        <chr>   
- 1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103     3/20/18 
- 2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112        10/26/18
- 3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118  10/10/18
- 4 Drunken Fish - Ballpark Village 601 Clark Ave #104, St. Louis, MO 63102      4/28/18 
- 5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102 5/10/18 
- 6 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102 8/7/18  
- 7 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108        12/2/18 
- 8 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132   1/1/18  
- 9 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108        2/13/18 
-10 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108    3/4/18  
+   name                            address                                           visit   
+   <chr>                           <chr>                                             <chr>   
+ 1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103          3/20/18 
+ 2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112             10/26/18
+ 3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118       10/10/18
+ 4 Drunken Fish - Ballpark Village 601 Clark Ave #104, St. Louis, MO 63102-1719      4/28/18 
+ 5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102-1719 5/10/18 
+ 6 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102-1719 8/7/18  
+ 7 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108             12/2/18 
+ 8 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132        1/1/18  
+ 9 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108             2/13/18 
+10 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108         3/4/18  
 # … with 20 more rows
 ```
 
-Some problems should already be apparent. For instance, Cafe Mouchi uses the full word for "Boulevard" while the entry for Blue Ocean uses the proper abbreviation "Blvd". For Drunken Fish, the suite number is listed both using the pound sign ("#") as well as with the word "Suite". Finally, some of the entries including for BaiKu and I Love Mr Sushi use the full name for "Missouri" while the rest use the proper two-letter abbreviation "MO".
+Some problems should already be apparent. For instance, Cafe Mouchi uses the full word for "Boulevard" while the entry for Blue Ocean uses the proper abbreviation "Blvd". For Drunken Fish, the suite number is listed both using the pound sign ("#") as well as with the word "Suite". Finally, some of the entries including for BaiKu and I Love Mr Sushi use the full name for "Missouri" while the rest use the proper two-letter abbreviation "MO". Finally, the Drunk Fish - Ballpark Village uses the "zip+4" format as opposed to the remainder of the addresses visible, which contain only the five digit zip-code.
 
 Some of the other entries have additional issues. For example, Sushi Koi has its address fully capitalized:
 
@@ -73,18 +73,18 @@ There are two initial prepretory steps that *must* be taken with these data. Fir
 > sushi1 <- pm_identify(sushi1, var = "address")
 > sushi1
 # A tibble: 30 x 5
-   pm.id pm.uid name                            address                                      visit   
-   <int>  <int> <chr>                           <chr>                                        <chr>   
- 1     1      1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103     3/20/18 
- 2     2      2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112        10/26/18
- 3     3      3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118  10/10/18
- 4     4      4 Drunken Fish - Ballpark Village 601 Clark Ave #104, St. Louis, MO 63102      4/28/18 
- 5     5      5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102 5/10/18 
- 6     6      5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102 8/7/18  
- 7     7      6 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108        12/2/18 
- 8     8      7 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132   1/1/18  
- 9     9      8 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108        2/13/18 
-10    10      9 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108    3/4/18  
+   pm.id pm.uid name                            address                                           visit   
+   <int>  <int> <chr>                           <chr>                                             <chr>   
+ 1     1      1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103          3/20/18 
+ 2     2      2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112             10/26/18
+ 3     3      3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118       10/10/18
+ 4     4      4 Drunken Fish - Ballpark Village 601 Clark Ave #104, St. Louis, MO 63102-1719      4/28/18 
+ 5     5      5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102-1719 5/10/18 
+ 6     6      5 Drunken Fish - Ballpark Village 601 Clark Ave Suite 104, St. Louis, MO 63102-1719 8/7/18  
+ 7     7      6 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108             12/2/18 
+ 8     8      7 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132        1/1/18  
+ 9     9      8 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108             2/13/18 
+10    10      9 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108         3/4/18  
 # … with 20 more rows
 ```
 
@@ -94,18 +94,18 @@ Notice that the Drunken Fish has three different unique identifers applied for `
 > sushi1_min <- pm_prep(sushi1, var = "address")
 > sushi1_min
 # A tibble: 24 x 2
-   pm.uid pm.address                                 
-    <int> <chr>                                      
- 1      1 3407 Olive St St. Louis, Missouri 63103    
- 2      2 6335 Delmar Blvd St. Louis, MO 63112       
- 3      3 3221 S Grand Boulevard St. Louis, MO 63118 
- 4      4 601 Clark Ave #104 St. Louis, MO 63102     
- 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102
- 6      6 1 Maryland Plaza St. Louis, MO 63108       
- 7      7 9443 Olive Blvd St. Louis, Missouri 63132  
- 8      8 4949 W Pine Blvd St. Louis, MO 63108       
- 9      9 3674 Forest Park Ave St. Louis, MO 63108   
-10     10 1013 Washington Avenue St. Louis, MO 63101 
+   pm.uid pm.address                                      
+    <int> <chr>                                           
+ 1      1 3407 Olive St St. Louis, Missouri 63103         
+ 2      2 6335 Delmar Blvd St. Louis, MO 63112            
+ 3      3 3221 S Grand Boulevard St. Louis, MO 63118      
+ 4      4 601 Clark Ave #104 St. Louis, MO 63102-1719     
+ 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102-1719
+ 6      6 1 Maryland Plaza St. Louis, MO 63108            
+ 7      7 9443 Olive Blvd St. Louis, Missouri 63132       
+ 8      8 4949 W Pine Blvd St. Louis, MO 63108            
+ 9      9 3674 Forest Park Ave St. Louis, MO 63108        
+10     10 1013 Washington Avenue St. Louis, MO 63101      
 # … with 14 more rows
 ```
 
