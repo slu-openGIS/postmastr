@@ -7,7 +7,8 @@
 #'    others entered in full (i.e. "Street"), and an example of two ways in which
 #'    unit numbers may appear. State names are given both in full and using the
 #'    standard two-letter abbreviation, and city names as well as postal codes
-#'    are included.
+#'    are included. Postal codes are given in both the standard five digit
+#'    form as well as the elongated "zip+4" format.
 #'
 #' @docType data
 #'
