@@ -35,6 +35,9 @@
 #' @export
 pm_identify <- function(.data, var){
 
+  # create bindings for global variables
+  . = pm.id = pm.uid = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 
@@ -99,6 +102,9 @@ pm_identify <- function(.data, var){
 #' @importFrom stringr str_replace
 #'
 pm_prep <- function(.data, var){
+
+  # create bindings for global variables
+  pm.address = pm.uid = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())

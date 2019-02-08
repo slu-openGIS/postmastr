@@ -25,6 +25,9 @@
 #' @export
 pm_has_city <- function(.data, dictionary, scalar = TRUE){
 
+  # create bindings for global variables
+  working_data = pm.address = pm.hasCity = NULL
+
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
     stop("Error 2.")
@@ -86,6 +89,9 @@ pm_has_city <- function(.data, dictionary, scalar = TRUE){
 #' @export
 pm_parse_city <- function(.data, dictionary, locale = "us"){
 
+  # create bindings for global variables
+  pm.uid = pm.city = pm.address = pm.hasCity = NULL
+
   # identify cities
   isCity <- pm_has_city(.data, dictionary = dictionary, scalar = FALSE)
 
@@ -144,6 +150,9 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 #'
 #' @export
 pm_std_city <- function(.data, var, dictionary){
+
+  # create bindings for global variables
+  . = cityGiven = cityCorrect = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
