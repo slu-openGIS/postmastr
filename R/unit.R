@@ -30,6 +30,9 @@
 #' @export
 pm_has_unit <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 
+  # create bindings for global variables
+  pm.address = pm.hasUnit = working_data = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 
