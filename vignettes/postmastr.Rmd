@@ -162,7 +162,7 @@ In a typical scenario, `pm_has_postal()` with the `scalar = FALSE` argument shou
 # … with 14 more rows
 ```
 
-Had no carrier routes been present, these data would have been returned with only the `pm.zip` column.
+Had no carrier routes been present, these data would have been returned with only the `pm.zip` column. Note that `pm_parse_postal()` also updates the `pm.address` column and removes any postal codes that have been identified. This facilitates additional parsing in subsequent steps.
 
 ### States
 
