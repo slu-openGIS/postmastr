@@ -133,7 +133,7 @@ pm_prep <- function(.data, var){
   .data %>%
     dplyr::distinct(pm.uid, .keep_all = TRUE) %>%
     dplyr::mutate(pm.address := !!varQ) %>%
-    dplyr::mutate(pm.address = stringr::str_replace(pm.address, ",", "")) %>%
+    dplyr::mutate(pm.address = stringr::str_replace_all(pm.address, pattern = ",", replace = "")) %>%
     dplyr::select(pm.uid, pm.address) -> out
 
   # return output

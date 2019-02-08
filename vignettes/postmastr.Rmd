@@ -162,18 +162,18 @@ Notice that the Drunken Fish has three different unique identifers applied for `
 > sushi1_min <- pm_prep(sushi1, var = "address")
 > sushi1_min
 # A tibble: 24 x 2
-   pm.uid pm.address                                      
-    <int> <chr>                                           
- 1      1 3407 Olive St St. Louis, Missouri 63103         
- 2      2 6335 Delmar Blvd St. Louis, MO 63112            
- 3      3 3221 S Grand Boulevard St. Louis, MO 63118      
- 4      4 601 Clark Ave #104 St. Louis, MO 63102-1719     
- 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102-1719
- 6      6 1 Maryland Plaza St. Louis, MO 63108            
- 7      7 9443 Olive Blvd St. Louis, Missouri 63132       
- 8      8 4949 W Pine Blvd St. Louis, MO 63108            
- 9      9 3674 Forest Park Ave St. Louis, MO 63108        
-10     10 1013 Washington Avenue St. Louis, MO 63101      
+   pm.uid pm.address                                     
+    <int> <chr>                                          
+ 1      1 3407 Olive St St. Louis Missouri 63103         
+ 2      2 6335 Delmar Blvd St. Louis MO 63112            
+ 3      3 3221 S Grand Boulevard St. Louis MO 63118      
+ 4      4 601 Clark Ave #104 St. Louis MO 63102-1719     
+ 5      5 601 Clark Ave Suite 104 St. Louis MO 63102-1719
+ 6      6 1 Maryland Plaza St. Louis MO 63108            
+ 7      7 9443 Olive Blvd St. Louis Missouri 63132       
+ 8      8 4949 W Pine Blvd St. Louis MO 63108            
+ 9      9 3674 Forest Park Ave St. Louis MO 63108        
+10     10 1013 Washington Avenue St. Louis MO 63101      
 # … with 14 more rows
 ```
 
@@ -194,18 +194,18 @@ We can see which observations have postal codes using the `scalar = FALSE` argum
 ```r
 > pm_has_postal(sushi1_min, scalar = FALSE)
 # A tibble: 24 x 3
-   pm.uid pm.address                                       pm.hasZip
-    <int> <chr>                                            <lgl>    
- 1      1 3407 Olive St St. Louis, Missouri 63103          TRUE     
- 2      2 6335 Delmar Blvd St. Louis, MO 63112             TRUE     
- 3      3 3221 S Grand Boulevard St. Louis, MO 63118       TRUE     
- 4      4 601 Clark Ave #104 St. Louis, MO 63102-1719      TRUE     
- 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102-1719 TRUE     
- 6      6 1 Maryland Plaza St. Louis, MO 63108             TRUE     
- 7      7 9443 Olive Blvd St. Louis, Missouri 63132        TRUE     
- 8      8 4949 W Pine Blvd St. Louis, MO 63108             TRUE     
- 9      9 3674 Forest Park Ave St. Louis, MO 63108         TRUE     
-10     10 1013 Washington Avenue St. Louis, MO 63101       TRUE     
+   pm.uid pm.address                                      pm.hasZip
+    <int> <chr>                                           <lgl>    
+ 1      1 3407 Olive St St. Louis Missouri 63103          TRUE     
+ 2      2 6335 Delmar Blvd St. Louis MO 63112             TRUE     
+ 3      3 3221 S Grand Boulevard St. Louis MO 63118       TRUE     
+ 4      4 601 Clark Ave #104 St. Louis MO 63102-1719      TRUE     
+ 5      5 601 Clark Ave Suite 104 St. Louis MO 63102-1719 TRUE     
+ 6      6 1 Maryland Plaza St. Louis MO 63108             TRUE     
+ 7      7 9443 Olive Blvd St. Louis Missouri 63132        TRUE     
+ 8      8 4949 W Pine Blvd St. Louis MO 63108             TRUE     
+ 9      9 3674 Forest Park Ave St. Louis MO 63108         TRUE     
+10     10 1013 Washington Avenue St. Louis MO 63101       TRUE     
 # … with 14 more rows
 ```
 
@@ -215,27 +215,67 @@ In a typical scenario, `pm_has_postal()` with the `scalar = FALSE` argument shou
 > sushi1_min <- pm_parse_postal(sushi1_min)
 > sushi1_min
 # A tibble: 24 x 4
-   pm.uid pm.address                            pm.zip pm.zip4
-    <int> <chr>                                 <chr>  <chr>  
- 1      1 3407 Olive St St. Louis, Missouri     63103  NA     
- 2      2 6335 Delmar Blvd St. Louis, MO        63112  NA     
- 3      3 3221 S Grand Boulevard St. Louis, MO  63118  NA     
- 4      4 601 Clark Ave #104 St. Louis, MO      63102  1719   
- 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102  1719   
- 6      6 1 Maryland Plaza St. Louis, MO        63108  NA     
- 7      7 9443 Olive Blvd St. Louis, Missouri   63132  NA     
- 8      8 4949 W Pine Blvd St. Louis, MO        63108  NA     
- 9      9 3674 Forest Park Ave St. Louis, MO    63108  NA     
-10     10 1013 Washington Avenue St. Louis, MO  63101  NA     
+   pm.uid pm.address                           pm.zip pm.zip4
+    <int> <chr>                                <chr>  <chr>  
+ 1      1 3407 Olive St St. Louis Missouri     63103  NA     
+ 2      2 6335 Delmar Blvd St. Louis MO        63112  NA     
+ 3      3 3221 S Grand Boulevard St. Louis MO  63118  NA     
+ 4      4 601 Clark Ave #104 St. Louis MO      63102  1719   
+ 5      5 601 Clark Ave Suite 104 St. Louis MO 63102  1719   
+ 6      6 1 Maryland Plaza St. Louis MO        63108  NA     
+ 7      7 9443 Olive Blvd St. Louis Missouri   63132  NA     
+ 8      8 4949 W Pine Blvd St. Louis MO        63108  NA     
+ 9      9 3674 Forest Park Ave St. Louis MO    63108  NA     
+10     10 1013 Washington Avenue St. Louis MO  63101  NA     
 # … with 14 more rows
 ```
 
 Had no carrier routes been present, these data would have been returned with only the `pm.zip` column. Note that `pm_parse_postal()` also updates the `pm.address` column and removes any postal codes that have been identified. This facilitates additional parsing in subsequent steps.
 
 ### States
+To parse the cities out of `pm.address`, we'll start by creating a state-level dictionary object that contains only references to Missouri since we don't have data outside of that state:
 
+```r
+> moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO")
+> moDict
+# A tibble: 4 x 2
+  state.output state.input
+  <chr>        <chr>      
+1 MO           MO         
+2 MO           Missouri   
+3 MO           MISSOURI   
+4 MO           missouri
+```
 
+With our dictionary created in the object `moDict`, we can use that to test whether state names or abbreviations are found at the end of our address string with `pm_has_state()`:
 
+```r
+> pm_has_state(sushi1_min, dictionary = moDict)
+[1] TRUE
+```
+
+We could also explore these matches further to make sure that misspellings did not prevent `pm_has_state()` from identifying states by using the `scalar = FALSE` argument. We'll skip this step for now and attempt to parse the data using `pm_parse_state()`:
+
+```r
+> sushi1_min <- pm_parse_state(sushi1_min, dictionary = moDict)
+> sushi1_min
+# A tibble: 24 x 5
+   pm.uid pm.address                        pm.state pm.zip pm.zip4
+    <int> <chr>                             <chr>    <chr>  <chr>  
+ 1      1 3407 Olive St St. Louis           MO       63103  NA     
+ 2      2 6335 Delmar Blvd St. Louis        MO       63112  NA     
+ 3      3 3221 S Grand Boulevard St. Louis  MO       63118  NA     
+ 4      4 601 Clark Ave #104 St. Louis      MO       63102  1719   
+ 5      5 601 Clark Ave Suite 104 St. Louis MO       63102  1719   
+ 6      6 1 Maryland Plaza St. Louis        MO       63108  NA     
+ 7      7 9443 Olive Blvd St. Louis         MO       63132  NA     
+ 8      8 4949 W Pine Blvd St. Louis        MO       63108  NA     
+ 9      9 3674 Forest Park Ave St. Louis    MO       63108  NA     
+10     10 1013 Washington Avenue St. Louis  MO       63101  NA     
+# … with 14 more rows
+```
+
+If we inspect this object, we'll see that `pm.state` contains the state abbreviation for Missouri in all cases.
 
 ### Cities
 
