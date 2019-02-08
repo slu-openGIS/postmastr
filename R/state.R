@@ -32,17 +32,17 @@
 pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.hasState = working_data = NULL
+  pm.address = pm.hasState = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
 
   # check for object and key variables
-  if (pm_has_uid(working_data) == FALSE){
+  if (pm_has_uid(.data) == FALSE){
     stop("Error 2.")
   }
 
-  if (pm_has_address(working_data) == FALSE){
+  if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
   }
 
@@ -51,19 +51,15 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # create directory
+  # minimize dictionary
   if (locale == "us"){
-    if (missing(dictionary) == FALSE){
-      fullDic <- c(datasets::state.abb, datasets::state.name, dictionary)
-    } else if (missing(dictionary) == TRUE){
-      fullDic <- c(datasets::state.abb, datasets::state.name)
-    }
+    dict <- dictionary$state.input
   }
 
   # iterate over observations
   if (locale == "us"){
     .data %>%
-      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = fullDic))) %>%
+      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dict))) %>%
       dplyr::mutate(pm.hasState = as.logical(pm.hasState)) -> out
   }
 
@@ -118,14 +114,14 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 pm_parse_state <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.state = pm.uid = working_data = NULL
+  pm.address = pm.state = pm.uid = NULL
 
   # check for object and key variables
-  if (pm_has_uid(working_data) == FALSE){
+  if (pm_has_uid(.data) == FALSE){
     stop("Error 2.")
   }
 
-  if (pm_has_address(working_data) == FALSE){
+  if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
   }
 
@@ -134,20 +130,13 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # create directory
-  if (missing(dictionary) == FALSE){
-    default.dictionary <- c(datasets::state.abb, datasets::state.name, dictionary)
-  } else if (missing(dictionary) == TRUE){
-    default.dictionary <- c(datasets::state.abb, datasets::state.name)
-  }
-
   # identify state
   # issues passing dictionary
-  isState <- pm_has_state(.data, scalar = FALSE, locale = locale)
+  isState <- pm_has_state(.data, dictionary = dictionary, scalar = FALSE, locale = locale)
 
   # iterate over observations
   if (locale == "us"){
-    out <- pm_parse_state_us(isState, dictionary = default.dictionary)
+    out <- pm_parse_state_us(isState, dictionary = dictionary)
   }
 
   # re-order output
@@ -163,6 +152,9 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 # parse American states
 pm_parse_state_us <- function(.data, dictionary){
 
+  # minimize dictionary
+  dict <- dictionary$state.input
+
   # create bindings for global variables
   pm.address = pm.state = pm.uid = pm.hasState = NULL
 
@@ -172,7 +164,7 @@ pm_parse_state_us <- function(.data, dictionary){
 
   # iterate over observations
   yesState %>%
-    dplyr::mutate(pm.state = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesState
+    dplyr::mutate(pm.state = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dict))) -> yesState
 
   # clean address data
   # issues passing dictionary to pm_std_states
@@ -183,7 +175,7 @@ pm_parse_state_us <- function(.data, dictionary){
     dplyr::mutate(pm.address =
                     stringr::word(pm.address, start = 1,
                                   end = -1-stringr::str_count(pm.state, pattern = "\\w+"))) %>%
-    pm_std_states(var = pm.state) -> yesState
+    pm_std_states(var = pm.state, dictionary = dictionary) -> yesState
 
   # combine with data missing states
   dplyr::bind_rows(yesState, noState) %>%
@@ -196,7 +188,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
 #'
-#' @usage pm_std_states_us(.data, var, dictionary)
+#' @usage pm_std_states_us(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object (\code{pm_subset})
 #' @param var A character variable that may contain city names
@@ -242,7 +234,7 @@ pm_std_states <- function(.data, var, dictionary, locale = "us"){
 
   # standardize state names
   if (locale == "us"){
-    out <- pm_std_states_us(.data, var = varQN, dictionary = dictionary)
+    out <- pm_std_states_us(.data, var = !!varQ, dictionary = dictionary)
   }
 
   # return output
@@ -254,7 +246,7 @@ pm_std_states <- function(.data, var, dictionary, locale = "us"){
 pm_std_states_us <- function(.data, var, dictionary){
 
   # create bindings for global variables
-  . = stateName = stateAbb = NULL
+  . = state.input = state.output = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -268,15 +260,14 @@ pm_std_states_us <- function(.data, var, dictionary){
 
   varQN <- rlang::quo_name(rlang::enquo(var))
 
-  # load state data
-    postmastr::states %>%
-      dplyr::rename(!!varQ := stateName) -> stateData
+  dictionary %>%
+    dplyr::rename(!!varQ := state.input) -> dictionary
 
   # standardize
   .data %>%
-    dplyr::left_join(., stateData, by = varQN) %>%
-    dplyr::mutate(!!varQ := ifelse(is.na(stateAbb) == FALSE, stateAbb, !!varQ)) %>%
-    dplyr::select(-stateAbb) -> out
+    dplyr::left_join(., dictionary, by = varQN) %>%
+    dplyr::mutate(!!varQ := ifelse(is.na(state.output) == FALSE, state.output, !!varQ)) %>%
+    dplyr::select(-state.output) -> out
 
   # return output
   return(out)
