@@ -15,7 +15,9 @@ current option is "us" but this is included to facilitate future expansion.}
 \value{
 A tibble with a new column \code{pm.zip} that contains the zip-code.
     If a postal code is not detected in the string, a value of \code{NA} will be
-    returned.
+    returned. If the "zip+4" formatting is detected in the string, a second column
+    named \code{pm.zip4} will be returned with the carrier route parsed out of the
+    five-digit postal code.
 }
 \description{
 Create a new column containing postal code data.

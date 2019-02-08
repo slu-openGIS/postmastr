@@ -112,6 +112,57 @@ Notice that the Drunken Fish has three different unique identifers applied for `
 Notice that all extraneous information has been removed, and that there are now only 24 rows instead of the original 30.
 
 ### Postal Codes
+All of the major grammatical elements of addresses have corresponding `has` and `parse` functions. The `has` functions return either a logical scalar if that grammatical element is found anywhere in the `postmastr` object *or*, with the `scalar = FALSE` argument, a logical vector identifying specific observations that contain that grammatical element.
+
+For postal codes ("zip-codes" in the United States), the `has` function is `pm_has_postal()`. With the `sushi1_min` data, it will return `TRUE` because postal codes are present in the data:
+
+```r
+> pm_has_postal(sushi1_min)
+[1] TRUE
+```
+
+We can see which observations have postal codes using the `scalar = FALSE` argument. This is particularly useful for more complex data situations where postal codes are misformatted and deeper cleaning before parsing is necessary. In this case, every observation has a valid postal code and so `pm.hasZip` contains all `TRUE` values:
+
+```r
+> pm_has_postal(sushi1_min, scalar = FALSE)
+# A tibble: 24 x 3
+   pm.uid pm.address                                       pm.hasZip
+    <int> <chr>                                            <lgl>    
+ 1      1 3407 Olive St St. Louis, Missouri 63103          TRUE     
+ 2      2 6335 Delmar Blvd St. Louis, MO 63112             TRUE     
+ 3      3 3221 S Grand Boulevard St. Louis, MO 63118       TRUE     
+ 4      4 601 Clark Ave #104 St. Louis, MO 63102-1719      TRUE     
+ 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102-1719 TRUE     
+ 6      6 1 Maryland Plaza St. Louis, MO 63108             TRUE     
+ 7      7 9443 Olive Blvd St. Louis, Missouri 63132        TRUE     
+ 8      8 4949 W Pine Blvd St. Louis, MO 63108             TRUE     
+ 9      9 3674 Forest Park Ave St. Louis, MO 63108         TRUE     
+10     10 1013 Washington Avenue St. Louis, MO 63101       TRUE     
+# … with 14 more rows
+```
+
+In a typical scenario, `pm_has_postal()` with the `scalar = FALSE` argument should be sufficent to prompt you to parse those postal codes. If `pm_parse_postal()` detects the presence of carrier routes (the four-digit additions to the typical five-digit zip-codes), it will parse those as well so that two postal code columns (`pm.zip` and `pm.zip4`) are returned:
+
+```r
+> sushi1_min <- pm_parse_postal(sushi1_min)
+> sushi1_min
+# A tibble: 24 x 4
+   pm.uid pm.address                            pm.zip pm.zip4
+    <int> <chr>                                 <chr>  <chr>  
+ 1      1 3407 Olive St St. Louis, Missouri     63103  NA     
+ 2      2 6335 Delmar Blvd St. Louis, MO        63112  NA     
+ 3      3 3221 S Grand Boulevard St. Louis, MO  63118  NA     
+ 4      4 601 Clark Ave #104 St. Louis, MO      63102  1719   
+ 5      5 601 Clark Ave Suite 104 St. Louis, MO 63102  1719   
+ 6      6 1 Maryland Plaza St. Louis, MO        63108  NA     
+ 7      7 9443 Olive Blvd St. Louis, Missouri   63132  NA     
+ 8      8 4949 W Pine Blvd St. Louis, MO        63108  NA     
+ 9      9 3674 Forest Park Ave St. Louis, MO    63108  NA     
+10     10 1013 Washington Avenue St. Louis, MO  63101  NA     
+# … with 14 more rows
+```
+
+Had no carrier routes been present, these data would have been returned with only the `pm.zip` column.
 
 ### States
 

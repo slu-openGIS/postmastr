@@ -28,15 +28,12 @@
 #' @export
 pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
 
-  # create bindings for global variables
-  working_data = NULL
-
   # check for object and key variables
-  if (pm_has_uid(working_data) == FALSE){
+  if (pm_has_uid(.data) == FALSE){
     stop("Error.")
   }
 
-  if (pm_has_address(working_data) == FALSE){
+  if (pm_has_address(.data) == FALSE){
     stop("Error.")
   }
 
@@ -89,7 +86,9 @@ pm_has_zip_us <- function(.data){
 #'
 #' @return A tibble with a new column \code{pm.zip} that contains the zip-code.
 #'     If a postal code is not detected in the string, a value of \code{NA} will be
-#'     returned.
+#'     returned. If the "zip+4" formatting is detected in the string, a second column
+#'     named \code{pm.zip4} will be returned with the carrier route parsed out of the
+#'     five-digit postal code.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
@@ -99,15 +98,12 @@ pm_has_zip_us <- function(.data){
 #' @export
 pm_parse_postal <- function(.data, locale = "us"){
 
-  # create bindings for global variables
-  working_data = NULL
-
   # check for object and key variables
-  if (pm_has_uid(working_data) == FALSE){
+  if (pm_has_uid(.data) == FALSE){
     stop("Error.")
   }
 
-  if (pm_has_address(working_data) == FALSE){
+  if (pm_has_address(.data) == FALSE){
     stop("Error.")
   }
 
@@ -148,6 +144,39 @@ pm_parse_zip_us <- function(.data){
                     ifelse(pm.hasZip == TRUE,
                            stringr::word(pm.address, start = 1, end = -2),
                            pm.address)) %>%
-    dplyr::select(-pm.hasZip) -> out
+    dplyr::select(-pm.hasZip) -> .data
+
+  # look for presence of zip+4
+  .data <- pm_has_zip4_us(.data)
+
+  # parse zip+4 if necessary
+  if (any(.data$pm.hasZip4) == TRUE){
+
+    .data %>%
+      pm_parse_zip4_us() %>%
+      dplyr::select(-pm.hasZip4) -> .data
+
+  } else if (any(.data$pm.hasZip4) == FALSE){
+
+    .data <- dplyr::select(.data, -pm.hasZip4)
+
+  }
+
+}
+
+# check for zip+4
+pm_has_zip4_us <- function(.data){
+
+  .data %>%
+    dplyr::mutate(pm.hasZip4 = ifelse(stringr::str_detect(pm.zip, pattern = "-") == TRUE, TRUE, FALSE)) -> out
+
+}
+
+# parse zip+4
+pm_parse_zip4_us <- function(.data){
+
+  .data %>%
+    dplyr::mutate(pm.zip4 = ifelse(pm.hasZip4 == TRUE, stringr::word(pm.zip, 2, sep = "-"), NA)) %>%
+    dplyr::mutate(pm.zip = ifelse(pm.hasZip4 == TRUE, stringr::word(pm.zip, 1, sep = "-"), pm.zip)) -> out
 
 }
