@@ -31,6 +31,9 @@
 #' @export
 pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 
+  # create bindings for global variables
+  pm.address = pm.hasState = working_data = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 
@@ -51,7 +54,7 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
   # create directory
   if (locale == "us"){
     if (missing(dictionary) == FALSE){
-      fullDic <- c(datasets::state.abb, datasets::state.name, directory)
+      fullDic <- c(datasets::state.abb, datasets::state.name, dictionary)
     } else if (missing(dictionary) == TRUE){
       fullDic <- c(datasets::state.abb, datasets::state.name)
     }
@@ -114,6 +117,9 @@ pm_has_state <- function(.data, dictionary, scalar = TRUE, locale = "us"){
 #' @export
 pm_parse_state <- function(.data, dictionary, locale = "us"){
 
+  # create bindings for global variables
+  pm.address = pm.state = pm.uid = working_data = NULL
+
   # check for object and key variables
   if (pm_has_uid(working_data) == FALSE){
     stop("Error 2.")
@@ -156,6 +162,9 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 
 # parse American states
 pm_parse_state_us <- function(.data, dictionary){
+
+  # create bindings for global variables
+  pm.address = pm.state = pm.uid = pm.hasState = NULL
 
   # subset
   yesState <- dplyr::filter(.data, pm.hasState == TRUE)
