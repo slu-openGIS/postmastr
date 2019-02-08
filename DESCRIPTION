@@ -3,22 +3,31 @@ Type: Package
 Title: Tidy Tools for Standardizing and Parsing Street Addresses
 Version: 0.1.0.9000
 Authors@R: c(
-    person("Christopher", "Prener", , "chris.prener@slu.edu", c("aut", "cre"))
+    person("Christopher", "Prener", ,"chris.prener@slu.edu", c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-4310-9888")),
+    person("Bayard", "Rucker", ,"bayardrucker0@gmail.com", c("ctb"))
     )
 Description: The goal of postmastr is to provide consistent, tidy parsing of street address data. 
     The package is primarily oriented towards American-style street addresses, e.g. "123 East Main Street". 
     It contains functions for both standardizing address elements (e.g. converting street names like 
     "Second" to "2nd" or converting "AV" to "Ave") and for parsing out intput strings into separate 
-    variables for each input element. Functionality is also provided to re-build parsed street addresses
+    variables for each input element. This includes support for parsing cities, states, and postal codes
+    out of address strings as well. Functionality is also provided to re-build parsed street addresses
     into a single string.
+Depends: R (>= 3.3)
 License: GPL-3
+URL: https://github.com/slu-openGIS/postmastr
+BugReports: https://github.com/slu-openGIS/postmastr/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
     dplyr,
+    purrr,
     rlang,
     stringr,
+    tibble,
+    tidyr,
     toOrdinal,
     tm
 Suggests: testthat
