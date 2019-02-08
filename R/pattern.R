@@ -1,12 +1,14 @@
 # iterate over directory items
-pm_has_pattern <- function(x, dictionary){
+pm_has_pattern <- function(x, dictionary, end = TRUE){
 
   # create pattern vector
   patternVector <- dictionary
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map_lgl( ~ stringr::str_detect(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) %>%
+    purrr::map_lgl( ~ stringr::str_detect(x, pattern = ifelse(end == TRUE,
+                                                              stringr::str_c("\\b", .x, "\\b$"),
+                                                              stringr::str_c("\\b", .x, "\\b")))) %>%
     any() -> out
 
   return(out)
