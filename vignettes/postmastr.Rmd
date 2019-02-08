@@ -1,0 +1,49 @@
+---
+title: "Address Parsing in `R`"
+author: "Christopher Prener, Ph.D."
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`postmastr` is designed to be an *opinionated* toolkit for parsing street addresses using `R`. It was originally created to standardize addresses prior to geocoding the, in an effor to increase the geocoder's ability to correctly match a given address with the appropriate coordinates.
+
+## Motivation
+Street addresses can be notoriously difficult to work with. In the United States, the U.S. Postal Service has [standards for their composition](https://pe.usps.com/text/pub28/welcome.htm). There is so much variety, however, that anticipating all of the possible permutations of addresses is a significant task. When the inaccuracy of human data entry is added, the challenge of parsing addresses becomes monumental. The goal of `postmastr` is to provide a uniform workflow for parsing street address data that allows for sufficient flexibility. 
+
+This flexibility is provided in two ways. First, we utilize "dictionaries" for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables `postmastr` to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped. 
+
+## A Grammar of Street Addresses
+
+## Creating Dictionaries
+
+## The postmastr Workflow
+
+### Postal Codes
+
+### States
+
+### Cities
+
+### Units
+
+### House Numbers
+
+### Street Prefix and Suffix Data
+
+### Street Names
+
+## Getting Help
+* If you are new to `R` itself, welcome! Hadley Wickham's [*R for Data Science*](http://r4ds.had.co.nz) is an excellent way to get started with data manipulation in the tidyverse, which `stlcsb` is designed to integrate seamlessly with.
+* If you have questions about using `postmastr`, you are encouraged to use the [RStudio Community forums](https://community.rstudio.com). Please create a [`reprex`](http://reprex.tidyverse.org/) before posting. Feel free to tag Chris (`@chris.prener`) in any posts about `postmastr`.
+* If you think you've found a bug, please create a [`reprex`](http://reprex.tidyverse.org/) and then open an issue on [GitHub](https://github.com/slu-openGIS/stlcsb/issues/new/choose).
