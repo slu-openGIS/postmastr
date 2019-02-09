@@ -55,7 +55,24 @@ pm_has_city <- function(.data, dictionary, scalar = TRUE){
 
 }
 
-#' Return only unmatched cities
+#' Return Only Unmatched Observations From pm_has_city
+#'
+#' @description Automatically subset the results of \link{pm_has_city} to
+#'    return only observations that were not found in the dictionary.
+#'
+#' @usage pm_has_city(.data, dictionary)
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
+#'
+#' @return A tibble containing only observations that were not found in
+#'     the dictionary. The variable created by \link{pm_has_city},
+#'     \code{pm.hasCity}, is removed.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #'
 #' @export
 pm_no_city <- function(.data, dictionary){
@@ -69,11 +86,13 @@ pm_no_city <- function(.data, dictionary){
     stop("Error 3.")
   }
 
+  # create output
   .data %>%
     pm_has_city(dictionary = dictionary, scalar = FALSE) %>%
     dplyr::filter(pm.hasCity == FALSE) %>%
     dplyr::select(-pm.hasCity) -> out
 
+  # return output
   return(out)
 
 }
@@ -118,6 +137,9 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
   # create bindings for global variables
   pm.uid = pm.city = pm.address = pm.hasCity = NULL
 
+  #
+  dict <- dictionary$city.input
+
   # identify cities
   isCity <- pm_has_city(.data, dictionary = dictionary, scalar = FALSE)
 
@@ -127,7 +149,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 
   # iterate over observations
   yesCity %>%
-    dplyr::mutate(pm.city = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dictionary))) -> yesCity
+    dplyr::mutate(pm.city = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dict))) -> yesCity
 
   # clean address data
   yesCity %>%
@@ -142,6 +164,13 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
   dplyr::bind_rows(yesCity, noCity) %>%
     dplyr::arrange(pm.uid) %>%
     dplyr::select(-pm.hasCity) -> out
+
+  # standardize if data available
+  if ("city.output" %in% names(dictionary)){
+
+    out <- pm_std_city(out, var = pm.city, dictionary = dictionary)
+
+  }
 
   # re-order output
   if (locale == "us"){
@@ -178,7 +207,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 pm_std_city <- function(.data, var, dictionary){
 
   # create bindings for global variables
-  . = cityGiven = cityCorrect = NULL
+  . = city.input = city.output = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -194,13 +223,13 @@ pm_std_city <- function(.data, var, dictionary){
 
   # prepare data
   dictionary %>%
-    dplyr::rename(!!varQ := cityGiven) -> cityData
+    dplyr::rename(!!varQ := city.input) -> cityData
 
   # standardize
   .data %>%
     dplyr::left_join(., cityData, by = varQN) %>%
-    dplyr::mutate(!!varQ := ifelse(is.na(cityCorrect) == FALSE, cityCorrect, !!varQ)) %>%
-    dplyr::select(-cityCorrect) -> out
+    dplyr::mutate(!!varQ := ifelse(is.na(city.output) == FALSE, city.output, !!varQ)) %>%
+    dplyr::select(-city.output) -> out
 
   # return output
   return(out)

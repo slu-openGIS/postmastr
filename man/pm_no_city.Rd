@@ -2,10 +2,22 @@
 % Please edit documentation in R/city.R
 \name{pm_no_city}
 \alias{pm_no_city}
-\title{Return only unmatched cities}
+\title{Return Only Unmatched Observations From pm_has_city}
 \usage{
-pm_no_city(.data, dictionary)
+pm_has_city(.data, dictionary)
+}
+\arguments{
+\item{.data}{A postmastr object created with \link{pm_prep}}
+
+\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
+as a master list for cities.}
+}
+\value{
+A tibble containing only observations that were not found in
+    the dictionary. The variable created by \link{pm_has_city},
+    \code{pm.hasCity}, is removed.
 }
 \description{
-Return only unmatched cities
+Automatically subset the results of \link{pm_has_city} to
+   return only observations that were not found in the dictionary.
 }

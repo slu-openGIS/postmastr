@@ -32,3 +32,14 @@ pm_no_city(sushi1_min, dictionary = cityDict)
 
 cityDict <- pm_append(type = "city",
                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis", "SAINT LOUIS", "Webster Groves"))
+
+pm_no_city(sushi1_min, dictionary = cityDict)
+
+cityDict <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis", "SAINT LOUIS", "Webster Groves"),
+                      output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
+
+
+sushi1_min <- pm_parse_city(sushi1_min, dictionary = cityDict)
+sushi1_min
+
