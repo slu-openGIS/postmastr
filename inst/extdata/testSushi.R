@@ -26,6 +26,10 @@ sushi1_min
 cityDict <- pm_append(type = "city",
                       input = c("Brentwood", "Clayton", "Maplewood", "St. Louis", "Webster Groves"))
 
+pm_any_city(sushi1_min, dictionary = cityDict)
+
+pm_all_city(sushi1_min, dictionary = cityDict)
+
 pm_has_city(sushi1_min, dictionary = cityDict)
 
 pm_no_city(sushi1_min, dictionary = cityDict)

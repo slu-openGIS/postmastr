@@ -7,7 +7,7 @@
 pm_std_city(.data, var, dictionary)
 }
 \arguments{
-\item{.data}{A tbl or data frame}
+\item{.data}{A postmastr object created with \link{pm_prep}, a tbl, or a data frame}
 
 \item{var}{A character variable that may contain city names}
 

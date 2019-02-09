@@ -4,31 +4,22 @@
 \alias{pm_has_state}
 \title{Detect Presence of State Name or Abbreviation}
 \usage{
-pm_has_state(.data, dictionary, scalar = TRUE, locale = "us")
+pm_has_state(.data, dictionary, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object (\code{pm_subset})}
+\item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
 as a master list for states. If none is provided, the \code{states}
 object will be used as the default directory.}
 
-\item{scalar}{If \code{TRUE}, a single logical scalar is returned; otherwise if
-\code{FALSE}, a logical vector is returned.}
-
 \item{locale}{A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.}
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
-A tibble with a new logical variable \code{pm.isState} that is
-    \code{TRUE} if a state name or abbreviation is found in the address
-    and \code{FALSE} otherwise.
-
-If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if the data contain statenames or abbreviations and \code{FALSE}
-    if they do not. If \code{scalar = FALSE} a tibble with a new logical variable
-    \code{pm.isState} that is \code{TRUE} if a state name or abbreviation is found
-    in the last word of the address and \code{FALSE} otherwise.
+A tibble with a new logical variable \code{pm.hasState} that is
+    \code{TRUE} if a state name or abbreviation from the given dictionary is found
+    at the end of the address and \code{FALSE} otherwise.
 }
 \description{
 Determine the presence of state names or abbreviations

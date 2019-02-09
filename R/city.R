@@ -1,21 +1,90 @@
-#' Detect Presence of City Name
+#' Does City Name Dictionary Return Any Matches
+#'
+#' @description Determine whether the dictionary returns any matches.
+#'
+#' @usage pm_any_city(.data, dictionary)
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
+#'
+#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
+#'     \code{TRUE} if the data contains at least one city name from the given
+#'     dictionary and \code{FALSE} if they do not.
+#'
+#' @export
+pm_any_city <- function(.data, dictionary){
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # test dictionary
+  .data <- pm_has_city(.data, dictionary = dictionary)
+
+  # create output
+  out <- any(.data$pm.hasCity)
+
+  # return output
+  return(out)
+
+}
+
+#' Does City Name Dictionary Return a Match for All Observations
+#'
+#' @description Determine whether the dictionary returns any matches.
+#'
+#' @usage pm_any_city(.data, dictionary)
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
+#'
+#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
+#'     \code{TRUE} if the data contains at least one city name from the given
+#'     dictionary and \code{FALSE} if they do not.
+#'
+#' @export
+pm_all_city <- function(.data, dictionary){
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # test dictionary
+  .data <- pm_has_city(.data, dictionary = dictionary)
+
+  # create output
+  out <- all(.data$pm.hasCity)
+
+  # return output
+  return(out)
+
+}
+
+#' Detect Presence of City Name in Address
 #'
 #' @description Determine the presence of city names in a string.
 #'
-#' @usage pm_has_city(.data, dictionary, scalar = TRUE)
+#' @usage pm_has_city(.data, dictionary)
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
-#' @param scalar If \code{TRUE}, a single logical scalar is returned; otherwise if
-#'     \code{FALSE}, a logical vector is returned.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains a city name from the given dictionary and
-#'     \code{FALSE} if they do not. If \code{scalar = FALSE} a tibble with a new
-#'     logical variable \code{pm.hasCity} that is \code{TRUE} if a city name from
-#'     the given dictionary is found in the last word of the address and
-#'     \code{FALSE} otherwise.
+#' @return A tibble with a new logical variable \code{pm.hasCity} that is
+#'     \code{TRUE} if a city name from the given dictionary is found in the
+#'     at the end the address and \code{FALSE} otherwise.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
@@ -44,11 +113,6 @@ pm_has_city <- function(.data, dictionary, scalar = TRUE){
   .data %>%
     dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dict))) %>%
     dplyr::mutate(pm.hasCity = as.logical(pm.hasCity)) -> out
-
-  # return scalar
-  if (scalar == TRUE){
-    out <- any(out$pm.hasCity)
-  }
 
   # return output
   return(out)
@@ -108,7 +172,7 @@ pm_no_city <- function(.data, dictionary){
 #'
 #' @usage pm_parse_city(.data, dictionary, locale = "us")
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
 #' @param locale A string indicating the country these data represent; the only
@@ -186,7 +250,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
 #'
-#' @param .data A tbl or data frame
+#' @param .data A postmastr object created with \link{pm_prep}, a tbl, or a data frame
 #' @param var A character variable that may contain city names
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
