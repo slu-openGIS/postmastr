@@ -27,6 +27,6 @@ Parse a city name or abbreviation from a string. These data
     should be at the end of the string (i.e. the last several words). If a
     state name or abbrevation follows the city, use \link{pm_parse_state} first
     to remove those data from \code{pm.address}. Likewise, if a
-    zip-code follows a name, use \link{pm_parse_zip} first to remove those
+    postal code follows a name, use \link{pm_parse_postal} first to remove those
     data from \code{pm.address}.
 }

@@ -39,7 +39,7 @@ pm_any_city <- function(.data, dictionary){
 #'
 #' @description Determine whether the dictionary returns any matches.
 #'
-#' @usage pm_any_city(.data, dictionary)
+#' @usage pm_all_city(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -152,7 +152,7 @@ pm_no_city <- function(.data, dictionary){
 
   # create output
   .data %>%
-    pm_has_city(dictionary = dictionary, scalar = FALSE) %>%
+    pm_has_city(dictionary = dictionary) %>%
     dplyr::filter(pm.hasCity == FALSE) %>%
     dplyr::select(-pm.hasCity) -> out
 
@@ -167,7 +167,7 @@ pm_no_city <- function(.data, dictionary){
 #'     should be at the end of the string (i.e. the last several words). If a
 #'     state name or abbrevation follows the city, use \link{pm_parse_state} first
 #'     to remove those data from \code{pm.address}. Likewise, if a
-#'     zip-code follows a name, use \link{pm_parse_zip} first to remove those
+#'     postal code follows a name, use \link{pm_parse_postal} first to remove those
 #'     data from \code{pm.address}.
 #'
 #' @usage pm_parse_city(.data, dictionary, locale = "us")
@@ -205,7 +205,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
   dict <- dictionary$city.input
 
   # identify cities
-  isCity <- pm_has_city(.data, dictionary = dictionary, scalar = FALSE)
+  isCity <- pm_has_city(.data, dictionary = dictionary)
 
   # subset
   yesCity <- dplyr::filter(isCity, pm.hasCity == TRUE)

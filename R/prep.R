@@ -173,7 +173,7 @@ pm_has_uid <- function(obj){
 #'     parsing functions, and is exported so that it can be used interactively a
 #'     s well.
 #'
-#' @usage pm_has_uid(obj)
+#' @usage pm_has_address(obj)
 #'
 #' @param obj Object to test
 #'

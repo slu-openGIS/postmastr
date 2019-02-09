@@ -28,6 +28,6 @@ A tibble with a new character variable \code{pm.state} that contains
 \description{
 Parse a state name or abbreviation from a string. These data
     should be at the end of the string (i.e. the last word or two). If a
-    zip-code follows the, use \link{pm_parse_sip} first to remove those
+    postal code follows the, use \link{pm_parse_psotal} first to remove those
     data from \code{pm.address}.
 }

@@ -4,7 +4,7 @@
 \alias{pm_has_address}
 \title{Validate postmastr Address Variable}
 \usage{
-pm_has_uid(obj)
+pm_has_address(obj)
 }
 \arguments{
 \item{obj}{Object to test}

@@ -4,7 +4,7 @@
 \alias{pm_all_city}
 \title{Does City Name Dictionary Return a Match for All Observations}
 \usage{
-pm_any_city(.data, dictionary)
+pm_all_city(.data, dictionary)
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
