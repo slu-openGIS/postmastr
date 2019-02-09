@@ -99,7 +99,7 @@ pm_identify <- function(.data, var){
 #' @importFrom rlang quo
 #' @importFrom rlang quo_name
 #' @importFrom rlang sym
-#' @importFrom stringr str_replace
+#' @importFrom stringr str_replace_all
 #'
 pm_prep <- function(.data, var){
 
