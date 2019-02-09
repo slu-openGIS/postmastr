@@ -26,20 +26,23 @@
 pm_has_city <- function(.data, dictionary, scalar = TRUE){
 
   # create bindings for global variables
-  working_data = pm.address = pm.hasCity = NULL
+   pm.address = pm.hasCity = NULL
 
   # check for object and key variables
-  if (pm_has_uid(working_data) == FALSE){
+  if (pm_has_uid(.data) == FALSE){
     stop("Error 2.")
   }
 
-  if (pm_has_address(working_data) == FALSE){
+  if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
   }
 
+  #
+  dict <- dictionary$city.input
+
   # iterate over observations
   .data %>%
-    dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dictionary))) %>%
+    dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dict))) %>%
     dplyr::mutate(pm.hasCity = as.logical(pm.hasCity)) -> out
 
   # return scalar
@@ -48,6 +51,29 @@ pm_has_city <- function(.data, dictionary, scalar = TRUE){
   }
 
   # return output
+  return(out)
+
+}
+
+#' Return only unmatched cities
+#'
+#' @export
+pm_no_city <- function(.data, dictionary){
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  .data %>%
+    pm_has_city(dictionary = dictionary, scalar = FALSE) %>%
+    dplyr::filter(pm.hasCity == FALSE) %>%
+    dplyr::select(-pm.hasCity) -> out
+
   return(out)
 
 }

@@ -11,13 +11,14 @@ pm_dictionary(locale = "us", type, input, output)
 current option is "us" but this is included to facilitate future expansion.}
 
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"}.}
+should represent. Current options are \code{"state"} and \code{"city"}.}
 
 \item{input}{A character scalar or vector containing possible terms existing in
 the data. This should be the same length as \code{output}.}
 
 \item{output}{A character scalar or vector containing desired output for each input.
-This should be the same length as \code{input}.}
+This should be the same length as \code{input}. This argument is required for
+\code{locale = "state"} and optional for \code{locale = "city"}.}
 }
 \description{
 This function allows for the creation of dictionary objects that are

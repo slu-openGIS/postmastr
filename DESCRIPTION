@@ -27,6 +27,7 @@ Imports:
     rlang,
     stringr,
     tibble,
+    tidycensus,
     tidyr,
     toOrdinal,
     tm

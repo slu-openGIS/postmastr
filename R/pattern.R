@@ -16,14 +16,16 @@ pm_has_pattern <- function(x, dictionary, end = TRUE){
 }
 
 # iterate over dictionary items per observations
-pm_extract_pattern <- function(x, dictionary){
+pm_extract_pattern <- function(x, dictionary, end = TRUE){
 
   # create pattern vector
   patternVector <- dictionary
 
   patternVector %>%
     base::split(patternVector) %>%
-    purrr::map( ~ stringr::str_extract(x, pattern = stringr::str_c("\\b", .x, "\\b$"))) -> out
+    purrr::map( ~ stringr::str_extract(x, pattern = ifelse (end == TRUE,
+                                                            stringr::str_c("\\b", .x, "\\b$"),
+                                                            stringr::str_c("\\b", .x, "\\b")))) -> out
 
   return(out)
 

@@ -11,7 +11,7 @@ pm_dictionary(locale = "us", type, append, filter)
 current option is "us" but this is included to facilitate future expansion.}
 
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"}.}
+should represent. Current options are \code{"state"} and \code{"city"}.}
 
 \item{append}{An optional dictionary appendix object created with \code{\link{pm_append}}}
 

@@ -21,3 +21,14 @@ pm_has_state(sushi1_min, dictionary = moDict, scalar = FALSE)
 
 sushi1_min <- pm_parse_state(sushi1_min, dictionary = moDict)
 sushi1_min
+
+# cities
+cityDict <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "Maplewood", "St. Louis", "Webster Groves"))
+
+pm_has_city(sushi1_min, dictionary = cityDict)
+
+pm_no_city(sushi1_min, dictionary = cityDict)
+
+cityDict <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis", "SAINT LOUIS", "Webster Groves"))
