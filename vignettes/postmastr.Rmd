@@ -275,7 +275,7 @@ We could also explore these matches further to make sure that misspellings did n
 # … with 14 more rows
 ```
 
-If we inspect this object, we'll see that `pm.state` contains the state abbreviation for Missouri in all cases.
+If we inspect this object, we'll see that `pm.state` contains the state abbreviation for Missouri in all cases. As with postal codes, the city names have been removed from `pm.address` to facilitate the next phase in parsing.
 
 ### Cities
 
