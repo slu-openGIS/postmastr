@@ -61,6 +61,10 @@ pm_dictionary <- function(locale = "us", type, append, filter){
 # us states
 pm_dictionary_us_states <- function(append, filter){
 
+  # global bindings
+  state.output = NULL
+
+  # load data
   out <- postmastr::dic_us_states
 
   # optionally append
@@ -108,6 +112,9 @@ pm_dictionary_us_cities <- function(append, states){
 # us cities via tidycensus
 pm_get_tidycensus <- function(states){
 
+  # global bindings
+  state.abb = NAME = NULL
+
   # download data
   states %>%
     base::split(states) %>%
@@ -154,6 +161,9 @@ pm_get_tidycensus <- function(states){
 
 # parse components of tidycensus data
 pm_parse_place <- function(.data, dictionary){
+
+  # global bindings
+  NAME = pm.place = NULL
 
   # iterate over observations
   .data %>%

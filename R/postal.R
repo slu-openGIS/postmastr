@@ -206,6 +206,9 @@ pm_parse_postal <- function(.data, locale = "us"){
 # parse American zip codes
 pm_parse_zip_us <- function(.data){
 
+  # global bindings
+  pm.hasZip4 = NULL
+
   # create bindings for global variables
   pm.address = pm.hasZip = NULL
 
@@ -245,6 +248,9 @@ pm_parse_zip_us <- function(.data){
 # check for zip+4
 pm_has_zip4_us <- function(.data){
 
+  # global bindings
+  pm.hasZip4 = pm.zip = NULL
+
   .data %>%
     dplyr::mutate(pm.hasZip4 = ifelse(stringr::str_detect(pm.zip, pattern = "-") == TRUE, TRUE, FALSE)) -> out
 
@@ -252,6 +258,9 @@ pm_has_zip4_us <- function(.data){
 
 # parse zip+4
 pm_parse_zip4_us <- function(.data){
+
+  # global bindings
+  pm.hasZip4 = pm.zip = NULL
 
   .data %>%
     dplyr::mutate(pm.zip4 = ifelse(pm.hasZip4 == TRUE, stringr::word(pm.zip, 2, sep = "-"), NA)) %>%

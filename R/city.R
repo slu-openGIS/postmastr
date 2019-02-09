@@ -141,6 +141,9 @@ pm_has_city <- function(.data, dictionary){
 #' @export
 pm_no_city <- function(.data, dictionary){
 
+  # global bindings
+  pm.hasCity = NULL
+
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
     stop("Error 2.")
