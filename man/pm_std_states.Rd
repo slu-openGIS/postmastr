@@ -7,7 +7,7 @@
 pm_std_states_us(.data, var, dictionary, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object (\code{pm_subset})}
+\item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{var}{A character variable that may contain city names}
 

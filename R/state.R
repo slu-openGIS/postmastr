@@ -155,7 +155,7 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 #'
 #' @usage pm_parse_state(.data, dictionary, locale = "us")
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}
 #'     object will be used as the default directory.
@@ -263,7 +263,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #'
 #' @usage pm_std_states_us(.data, var, dictionary, locale = "us")
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain city names
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
 #'     as a master list for states. If none is provided, the \code{states}

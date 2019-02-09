@@ -7,7 +7,7 @@
 pm_parse_state(.data, dictionary, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object (\code{pm_subset})}
+\item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
 as a master list for states. If none is provided, the \code{states}
