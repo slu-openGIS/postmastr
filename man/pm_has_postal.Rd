@@ -4,22 +4,20 @@
 \alias{pm_has_postal}
 \title{Detect Presence of Postal Codes}
 \usage{
-pm_has_postal(.data, scalar = TRUE, locale = "us")
+pm_has_postal(.data, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object (\code{pm_subset})}
-
-\item{scalar}{If \code{TRUE}, a single logical scalar is returned; otherwise if
-\code{FALSE}, a logical vector is returned.}
+\item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
+
+\item{scalar}{If \code{TRUE}, a single logical scalar is returned; otherwise if
+\code{FALSE}, a logical vector is returned.}
 }
 \value{
-If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if the data contain postal codes and \code{FALSE} if they do not.
-    If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.hasZip}
-    that is \code{TRUE} if a zip-code is found in the last word of the address
+A tibble with a new logical variable \code{pm.hasZip} that is
+    \code{TRUE} if a zip-code is found in the last word of the address
     and \code{FALSE} otherwise.
 }
 \description{

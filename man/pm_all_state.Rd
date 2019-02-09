@@ -17,8 +17,8 @@ current option is \code{"us"} but this is included to facilitate future expansio
 }
 \value{
 If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if the data contains at least one city name from the given
-    dictionary and \code{FALSE} if they do not.
+    \code{TRUE} if the data contains a state name or abbreviation for every observation
+    in the data set and \code{FALSE} otherwise.
 }
 \description{
 Determine whether the dictionary returns any matches.

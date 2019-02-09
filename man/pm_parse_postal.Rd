@@ -7,7 +7,7 @@
 pm_parse_zip(.data, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object (\code{pm_subset})}
+\item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}

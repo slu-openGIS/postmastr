@@ -11,7 +11,7 @@
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains at least one city name from the given
+#'     \code{TRUE} if the data contains at least one state name or abbreviation the given
 #'     dictionary and \code{FALSE} if they do not.
 #'
 #' @export
@@ -54,8 +54,8 @@ pm_any_state <- function(.data, dictionary){
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains at least one city name from the given
-#'     dictionary and \code{FALSE} if they do not.
+#'     \code{TRUE} if the data contains a state name or abbreviation for every observation
+#'     in the data set and \code{FALSE} otherwise.
 #'
 #' @export
 pm_all_state <- function(.data, dictionary, locale = "us"){

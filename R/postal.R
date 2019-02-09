@@ -1,3 +1,91 @@
+#' Do Any Addresses Have Postal Codes
+#'
+#' @description Determine whether the postal code test returns any matches.
+#'
+#' @usage pm_any_postal(.data, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
+#'     \code{TRUE} if the data contains at least one postal code and \code{FALSE} if
+#'     they do not.
+#'
+#' @export
+pm_any_postal <- function(.data, locale = "us"){
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # test and create output
+  if (locale == "us"){
+    .data <- pm_has_postal(.data, locale = locale)
+
+    # create output
+    out <- any(.data$pm.hasZip)
+  }
+
+  # return output
+  return(out)
+
+}
+
+#' Do All Addresses Have Postal Codes
+#'
+#' @description Determine whether the postal code test returns matches for every
+#'     observation.
+#'
+#' @usage pm_all_postal(.data, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
+#'     \code{TRUE} if all observations contain postal codes and \code{FALSE} otherwise.
+#'
+#' @export
+pm_all_postal <- function(.data, dictionary, locale = "us"){
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # test and create output
+  if (locale == "us"){
+    .data <- pm_has_postal(.data, locale = locale)
+
+    # create output
+    out <- all(.data$pm.hasZip)
+  }
+
+  # return output
+  return(out)
+
+}
+
 #' Detect Presence of Postal Codes
 #'
 #' @description Determine the presence of U.S. zip-codes in a string. This will
@@ -5,18 +93,16 @@
 #'     codes (e.g. \code{63108-3412}). The zip-code must be the final word in
 #'     the string to return \code{TRUE}.
 #'
-#' @usage pm_has_postal(.data, scalar = TRUE, locale = "us")
+#' @usage pm_has_postal(.data, locale = "us")
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param scalar If \code{TRUE}, a single logical scalar is returned; otherwise if
 #'     \code{FALSE}, a logical vector is returned.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contain postal codes and \code{FALSE} if they do not.
-#'     If \code{scalar = FALSE} a tibble with a new logical variable \code{pm.hasZip}
-#'     that is \code{TRUE} if a zip-code is found in the last word of the address
+#' @return A tibble with a new logical variable \code{pm.hasZip} that is
+#'     \code{TRUE} if a zip-code is found in the last word of the address
 #'     and \code{FALSE} otherwise.
 #'
 #' @importFrom dplyr %>%
@@ -26,7 +112,7 @@
 #' @importFrom stringr word
 #'
 #' @export
-pm_has_postal <- function(.data, scalar = TRUE, locale = "us"){
+pm_has_postal <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -80,7 +166,7 @@ pm_has_zip_us <- function(.data){
 #'
 #' @usage pm_parse_zip(.data, locale = "us")
 #'
-#' @param .data A postmastr object (\code{pm_subset})
+#' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
