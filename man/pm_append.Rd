@@ -4,7 +4,7 @@
 \alias{pm_append}
 \title{Append Custom Vectors to Dictionary Objects}
 \usage{
-pm_dictionary(locale = "us", type, input, output)
+pm_append(locale = "us", type, input, output)
 }
 \arguments{
 \item{locale}{A string indicating the country these data represent; the only

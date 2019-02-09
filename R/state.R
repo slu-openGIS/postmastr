@@ -10,12 +10,12 @@
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains at least one state name or abbreviation the given
-#'     dictionary and \code{FALSE} if they do not.
+#' @return A logical scalar is returned that is \code{TRUE} if the data contains at
+#'     least one state name or abbreviation the given dictionary and \code{FALSE}
+#'     if they do not.
 #'
 #' @export
-pm_any_state <- function(.data, dictionary){
+pm_any_state <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -53,9 +53,8 @@ pm_any_state <- function(.data, dictionary){
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains a state name or abbreviation for every observation
-#'     in the data set and \code{FALSE} otherwise.
+#' @return A logical scalar is returned that is \code{TRUE} if the data contains a state
+#'     name or abbreviation for every observation in the data set and \code{FALSE} otherwise.
 #'
 #' @export
 pm_all_state <- function(.data, dictionary, locale = "us"){
@@ -150,7 +149,7 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 #'
 #' @description Parse a state name or abbreviation from a string. These data
 #'     should be at the end of the string (i.e. the last word or two). If a
-#'     zip-code follows the, use \link{pm_parseZip} first to remove those
+#'     zip-code follows the, use \link{pm_parse_sip} first to remove those
 #'     data from \code{pm.address}.
 #'
 #' @usage pm_parse_state(.data, dictionary, locale = "us")
@@ -205,7 +204,7 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 
   # identify state
   # issues passing dictionary
-  isState <- pm_has_state(.data, dictionary = dictionary, scalar = FALSE, locale = locale)
+  isState <- pm_has_state(.data, dictionary = dictionary, locale = locale)
 
   # iterate over observations
   if (locale == "us"){
@@ -261,7 +260,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
 #'
-#' @usage pm_std_states_us(.data, var, dictionary, locale = "us")
+#' @usage pm_std_states(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain city names

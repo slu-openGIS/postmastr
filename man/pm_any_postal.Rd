@@ -13,9 +13,8 @@ pm_any_postal(.data, locale = "us")
 current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
-If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if the data contains at least one postal code and \code{FALSE} if
-    they do not.
+A logical scalar is returned that is \code{TRUE} if the data contains at least
+    one postal code and \code{FALSE} if they do not.
 }
 \description{
 Determine whether the postal code test returns any matches.

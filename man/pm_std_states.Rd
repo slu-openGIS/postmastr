@@ -4,7 +4,7 @@
 \alias{pm_std_states}
 \title{Standardize Parsed State Names}
 \usage{
-pm_std_states_us(.data, var, dictionary, locale = "us")
+pm_std_states(.data, var, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}

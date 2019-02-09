@@ -8,9 +8,8 @@
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if the data contains at least one postal code and \code{FALSE} if
-#'     they do not.
+#' @return A logical scalar is returned that is \code{TRUE} if the data contains at least
+#'     one postal code and \code{FALSE} if they do not.
 #'
 #' @export
 pm_any_postal <- function(.data, locale = "us"){
@@ -53,11 +52,11 @@ pm_any_postal <- function(.data, locale = "us"){
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
-#' @return If \code{scalar = TRUE}, a single logical scalar is returned that is
-#'     \code{TRUE} if all observations contain postal codes and \code{FALSE} otherwise.
+#' @return A logical scalar is returned that is \code{TRUE} if all observations contain postal
+#'     codes and \code{FALSE} otherwise.
 #'
 #' @export
-pm_all_postal <- function(.data, dictionary, locale = "us"){
+pm_all_postal <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -96,8 +95,6 @@ pm_all_postal <- function(.data, dictionary, locale = "us"){
 #' @usage pm_has_postal(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param scalar If \code{TRUE}, a single logical scalar is returned; otherwise if
-#'     \code{FALSE}, a logical vector is returned.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -133,11 +130,6 @@ pm_has_postal <- function(.data, locale = "us"){
     out <- pm_has_zip_us(.data)
   }
 
-  # return scalar
-  if (scalar == TRUE){
-    out <- any(out$pm.hasZip)
-  }
-
   # return output
   return(out)
 
@@ -164,7 +156,7 @@ pm_has_zip_us <- function(.data){
 #'
 #' @description Create a new column containing postal code data.
 #'
-#' @usage pm_parse_zip(.data, locale = "us")
+#' @usage pm_parse_postal(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
@@ -199,7 +191,7 @@ pm_parse_postal <- function(.data, locale = "us"){
   }
 
   # identify zip-code
-  out <- pm_has_postal(.data, scalar = FALSE, locale = locale)
+  out <- pm_has_postal(.data, locale = locale)
 
   # parse
   if (locale == "us"){

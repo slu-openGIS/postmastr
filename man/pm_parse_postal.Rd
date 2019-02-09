@@ -4,7 +4,7 @@
 \alias{pm_parse_postal}
 \title{Parse Postal Codes}
 \usage{
-pm_parse_zip(.data, locale = "us")
+pm_parse_postal(.data, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}

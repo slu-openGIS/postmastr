@@ -11,9 +11,6 @@ pm_has_postal(.data, locale = "us")
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
-
-\item{scalar}{If \code{TRUE}, a single logical scalar is returned; otherwise if
-\code{FALSE}, a logical vector is returned.}
 }
 \value{
 A tibble with a new logical variable \code{pm.hasZip} that is

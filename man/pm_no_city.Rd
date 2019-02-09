@@ -4,7 +4,7 @@
 \alias{pm_no_city}
 \title{Return Only Unmatched Observations From pm_has_city}
 \usage{
-pm_has_city(.data, dictionary)
+pm_no_city(.data, dictionary)
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}

@@ -178,7 +178,7 @@ pm_parse_place <- function(.data, dictionary){
 #' @description This function allows for the creation of dictionary objects that are
 #'     either optional or required elements of other \code{postmastr} functions.
 #'
-#' @usage pm_dictionary(locale = "us", type, input, output)
+#' @usage pm_append(locale = "us", type, input, output)
 #'
 #' @param locale A string indicating the country these data represent; the only
 #'     current option is "us" but this is included to facilitate future expansion.

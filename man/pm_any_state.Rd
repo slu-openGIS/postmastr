@@ -16,9 +16,9 @@ as a master list for cities.}
 current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
-If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if the data contains at least one state name or abbreviation the given
-    dictionary and \code{FALSE} if they do not.
+A logical scalar is returned that is \code{TRUE} if the data contains at
+    least one state name or abbreviation the given dictionary and \code{FALSE}
+    if they do not.
 }
 \description{
 Determine whether the dictionary returns any matches.

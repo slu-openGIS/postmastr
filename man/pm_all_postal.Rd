@@ -13,8 +13,8 @@ pm_all_postal(.data, locale = "us")
 current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
-If \code{scalar = TRUE}, a single logical scalar is returned that is
-    \code{TRUE} if all observations contain postal codes and \code{FALSE} otherwise.
+A logical scalar is returned that is \code{TRUE} if all observations contain postal
+    codes and \code{FALSE} otherwise.
 }
 \description{
 Determine whether the postal code test returns matches for every

@@ -92,7 +92,7 @@ pm_all_city <- function(.data, dictionary){
 #' @importFrom stringr str_c
 #'
 #' @export
-pm_has_city <- function(.data, dictionary, scalar = TRUE){
+pm_has_city <- function(.data, dictionary){
 
   # create bindings for global variables
    pm.address = pm.hasCity = NULL
@@ -124,7 +124,7 @@ pm_has_city <- function(.data, dictionary, scalar = TRUE){
 #' @description Automatically subset the results of \link{pm_has_city} to
 #'    return only observations that were not found in the dictionary.
 #'
-#' @usage pm_has_city(.data, dictionary)
+#' @usage pm_no_city(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -165,9 +165,9 @@ pm_no_city <- function(.data, dictionary){
 #'
 #' @description Parse a city name or abbreviation from a string. These data
 #'     should be at the end of the string (i.e. the last several words). If a
-#'     state name or abbrevation follows the city, use \link{pm_parseState} first
+#'     state name or abbrevation follows the city, use \link{pm_parse_state} first
 #'     to remove those data from \code{pm.address}. Likewise, if a
-#'     zip-code follows a name, use \link{pm_parseZip} first to remove those
+#'     zip-code follows a name, use \link{pm_parse_zip} first to remove those
 #'     data from \code{pm.address}.
 #'
 #' @usage pm_parse_city(.data, dictionary, locale = "us")
