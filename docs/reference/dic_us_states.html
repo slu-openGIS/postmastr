@@ -128,7 +128,7 @@
         
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A tibble with 124 rows and 2 variables:</p><dl class='dl-horizontal'>
+    <p>A tibble with 248 rows and 2 variables:</p><dl class='dl-horizontal'>
   <dt>state.output</dt><dd><p>standard two-letter abbreviations</p></dd>
   <dt>state.input</dt><dd><p>standard full names and two-letter abbreviations</p></dd>
 </dl>
@@ -143,18 +143,12 @@
 #&gt;  $ name   : chr  "BaiKu Sushi Lounge" "Blue Ocean Restaurant" "Cafe Mochi" "Drunken Fish - Ballpark Village" ...
 #&gt;  $ address: chr  "3407 Olive St, St. Louis, Missouri 63103" "6335 Delmar Blvd, St. Louis, MO 63112" "3221 S Grand Boulevard, St. Louis, MO 63118" "601 Clark Ave #104, St. Louis, MO 63102-1719" ...
 #&gt;  $ visit  : chr  "3/20/18" "10/26/18" "10/10/18" "4/28/18" ...
-#&gt;  - attr(*, "spec")=List of 3
-#&gt;   ..$ cols   :List of 3
-#&gt;   .. ..$ name   : list()
-#&gt;   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-#&gt;   .. ..$ address: list()
-#&gt;   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-#&gt;   .. ..$ visit  : list()
-#&gt;   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-#&gt;   ..$ default: list()
-#&gt;   .. ..- attr(*, "class")= chr  "collector_guess" "collector"
-#&gt;   ..$ skip   : num 1
-#&gt;   ..- attr(*, "class")= chr "col_spec"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>sushi1</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 3</span><span>
+#&gt;  - attr(*, "spec")=
+#&gt;   .. cols(
+#&gt;   ..   name = <span style='color: #BB0000;'>col_character()</span><span>,
+#&gt;   ..   address = </span><span style='color: #BB0000;'>col_character()</span><span>,
+#&gt;   ..   visit = </span><span style='color: #BB0000;'>col_character()</span><span>
+#&gt;   .. )</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>sushi1</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 6 x 3</span><span>
 #&gt;   name                        address                                    visit  
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                                      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  
 #&gt; </span><span style='color: #555555;'>1</span><span> BaiKu Sushi Lounge          3407 Olive St, St. Louis, Missouri 63103   3/20/18

@@ -133,7 +133,7 @@ current option is "us" but this is included to facilitate future expansion.</p><
     <tr>
       <th>type</th>
       <td><p>A string indicating the grammatical address element the dictionary
-should represent. Current options are <code>"state"</code>.</p></td>
+should represent. Current options are <code>"state"</code> and <code>"city"</code>.</p></td>
     </tr>
     <tr>
       <th>input</th>
@@ -143,7 +143,8 @@ the data. This should be the same length as <code>output</code>.</p></td>
     <tr>
       <th>output</th>
       <td><p>A character scalar or vector containing desired output for each input.
-This should be the same length as <code>input</code>.</p></td>
+This should be the same length as <code>input</code>. This argument is required for
+<code>locale = "state"</code> and optional for <code>locale = "city"</code>.</p></td>
     </tr>
     </table>
     
