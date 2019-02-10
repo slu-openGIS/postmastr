@@ -4,7 +4,7 @@
 \alias{pm_dictionary}
 \title{Create Dictionary Objects}
 \usage{
-pm_dictionary(locale = "us", type, append, filter)
+pm_dictionary(locale = "us", type, append, filter, case = c("title", "lower", "upper"))
 }
 \arguments{
 \item{locale}{A string indicating the country these data represent; the only
@@ -17,6 +17,11 @@ should represent. Current options are \code{"state"} and \code{"city"}.}
 
 \item{filter}{An optional character scalar or vector with output elements that should
 be retained.}
+
+\item{case}{An optional character scalar or vector containing one or more of three valid
+options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
+\code{"upper"} (e.g. "MISSOURI"). These are used to create a more robust dictionary of
+input terms.}
 }
 \value{
 A \code{postmastr} dictionary object, which will always include an input column

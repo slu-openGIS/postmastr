@@ -3,7 +3,7 @@
 #' @description This function allows for the creation of dictionary objects that are
 #'     either optional or required elements of other \code{postmastr} functions.
 #'
-#' @usage pm_dictionary(locale = "us", type, append, filter)
+#' @usage pm_dictionary(locale = "us", type, append, filter, case = c("title", "lower", "upper"))
 #'
 #' @param locale A string indicating the country these data represent; the only
 #'     current option is "us" but this is included to facilitate future expansion.
@@ -12,6 +12,10 @@
 #' @param append An optional dictionary appendix object created with \code{\link{pm_append}}
 #' @param filter An optional character scalar or vector with output elements that should
 #'     be retained.
+#' @param case An optional character scalar or vector containing one or more of three valid
+#'     options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
+#'     \code{"upper"} (e.g. "MISSOURI"). These are used to create a more robust dictionary of
+#'     input terms.
 #'
 #' @return A \code{postmastr} dictionary object, which will always include an input column
 #'     of possible terms for the given grammatical address element and an output column
@@ -21,21 +25,23 @@
 #' @importFrom dplyr filter
 #'
 #' @export
-pm_dictionary <- function(locale = "us", type, append, filter){
+pm_dictionary <- function(locale = "us", type, append, filter, case = c("title", "lower", "upper")){
 
   if (locale == "us"){
 
     if (type == "state"){
 
       if (missing(append) == FALSE & missing(filter) == FALSE){
-        out <- pm_dictionary_us_states(append = append, filter = filter)
+        working <- pm_dictionary_us_states(append = append, filter = filter)
       } else if (missing(append) == FALSE & missing(filter) == TRUE){
-        out <- pm_dictionary_us_states(append = append)
+        working <- pm_dictionary_us_states(append = append)
       } else if (missing(append) == TRUE & missing(filter) == FALSE){
-        out <- pm_dictionary_us_states(filter = filter)
+        working <- pm_dictionary_us_states(filter = filter)
       } else if (missing(append) == TRUE & missing(filter) == TRUE){
-        out <- pm_dictionary_us_states()
+        working <- pm_dictionary_us_states()
       }
+
+      out <- pm_case(working, locale = locale, type = type, case = case)
 
     } else if (type == "city"){
 
@@ -183,6 +189,58 @@ pm_parse_place <- function(.data, dictionary){
 
 }
 
+# Dictionary Case
+pm_case <- function(.data, locale, type, case){
+
+  if (locale == "us"){
+
+    if (type == "state"){
+      out <- pm_convert_case(.data, var = "state.input", orderVar = "state.output", case = case)
+    }
+
+  }
+
+  return(out)
+
+}
+
+# Convert Case
+pm_convert_case <- function(.data, var, orderVar, case){
+
+  # global binding
+  ...case = NULL
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # reformat address variable
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # convert
+  title <- dplyr::mutate(.data, ...case = "title")
+  lower <- dplyr::mutate(.data,
+                         !!varQN := stringr::str_to_lower(!!varQ),
+                         ...case = "lower")
+  upper <- dplyr::mutate(.data,
+                         !!varQN := stringr::str_to_upper(!!varQ),
+                         ...case = "upper")
+
+  dplyr::bind_rows(title, lower, upper) %>%
+    dplyr::filter(...case %in% case) %>%
+    dplyr::distinct(!!varQ, .keep_all = TRUE) %>%
+    dplyr::select(-...case) -> out
+
+  # re-order observations
+  out <- out[order(out[[orderVar]]),]
+
+}
+
 #' Append Custom Vectors to Dictionary Objects
 #'
 #' @description This function allows for the creation of dictionary objects that are
@@ -205,6 +263,9 @@ pm_parse_place <- function(.data, dictionary){
 #' @export
 pm_append <- function(locale = "us", type, input, output){
 
+  # global binding
+  state.output = state.input = city.output = city.input = NULL
+
   if (locale == "us"){
 
     if (type == "state"){
@@ -214,6 +275,10 @@ pm_append <- function(locale = "us", type, input, output){
         state.input = c(input),
         stringsAsFactors = FALSE
       )
+
+      out <- dplyr::mutate(out,
+                           state.output = stringr::str_to_upper(state.output),
+                           state.input = stringr::str_to_title(state.input))
 
       out <- dplyr::as_tibble(out)
 
@@ -225,11 +290,19 @@ pm_append <- function(locale = "us", type, input, output){
           city.input = c(input),
           stringsAsFactors = FALSE
         )
+
+        out <- dplyr::mutate(out,
+                             city.output = stringr::str_to_upper(city.output),
+                             city.input = stringr::str_to_title(city.input))
+
       } else if (missing(output) == TRUE){
         out <- data.frame(
           city.input = c(input),
           stringsAsFactors = FALSE
         )
+
+        out <- dplyr::mutate(out, city.input = stringr::str_to_upper(city.input))
+
       }
 
       out <- dplyr::as_tibble(out)
@@ -254,7 +327,7 @@ pm_append <- function(locale = "us", type, input, output){
 #'
 #' @usage data(dic_us_states)
 #'
-#' @format A tibble with 248 rows and 2 variables:
+#' @format A tibble with 124 rows and 2 variables:
 #' \describe{
 #'   \item{state.output}{standard two-letter abbreviations}
 #'   \item{state.input}{standard full names and two-letter abbreviations}
@@ -263,7 +336,7 @@ pm_append <- function(locale = "us", type, input, output){
 #' @seealso \href{https://pe.usps.com/text/pub28/28apb.htm}{U.S. Postal Service, Publication 28, Appendix B}
 #'
 #' @examples
-#' str(sushi1)
-#' head(sushi1)
+#' str(dic_us_states)
+#' head(dic_us_states)
 #'
 "dic_us_states"

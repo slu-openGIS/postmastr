@@ -4,7 +4,7 @@
 \name{dic_us_states}
 \alias{dic_us_states}
 \title{State Dictionary, United States of America}
-\format{A tibble with 248 rows and 2 variables:
+\format{A tibble with 124 rows and 2 variables:
 \describe{
   \item{state.output}{standard two-letter abbreviations}
   \item{state.input}{standard full names and two-letter abbreviations}
@@ -19,8 +19,8 @@ A listing of abbreviations and full names for U.S. states, territories,
     abbreviations by the U.S. Postal Service.
 }
 \examples{
-str(sushi1)
-head(sushi1)
+str(dic_us_states)
+head(dic_us_states)
 
 }
 \seealso{
