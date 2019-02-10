@@ -17,7 +17,6 @@ sushi1_min
 moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO")
 
 pm_has_state(sushi1_min, dictionary = moDict)
-pm_has_state(sushi1_min, dictionary = moDict, scalar = FALSE)
 
 sushi1_min <- pm_parse_state(sushi1_min, dictionary = moDict)
 sushi1_min

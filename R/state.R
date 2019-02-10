@@ -103,16 +103,14 @@ pm_all_state <- function(.data, dictionary, locale = "us"){
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
-#' @importFrom purrr map
+#' @importFrom stringr str_c
+#' @importFrom stringr str_detect
 #'
 #' @export
 pm_has_state <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.address = pm.hasState = NULL
-
-  # save parameters to list
-  paramList <- as.list(match.call())
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -130,20 +128,20 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 
   # minimize dictionary
   if (locale == "us"){
-    dict <- dictionary$state.input
+    dict <- paste(dictionary$state.input, collapse = "|")
   }
 
-  # iterate over observations
+  # check observations
   if (locale == "us"){
-    .data %>%
-      dplyr::mutate(pm.hasState = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dict))) %>%
-      dplyr::mutate(pm.hasState = as.logical(pm.hasState)) -> out
+    .data <- dplyr::mutate(.data, pm.hasState = stringr::str_detect(pm.address,
+                                                                    pattern = stringr::str_c("\\b(", dict, ")\\b$")))
   }
 
   # return output
-  return(out)
+  return(.data)
 
 }
+
 
 #' Return Only Unmatched Observations From pm_has_state
 #'
@@ -217,17 +215,12 @@ pm_no_state <- function(.data, dictionary, locale = "us"){
 #'     state name or abbreviation removed.
 #'
 #' @importFrom dplyr %>%
-#' @importFrom dplyr arrange
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
-#' @importFrom purrr map
 #' @importFrom stringr str_c
 #' @importFrom stringr str_count
 #' @importFrom stringr str_replace
 #' @importFrom stringr word
-#' @importFrom tidyr unnest
 #'
 #' @export
 pm_parse_state <- function(.data, dictionary, locale = "us"){
@@ -277,29 +270,18 @@ pm_parse_state_us <- function(.data, dictionary){
   # create bindings for global variables
   pm.address = pm.state = pm.uid = pm.hasState = NULL
 
-  # subset
-  yesState <- dplyr::filter(.data, pm.hasState == TRUE)
-  noState <- dplyr::filter(.data, pm.hasState == FALSE)
-
-  # iterate over observations
-  yesState %>%
-    dplyr::mutate(pm.state = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dict))) -> yesState
+  # parse
+  .data <- dplyr::mutate(.data, pm.state =
+                           stringr::str_extract(pm.address,
+                                                pattern = stringr::str_c("\\b(", dict, ")\\b$")))
 
   # clean address data
-  # issues passing dictionary to pm_std_states
-  yesState %>%
-    tidyr::unnest(pm.state) %>%
-    dplyr::filter(is.na(pm.state) == FALSE) %>%
-    dplyr::mutate(pm.state = as.character(pm.state)) %>%
-    dplyr::mutate(pm.address =
-                    stringr::word(pm.address, start = 1,
-                                  end = -1-stringr::str_count(pm.state, pattern = "\\w+"))) %>%
-    pm_std_states(var = pm.state, dictionary = dictionary) -> yesState
-
-  # combine with data missing states
-  dplyr::bind_rows(yesState, noState) %>%
-    dplyr::arrange(pm.uid) %>%
-    dplyr::select(-pm.hasState) -> out
+  .data %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.state) == FALSE,
+                                      stringr::word(pm.address, start = 1,
+                                                    end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address)) %>%
+    pm_std_states(var = pm.state, dictionary = dictionary) %>%
+    dplyr::select(-pm.hasState) -> .data
 
 }
 
