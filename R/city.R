@@ -196,7 +196,7 @@ pm_no_city <- function(.data, dictionary){
 pm_parse_city <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.city = pm.address = pm.hasCity = NULL
+  pm.uid = pm.city = pm.address = pm.hasCity = NULL
 
   # minimize dictionary
   dict <- paste(dictionary$city.input, collapse = "|")
