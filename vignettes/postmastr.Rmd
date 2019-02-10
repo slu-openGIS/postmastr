@@ -24,33 +24,103 @@ Street addresses can be notoriously difficult to work with. In the United States
 This flexibility is provided in two ways. First, we utilize "dictionaries" for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables `postmastr` to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped. 
 
 ## A Grammar of Street Addresses
+### The Anatomy of an American Street Address
+While street addresses have a significant amount of variation, they also are ordered in a relatively standardized fashion. Take, for example, an address from `sushi1` (one of the example data sets in `postmastr`): `601 Clark Ave Suite 104, St. Louis, MO 63102-1719`. We can break down the address in the following way:
+
+* *house number* - `601`
+* *street* name - `Clark`
+* *street* suffix - `Ave`
+* *unit* type - `Suite`
+* *unit* number - `104`
+* *city* - `St. Louis`
+* *state* - `MO`
+* *postal code* - `63102-1719`
+
+There is sometimes additional information as well. Imagine that the house number in the example above was `601-603` instead. We could break this more complex number down in the following way:
+
+* *house number* - `601-603`
+* *house number* lower value - `601`
+* *house number* upper value - `603`
+
+Another permutation has to do with the *house number* suffix. Imagine a house number that is `601R` or `601 Rear`:
+
+* *house number* - `601`
+* *house number* suffix - `R`
+
+Finally, streets in the United States sometimes contain either a *street* prefix direction (`601 North Clark Ave`) or a *street* suffix direction (`601 Clark Ave North`).
+
+This basic anatomy of a street address forms our *grammar of street addresses* - a specific language for thinking about how addresses are formed and therefore can be parsed. 
+
+### Basic Organization of `postmastr`
+To parse our *grammar of street addresses*, functions can be grouped in two ways. All functions begin with the prefix `pm_` in order to take advantage of RStudio's autocomplete functionality. 
+
+First, we have major groups of functions based on their associated grammatical element:
+
+* `house` - *house number*
+* `house_suf` - *house number* suffix
+* `street` - *street* name
+* `street_suf` - *street* suffix
+* `street_dir` - *street* prefix and suffix direction
+* `unit` - *unit* name and number
+* `city` - *city*
+* `state` - *state*
+* `postal` - *postal code*
+
+For each group of function, we have a similar menu of options that describe the *verb* (action) the function implements. For the `state` family of functions, for instance:
+
+* `pm_has_state()` - does a given street address contain a state name or abbreviation?
+* `pm_any_state()` - does a any street address contain a state name or abbreviation?
+* `pm_all_state()` - do all street addresses contain a state name or abbreviation?
+* `pm_no_state()` - returns a tibble of street addresses that *do not* contain a state name or abbreviation
+* `pm_parse_state()` - parses street addresses that *do* contain a street name or abbreviation
+* `pm_std_state()` - standardizes the parsed state data to return upper-case abbreviations
 
 ## Creating Dictionaries
 ### State Dictionaries
-`postmastr` comes with a built-in dictionary of states and their abbreviations that can be expanded and filterd using `pm_dictionary()` and `pm_append()`. On its own, `pm_dictionary()` will return that built-in dictionary:
+`postmastr` comes with a built-in dictionary of states and their abbreviations that can be expanded and filterd using `pm_dictionary()` and `pm_append()`. On its own, `pm_dictionary()` will return that built-in dictionary with a variety of entries based on what we specify for case:
 
 ```r
-> pm_dictionary(locale = "us", type = "state")
+> pm_dictionary(locale = "us", type = "state", case = "title")
 # A tibble: 124 x 2
    state.output state.input                                     
    <chr>        <chr>                                           
- 1 AA           Armed Forces Americas                           
- 2 AA           AA                                              
- 3 AE           Armed Forces Europe, the Middle East, and Canada
- 4 AE           AE                                              
+ 1 AA           AA                                              
+ 2 AA           Armed Forces Americas                           
+ 3 AE           AE                                              
+ 4 AE           Armed Forces Europe, the Middle East, and Canada
  5 AK           AK                                              
  6 AK           Alaska                                          
  7 AL           AL                                              
  8 AL           Alabama                                         
- 9 AP           Armed Forces Pacific                            
-10 AP           AP                                              
+ 9 AP           AP                                              
+10 AP           Armed Forces Pacific                            
 # … with 114 more rows
+```
+
+We can customize this mix of cases by using `"upper"` and `"lower"` as well. For example:
+
+```r
+> pm_dictionary(locale = "us", type = "state", case = c("title", "upper"))
+# A tibble: 186 x 2
+   state.output state.input                                     
+   <chr>        <chr>                                           
+ 1 AA           AA                                              
+ 2 AA           Armed Forces Americas                           
+ 3 AA           ARMED FORCES AMERICAS                           
+ 4 AE           AE                                              
+ 5 AE           Armed Forces Europe, the Middle East, and Canada
+ 6 AE           ARMED FORCES EUROPE, THE MIDDLE EAST, AND CANADA
+ 7 AK           AK                                              
+ 8 AK           Alaska                                          
+ 9 AK           ALASKA                                          
+10 AL           AL                                              
+# … with 176 more rows
 ```
 
 If only a subset of states are included in your data, you can improve `postmastr`'s performance by limiting your state dictionary's contents. The `filter` argument can accept scalar or vector inputs of two-letter state abbreviations. For instance, we could construction a state dictionary that contains only the states along the Gulf of Mexico:
 
 ```r
-> pm_dictionary(locale = "us", type = "state", filter = c("AL", "FL", "LA", "MS", "TX"))
+> pm_dictionary(locale = "us", type = "state", filter = c("AL", "FL", "LA", "MS", "TX"), case = "title")
 # A tibble: 10 x 2
    state.output state.input
    <chr>        <chr>      
@@ -63,39 +133,61 @@ If only a subset of states are included in your data, you can improve `postmastr
  7 MS           MS         
  8 MS           Mississippi
  9 TX           TX         
-10 TX           Texas   
+10 TX           Texas     
 ```
 
 The state dictionary can also be expanded. For instance, there are several common abbreviations for Mississippi - "Miss" and "MISS". We can create an appendix with `pm_append()`:
 
 ```r
-> miss <- pm_append(locale = "us", type = "state", input = c("Miss", "MISS"), output = c("MS", "MS"))
+> miss <- pm_append(locale = "us", type = "state", input = "Miss", output = "MS")
 ```
 
 Once this has been created, we can combine it with the default state dictionary to create our custom dictionary output:
 
 ```r
-> pm_dictionary(locale = "us", type = "state", append = miss, filter = c("AL", "FL", "LA", "MS", "TX"))
-# A tibble: 12 x 2
+> pm_dictionary(locale = "us", type = "state", 
+    append = miss, 
+    filter = c("AL", "FL", "LA", "MS", "TX"), 
+    case = c("title", "upper"))
+# A tibble: 17 x 2
    state.output state.input
    <chr>        <chr>      
  1 AL           AL         
  2 AL           Alabama    
- 3 FL           FL         
- 4 FL           Florida    
- 5 LA           LA         
- 6 LA           Louisiana  
- 7 MS           MS         
- 8 MS           Mississippi
- 9 MS           Miss       
-10 MS           MISS       
-11 TX           TX         
-12 TX           Texas 
+ 3 AL           ALABAMA    
+ 4 FL           FL         
+ 5 FL           Florida    
+ 6 FL           FLORIDA    
+ 7 LA           LA         
+ 8 LA           Louisiana  
+ 9 LA           LOUISIANA  
+10 MS           MS         
+11 MS           Mississippi
+12 MS           Miss       
+13 MS           MISSISSIPPI
+14 MS           MISS       
+15 TX           TX         
+16 TX           Texas      
+17 TX           TEXAS  
 ```
 
 All of the different inputs for Mississippi will now return the same `MS` output.
 
-## The postmastr Workflow
+## Order of Operations in `postmastr`
+`postmast`'s functionality rests on an order of operations that *must* be followed to ensure correct parsing:
+
+1. prep
+2. postal code
+3. state
+4. city
+5. unit
+6. house number
+7. street
+8. construct
+
+If no street address in the given data set contains one of the grammatical elements (for example, if none of the addresses contain units), the associated functions in the workflow can be skipped.
+
+## The `postmastr` Workflow
 To illustrate the core components of the `postmastr` workflow, we'll use some data on sushi resturants in the St. Louis, Missouri region. These are "long" data - some resturants appear multiple times. Here is a quick preview of the data:
 
 ```r
@@ -180,36 +272,21 @@ Notice that the Drunken Fish has three different unique identifers applied for `
 Notice that all extraneous information has been removed, and that there are now only 24 rows instead of the original 30.
 
 ### Postal Codes
-All of the major grammatical elements of addresses have corresponding `has` and `parse` functions. The `has` functions return either a logical scalar if that grammatical element is found anywhere in the `postmastr` object *or*, with the `scalar = FALSE` argument, a logical vector identifying specific observations that contain that grammatical element.
-
-For postal codes ("zip-codes" in the United States), the `has` function is `pm_has_postal()`. With the `sushi1_min` data, it will return `TRUE` because postal codes are present in the data:
+Once we have our data prepared, we can begin working our way down the order of operations list. To see if is possible to skip a step, we should first use the appropriate `pm_any_` function. With the `sushi1_min` data, it will return `TRUE` because postal codes are present in the data:
 
 ```r
-> pm_has_postal(sushi1_min)
+> pm_any_postal(sushi1_min)
 [1] TRUE
 ```
 
-We can see which observations have postal codes using the `scalar = FALSE` argument. This is particularly useful for more complex data situations where postal codes are misformatted and deeper cleaning before parsing is necessary. In this case, every observation has a valid postal code and so `pm.hasZip` contains all `TRUE` values:
+We can also use `pm_all_` functions to determine whether all of the addresses have a postal code:
 
 ```r
-> pm_has_postal(sushi1_min, scalar = FALSE)
-# A tibble: 24 x 3
-   pm.uid pm.address                                      pm.hasZip
-    <int> <chr>                                           <lgl>    
- 1      1 3407 Olive St St. Louis Missouri 63103          TRUE     
- 2      2 6335 Delmar Blvd St. Louis MO 63112             TRUE     
- 3      3 3221 S Grand Boulevard St. Louis MO 63118       TRUE     
- 4      4 601 Clark Ave #104 St. Louis MO 63102-1719      TRUE     
- 5      5 601 Clark Ave Suite 104 St. Louis MO 63102-1719 TRUE     
- 6      6 1 Maryland Plaza St. Louis MO 63108             TRUE     
- 7      7 9443 Olive Blvd St. Louis Missouri 63132        TRUE     
- 8      8 4949 W Pine Blvd St. Louis MO 63108             TRUE     
- 9      9 3674 Forest Park Ave St. Louis MO 63108         TRUE     
-10     10 1013 Washington Avenue St. Louis MO 63101       TRUE     
-# … with 14 more rows
+> pm_all_postal(sushi1_min)
+[1] TRUE
 ```
 
-In a typical scenario, `pm_has_postal()` with the `scalar = FALSE` argument should be sufficent to prompt you to parse those postal codes. If `pm_parse_postal()` detects the presence of carrier routes (the four-digit additions to the typical five-digit zip-codes), it will parse those as well so that two postal code columns (`pm.zip` and `pm.zip4`) are returned:
+If this returned a `FALSE` result, we would want to use `pm_has` and `pm_no_` functions to explore whether postal codes are not being detected because they (a) actually do not exist or (b) are not being found because they are mis-formatted. Since we get a `TRUE` result, we can move on to parsing. If `pm_parse_postal()` detects the presence of carrier routes (the four-digit additions to the typical five-digit zip-codes), it will parse those as well so that two postal code columns (`pm.zip` and `pm.zip4`) are returned:
 
 ```r
 > sushi1_min <- pm_parse_postal(sushi1_min)
@@ -236,25 +313,55 @@ Had no carrier routes been present, these data would have been returned with onl
 To parse the cities out of `pm.address`, we'll start by creating a state-level dictionary object that contains only references to Missouri since we don't have data outside of that state:
 
 ```r
-> moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO")
+> moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = "title")
 > moDict
-# A tibble: 4 x 2
+# A tibble: 2 x 2
+  state.output state.input
+  <chr>        <chr>      
+1 MO           MO         
+2 MO           Missouri   
+```
+
+With our dictionary created in the object `moDict`, we can use that to test whether state names or abbreviations are found at the end of our address string with `pm_any_state()` and `pm_all_state()`:
+
+```r
+> pm_any_state(sushi1_min, dictionary = moDict)
+[1] TRUE
+> pm_all_state(sushi1_min, dictionary = moDict)
+[1] FALSE
+```
+
+These results indicate that our dictionary is returning matches, but that our list of possible inputs is not complete. We can explore the un-matched streets with `pm_no_state()` to determing whether these observations (a) actually do not contain states or (b) are not being matched because an entry is missing from our dictionary:
+
+```r
+> pm_no_state(sushi1_min, dictionary = moDict)
+# A tibble: 1 x 4
+  pm.uid pm.address                            pm.zip pm.zip4
+   <int> <chr>                                 <chr>  <chr>  
+1     24 16 SOUTH CENTRAL AVE CLAYTON MISSOURI 63105  NA  
+```
+
+Our dictionary does not contain `MISSOURI`, only `Missouri`, so we'll need to add that option. We can use `case = c("title", "upper")` to do this: 
+
+```r
+> moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = c("title", "upper"))
+> moDict
+# A tibble: 3 x 2
   state.output state.input
   <chr>        <chr>      
 1 MO           MO         
 2 MO           Missouri   
 3 MO           MISSOURI   
-4 MO           missouri
 ```
 
-With our dictionary created in the object `moDict`, we can use that to test whether state names or abbreviations are found at the end of our address string with `pm_has_state()`:
+For more complex mis-matches, we would want to use `pm_append()` to construct an appendix and then re-build our dictionary with that appendix included. We can verify that our dictionary is now complete by repeating our use of `pm_all_state()`:
 
 ```r
-> pm_has_state(sushi1_min, dictionary = moDict)
+> pm_all_state(sushi1_min, dictionary = moDict)
 [1] TRUE
 ```
 
-We could also explore these matches further to make sure that misspellings did not prevent `pm_has_state()` from identifying states by using the `scalar = FALSE` argument. We'll skip this step for now and attempt to parse the data using `pm_parse_state()`:
+With a `TRUE` result, we are ready to parse state names and abbreviations out of our data:
 
 ```r
 > sushi1_min <- pm_parse_state(sushi1_min, dictionary = moDict)
@@ -278,6 +385,65 @@ We could also explore these matches further to make sure that misspellings did n
 If we inspect this object, we'll see that `pm.state` contains the state abbreviation for Missouri in all cases. As with postal codes, the city names have been removed from `pm.address` to facilitate the next phase in parsing.
 
 ### Cities
+The workflow for cities is similar. Two options exist for American cities - you can either create a full list of cities by state using `pm_dictionary()` (useful if you are not sure which cities appear in the data) or use `pm_append()` on its own to create an appendix (faster if you know that there are a limited number of cities). This appendix for cities can be used on its own. We'll choose this second option:
+
+```r
+cityDict <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "Maplewood", "St. Louis", "Webster Groves"))
+```
+
+We'll then use `pm_any_city()` and `pm_all_city()` to verify that our dictionary is working and complete:
+
+```r
+> pm_any_city(sushi1_min, dictionary = cityDict)
+[1] TRUE
+> pm_all_city(sushi1_min, dictionary = cityDict)
+[1] FALSE
+```
+
+As with the state data, we can use `pm_no_city()` to identify why our dictionary is incomplete (or verify that some addresses do not contain cities):
+
+```r
+> pm_no_city(sushi1_min, dictionary = cityDict)
+# A tibble: 2 x 5
+  pm.uid pm.address                   pm.state pm.zip pm.zip4
+   <int> <chr>                        <chr>    <chr>  <chr>  
+1     17 4 N EUCLID AVE SAINT LOUIS   MO       63108  NA     
+2     24 16 SOUTH CENTRAL AVE CLAYTON MO       63105  NA    
+```
+
+There are two city names in all upper-case. We'll re-create our dictionary, adding both `"SAINT LOUIS"` and `"CLAYTON"` as well as specifying an `output` vector that is `NA` for all the correct cities but includes entries for our two incorrectly formatted cities and verify using `pm_all_city()` that our dictionary is now complete:
+
+```r
+> cityDict <- pm_append(type = "city",
++                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", 
++                                 "St. Louis", "SAINT LOUIS", "Webster Groves"),
++                       output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
+> pm_all_city(sushi1_min, dictionary = cityDict)
+[1] TRUE
+```
+
+We can now move on to parsing using `pm_parse_city()`:
+
+```r
+> sushi1_min <- pm_parse_city(sushi1_min, dictionary = cityDict)
+> sushi1_min
+# A tibble: 24 x 6
+   pm.uid pm.address              pm.city   pm.state pm.zip pm.zip4
+    <int> <chr>                   <chr>     <chr>    <chr>  <chr>  
+ 1      1 3407 Olive St           St. Louis MO       63103  NA     
+ 2      2 6335 Delmar Blvd        St. Louis MO       63112  NA     
+ 3      3 3221 S Grand Boulevard  St. Louis MO       63118  NA     
+ 4      4 601 Clark Ave #104      St. Louis MO       63102  1719   
+ 5      5 601 Clark Ave Suite 104 St. Louis MO       63102  1719   
+ 6      6 1 Maryland Plaza        St. Louis MO       63108  NA     
+ 7      7 9443 Olive Blvd         St. Louis MO       63132  NA     
+ 8      8 4949 W Pine Blvd        St. Louis MO       63108  NA     
+ 9      9 3674 Forest Park Ave    St. Louis MO       63108  NA     
+10     10 1013 Washington Avenue  St. Louis MO       63101  NA 
+```
+
+The column `pm.city` has been added to our data set and city names have been parsed as wel as standardized.
 
 ### Units
 

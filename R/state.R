@@ -242,22 +242,18 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # identify state
-  # issues passing dictionary
-  isState <- pm_has_state(.data, dictionary = dictionary, locale = locale)
-
-  # iterate over observations
+  # parse states
   if (locale == "us"){
-    out <- pm_parse_state_us(isState, dictionary = dictionary)
+    .data <- pm_parse_state_us(.data, dictionary = dictionary)
   }
 
   # re-order output
   if (locale == "us"){
-    out <- dplyr::select(out, pm.uid, pm.address, pm.state, dplyr::everything())
+    .data <- dplyr::select(.data, pm.uid, pm.address, pm.state, dplyr::everything())
   }
 
   # return output
-  return(out)
+  return(.data)
 
 }
 

@@ -291,17 +291,11 @@ pm_append <- function(locale = "us", type, input, output){
           stringsAsFactors = FALSE
         )
 
-        out <- dplyr::mutate(out,
-                             city.output = stringr::str_to_upper(city.output),
-                             city.input = stringr::str_to_title(city.input))
-
       } else if (missing(output) == TRUE){
         out <- data.frame(
           city.input = c(input),
           stringsAsFactors = FALSE
         )
-
-        out <- dplyr::mutate(out, city.input = stringr::str_to_upper(city.input))
 
       }
 
