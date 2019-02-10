@@ -265,7 +265,7 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
 pm_parse_state_us <- function(.data, dictionary){
 
   # minimize dictionary
-  dict <- dictionary$state.input
+  dict <- paste(dictionary$state.input, collapse = "|")
 
   # create bindings for global variables
   pm.address = pm.state = pm.uid = pm.hasState = NULL
@@ -280,8 +280,7 @@ pm_parse_state_us <- function(.data, dictionary){
     dplyr::mutate(pm.address = ifelse(is.na(pm.state) == FALSE,
                                       stringr::word(pm.address, start = 1,
                                                     end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address)) %>%
-    pm_std_states(var = pm.state, dictionary = dictionary) %>%
-    dplyr::select(-pm.hasState) -> .data
+    pm_std_states(var = pm.state, dictionary = dictionary) -> .data
 
 }
 

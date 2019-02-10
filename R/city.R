@@ -88,8 +88,8 @@ pm_all_city <- function(.data, dictionary){
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
-#' @importFrom purrr map
 #' @importFrom stringr str_c
+#' @importFrom stringr str_detect
 #'
 #' @export
 pm_has_city <- function(.data, dictionary){
@@ -106,16 +106,15 @@ pm_has_city <- function(.data, dictionary){
     stop("Error 3.")
   }
 
-  #
-  dict <- dictionary$city.input
+  # minimize dictionary
+  dict <- paste(dictionary$city.input, collapse = "|")
 
-  # iterate over observations
-  .data %>%
-    dplyr::mutate(pm.hasCity = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = dict))) %>%
-    dplyr::mutate(pm.hasCity = as.logical(pm.hasCity)) -> out
+  # check observations
+  .data <- dplyr::mutate(.data, pm.hasCity = stringr::str_detect(pm.address,
+                                                                 pattern = stringr::str_c("\\b(", dict, ")\\b$")))
 
   # return output
-  return(out)
+  return(.data)
 
 }
 
@@ -188,64 +187,45 @@ pm_no_city <- function(.data, dictionary){
 #'     state name or abbreviation removed.
 #'
 #' @importFrom dplyr %>%
-#' @importFrom dplyr arrange
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
-#' @importFrom purrr map
 #' @importFrom stringr str_count
 #' @importFrom stringr word
-#' @importFrom tidyr unnest
 #'
 #' @export
 pm_parse_city <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.uid = pm.city = pm.address = pm.hasCity = NULL
+  pm.city = pm.address = pm.hasCity = NULL
 
-  #
-  dict <- dictionary$city.input
+  # minimize dictionary
+  dict <- paste(dictionary$city.input, collapse = "|")
 
-  # identify cities
-  isCity <- pm_has_city(.data, dictionary = dictionary)
-
-  # subset
-  yesCity <- dplyr::filter(isCity, pm.hasCity == TRUE)
-  noCity <- dplyr::filter(isCity, pm.hasCity == FALSE)
-
-  # iterate over observations
-  yesCity %>%
-    dplyr::mutate(pm.city = purrr::map(pm.address, ~ pm_extract_pattern(.x, dictionary = dict))) -> yesCity
+  # parse
+  .data <- dplyr::mutate(.data, pm.city =
+                           stringr::str_extract(pm.address,
+                                                pattern = stringr::str_c("\\b(", dict, ")\\b$")))
 
   # clean address data
-  yesCity %>%
-    tidyr::unnest(pm.city) %>%
-    dplyr::filter(is.na(pm.city) == FALSE) %>%
-    dplyr::mutate(pm.city = as.character(pm.city)) %>%
-    dplyr::mutate(pm.address =
-                    stringr::word(pm.address, start = 1,
-                                  end = -1-stringr::str_count(pm.city, pattern = "\\w+"))) -> yesCity
-
-  # combine with data missing states
-  dplyr::bind_rows(yesCity, noCity) %>%
-    dplyr::arrange(pm.uid) %>%
-    dplyr::select(-pm.hasCity) -> out
+  .data %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.city) == FALSE,
+                                      stringr::word(pm.address, start = 1,
+                                                    end = -1-stringr::str_count(pm.city, pattern = "\\w+")), pm.address)) -> .data
 
   # standardize if data available
   if ("city.output" %in% names(dictionary)){
 
-    out <- pm_std_city(out, var = pm.city, dictionary = dictionary)
+    .data <- pm_std_city(.data, var = pm.city, dictionary = dictionary)
 
   }
 
   # re-order output
   if (locale == "us"){
-    out <- dplyr::select(out, pm.uid, pm.address, pm.city, dplyr::everything())
+    .data <- dplyr::select(.data, pm.uid, pm.address, pm.city, dplyr::everything())
   }
 
   # return output
-  return(out)
+  return(.data)
 
 }
 
