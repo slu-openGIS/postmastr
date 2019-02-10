@@ -120,7 +120,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_dictionary</span>(<span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>, <span class='no'>type</span>, <span class='no'>append</span>, <span class='no'>filter</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_dictionary</span>(<span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>, <span class='no'>type</span>, <span class='no'>append</span>, <span class='no'>filter</span>, <span class='kw'>case</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"title"</span>, <span class='st'>"lower"</span>, <span class='st'>"upper"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,6 +143,13 @@ should represent. Current options are <code>"state"</code> and <code>"city"</cod
       <th>filter</th>
       <td><p>An optional character scalar or vector with output elements that should
 be retained.</p></td>
+    </tr>
+    <tr>
+      <th>case</th>
+      <td><p>An optional character scalar or vector containing one or more of three valid
+options - <code>"title"</code> (e.g. "Missouri"), <code>"lower"</code> (e.g. "missouri), or
+<code>"upper"</code> (e.g. "MISSOURI"). These are used to create a more robust dictionary of
+input terms.</p></td>
     </tr>
     </table>
     
