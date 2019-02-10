@@ -25,7 +25,8 @@
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
-#' @importFrom purrr map
+#' @importFrom stringr str_c
+#' @importFrom stringr str_detect
 #'
 #' @export
 pm_has_unit <- function(.data, dictionary, scalar = TRUE, locale = "us"){
@@ -59,22 +60,18 @@ pm_has_unit <- function(.data, dictionary, scalar = TRUE, locale = "us"){
     } else if (missing(dictionary) == TRUE){
       fullDic <- dictionary
     }
+
+    dict <- paste(fullDic, collapse = "|")
   }
 
   # iterate over observations
   if (locale == "us"){
-    .data %>%
-      dplyr::mutate(pm.hasUnit = purrr::map(pm.address, ~ pm_has_pattern(.x, dictionary = fullDic, end = FALSE))) %>%
-      dplyr::mutate(pm.hasUnit = as.logical(pm.hasUnit)) -> out
-  }
-
-  # return scalar
-  if (scalar == TRUE){
-    out <- any(out$pm.hasUnit)
+    .data <- dplyr::mutate(.data, pm.hasUnit = stringr::str_detect(pm.address,
+                                                                    pattern = stringr::str_c("\\b(", dict, ")\\b")))
   }
 
   # return output
-  return(out)
+  return(.data)
 
 }
 
