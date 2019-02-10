@@ -37,7 +37,7 @@
     codes (e.g. 63108-3412). The zip-code must be the final word in
     the string to return TRUE." />
 
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,19 +124,14 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_has_postal</span>(<span class='no'>.data</span>, <span class='kw'>scalar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_has_postal</span>(<span class='no'>.data</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object (<code>pm_subset</code>)</p></td>
-    </tr>
-    <tr>
-      <th>scalar</th>
-      <td><p>If <code>TRUE</code>, a single logical scalar is returned; otherwise if
-<code>FALSE</code>, a logical vector is returned.</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
       <th>locale</th>
@@ -147,10 +142,8 @@ current option is "us" but this is included to facilitate future expansion.</p><
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If <code>scalar = TRUE</code>, a single logical scalar is returned that is
-    <code>TRUE</code> if the data contain postal codes and <code>FALSE</code> if they do not.
-    If <code>scalar = FALSE</code> a tibble with a new logical variable <code>pm.hasZip</code>
-    that is <code>TRUE</code> if a zip-code is found in the last word of the address
+    <p>A tibble with a new logical variable <code>pm.hasZip</code> that is
+    <code>TRUE</code> if a zip-code is found in the last word of the address
     and <code>FALSE</code> otherwise.</p>
     
 
@@ -168,7 +161,7 @@ current option is "us" but this is included to facilitate future expansion.</p><
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christopher Prener.</p>
+  <p>Developed by <a href='https://chris-prener.github.io'>Christopher Prener</a>.</p>
 </div>
 
 <div class="pkgdown">

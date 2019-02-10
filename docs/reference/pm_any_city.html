@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parse City Names — pm_parse_city • postmastr</title>
+<title>Does City Name Dictionary Return Any Matches — pm_any_city • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,14 +30,9 @@
 
 
 
-<meta property="og:title" content="Parse City Names — pm_parse_city" />
+<meta property="og:title" content="Does City Name Dictionary Return Any Matches — pm_any_city" />
 
-<meta property="og:description" content="Parse a city name or abbreviation from a string. These data
-    should be at the end of the string (i.e. the last several words). If a
-    state name or abbrevation follows the city, use pm_parse_state first
-    to remove those data from pm.address. Likewise, if a
-    postal code follows a name, use pm_parse_postal first to remove those
-    data from pm.address." />
+<meta property="og:description" content="Determine whether the dictionary returns any matches." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -112,23 +107,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parse City Names</h1>
+    <h1>Does City Name Dictionary Return Any Matches</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/city.R'><code>R/city.R</code></a></small>
-    <div class="hidden name"><code>pm_parse_city.Rd</code></div>
+    <div class="hidden name"><code>pm_any_city.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Parse a city name or abbreviation from a string. These data
-    should be at the end of the string (i.e. the last several words). If a
-    state name or abbrevation follows the city, use <a href='pm_parse_state.html'>pm_parse_state</a> first
-    to remove those data from <code>pm.address</code>. Likewise, if a
-    postal code follows a name, use <a href='pm_parse_postal.html'>pm_parse_postal</a> first to remove those
-    data from <code>pm.address</code>.</p>
+    <p>Determine whether the dictionary returns any matches.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_parse_city</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_any_city</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,20 +132,13 @@
       <td><p>A tbl created with <code>pm_dictionary</code> to be used
 as a master list for cities.</p></td>
     </tr>
-    <tr>
-      <th>locale</th>
-      <td><p>A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tibble with a new character variable <code>pm.city</code> that contains
-    the city name. If a city name is not detected in the string, a value
-    of <code>NA</code> will be returned. If it does not yet exist, a copy of the
-    address variable will be created in <code>pm.address</code> and returned with
-    state name or abbreviation removed.</p>
+    <p>If <code>scalar = TRUE</code>, a single logical scalar is returned that is
+    <code>TRUE</code> if the data contains at least one city name from the given
+    dictionary and <code>FALSE</code> if they do not.</p>
     
 
   </div>

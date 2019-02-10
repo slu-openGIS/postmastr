@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Detect Presence of City Name — pm_has_city • postmastr</title>
+<title>Detect Presence of City Name in Address — pm_has_city • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,11 @@
 
 
 
-<meta property="og:title" content="Detect Presence of City Name — pm_has_city" />
+<meta property="og:title" content="Detect Presence of City Name in Address — pm_has_city" />
 
 <meta property="og:description" content="Determine the presence of city names in a string." />
 
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -107,7 +107,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Detect Presence of City Name</h1>
+    <h1>Detect Presence of City Name in Address</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/city.R'><code>R/city.R</code></a></small>
     <div class="hidden name"><code>pm_has_city.Rd</code></div>
     </div>
@@ -118,35 +118,27 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_has_city</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>scalar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_has_city</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object (<code>pm_subset</code>)</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
       <th>dictionary</th>
       <td><p>A tbl created with <code>pm_dictionary</code> to be used
 as a master list for cities.</p></td>
     </tr>
-    <tr>
-      <th>scalar</th>
-      <td><p>If <code>TRUE</code>, a single logical scalar is returned; otherwise if
-<code>FALSE</code>, a logical vector is returned.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If <code>scalar = TRUE</code>, a single logical scalar is returned that is
-    <code>TRUE</code> if the data contains a city name from the given dictionary and
-    <code>FALSE</code> if they do not. If <code>scalar = FALSE</code> a tibble with a new
-    logical variable <code>pm.hasCity</code> that is <code>TRUE</code> if a city name from
-    the given dictionary is found in the last word of the address and
-    <code>FALSE</code> otherwise.</p>
+    <p>A tibble with a new logical variable <code>pm.hasCity</code> that is
+    <code>TRUE</code> if a city name from the given dictionary is found in the
+    at the end the address and <code>FALSE</code> otherwise.</p>
     
 
   </div>
@@ -163,7 +155,7 @@ as a master list for cities.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christopher Prener.</p>
+  <p>Developed by <a href='https://chris-prener.github.io'>Christopher Prener</a>.</p>
 </div>
 
 <div class="pkgdown">

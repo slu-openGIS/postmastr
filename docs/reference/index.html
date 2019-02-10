@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Function reference" />
 
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,94 +119,16 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-prepare-data" class="hasAnchor"><a href="#section-prepare-data" class="anchor"></a>Prepare Data</h2>
+          <p class="section-desc"><p>Create <code>postmastr</code> and Validate Objects</p></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="dic_us_states.html">dic_us_states</a></code> </p>
-        </td>
-        <td><p>State Dictionary, United States of America</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_append.html">pm_dictionary()</a></code> </p>
-        </td>
-        <td><p>Append Custom Vectors to Dictionary Objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_dictionary.html">pm_dictionary()</a></code> </p>
-        </td>
-        <td><p>Create Dictionary Objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_address.html">pm_has_uid()</a></code> </p>
-        </td>
-        <td><p>Validate postmastr Address Variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_city.html">pm_has_city()</a></code> </p>
-        </td>
-        <td><p>Detect Presence of City Name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_postal.html">pm_has_postal()</a></code> </p>
-        </td>
-        <td><p>Detect Presence of Postal Codes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_state.html">pm_has_state()</a></code> </p>
-        </td>
-        <td><p>Detect Presence of State Name or Abbreviation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_uid.html">pm_has_uid()</a></code> </p>
-        </td>
-        <td><p>Validate postmastr pm.uid Variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_has_unit.html">pm_has_unit()</a></code> </p>
-        </td>
-        <td><p>Detect Presence of Unit</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="pm_identify.html">pm_identify()</a></code> </p>
         </td>
         <td><p>Identify Observations</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_no_city.html">pm_has_city()</a></code> </p>
-        </td>
-        <td><p>Return Only Unmatched Observations From pm_has_city</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_parse_city.html">pm_parse_city()</a></code> </p>
-        </td>
-        <td><p>Parse City Names</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_parse_postal.html">pm_parse_zip()</a></code> </p>
-        </td>
-        <td><p>Parse Postal Codes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_parse_state.html">pm_parse_state()</a></code> </p>
-        </td>
-        <td><p>Parse State Names and Abbreviation</p></td>
       </tr><tr>
         
         <td>
@@ -216,16 +138,166 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_std_city.html">pm_std_city()</a></code> </p>
+          <p><code><a href="pm_has_address.html">pm_has_address()</a></code> </p>
         </td>
-        <td><p>Standardize Parsed City Names</p></td>
+        <td><p>Validate postmastr Address Variable</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_std_states.html">pm_std_states_us()</a></code> </p>
+          <p><code><a href="pm_has_uid.html">pm_has_uid()</a></code> </p>
         </td>
-        <td><p>Standardize Parsed State Names</p></td>
+        <td><p>Validate postmastr pm.uid Variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-dictionaries" class="hasAnchor"><a href="#section-dictionaries" class="anchor"></a>Dictionaries</h2>
+          <p class="section-desc"><p>Functions and Data for Creating Dictionaries</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_dictionary.html">pm_dictionary()</a></code> </p>
+        </td>
+        <td><p>Create Dictionary Objects</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_append.html">pm_append()</a></code> </p>
+        </td>
+        <td><p>Append Custom Vectors to Dictionary Objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dic_us_states.html">dic_us_states</a></code> </p>
+        </td>
+        <td><p>State Dictionary, United States of America</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-postal-codes" class="hasAnchor"><a href="#section-postal-codes" class="anchor"></a>Postal Codes</h2>
+          <p class="section-desc"><p>Work with Postal (Zip) Codes</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_any_postal.html">pm_any_postal()</a></code> </p>
+        </td>
+        <td><p>Do Any Addresses Have Postal Codes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_all_postal.html">pm_all_postal()</a></code> </p>
+        </td>
+        <td><p>Do All Addresses Have Postal Codes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_has_postal.html">pm_has_postal()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of Postal Codes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_parse_postal.html">pm_parse_postal()</a></code> </p>
+        </td>
+        <td><p>Parse Postal Codes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-states" class="hasAnchor"><a href="#section-states" class="anchor"></a>States</h2>
+          <p class="section-desc"><p>Work with State Names and Abbreviations</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_any_state.html">pm_any_state()</a></code> </p>
+        </td>
+        <td><p>Does State Dictionary Return Any Matches</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_all_state.html">pm_all_state()</a></code> </p>
+        </td>
+        <td><p>Does State Dictionary Return a Match for All Observations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_has_state.html">pm_has_state()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of State Name or Abbreviation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_parse_state.html">pm_parse_state()</a></code> </p>
+        </td>
+        <td><p>Parse State Names and Abbreviation</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-cities" class="hasAnchor"><a href="#section-cities" class="anchor"></a>Cities</h2>
+          <p class="section-desc"><p>Work with City Names</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_any_city.html">pm_any_city()</a></code> </p>
+        </td>
+        <td><p>Does City Name Dictionary Return Any Matches</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_all_city.html">pm_all_city()</a></code> </p>
+        </td>
+        <td><p>Does City Name Dictionary Return a Match for All Observations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_has_city.html">pm_has_city()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of City Name in Address</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_no_city.html">pm_no_city()</a></code> </p>
+        </td>
+        <td><p>Return Only Unmatched Observations From pm_has_city</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_parse_city.html">pm_parse_city()</a></code> </p>
+        </td>
+        <td><p>Parse City Names</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-units" class="hasAnchor"><a href="#section-units" class="anchor"></a>Units</h2>
+          <p class="section-desc"><p>Work with Unit Names and Numbers</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_has_unit.html">pm_has_unit()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of Unit</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-sample-data" class="hasAnchor"><a href="#section-sample-data" class="anchor"></a>Sample Data</h2>
+          <p class="section-desc"><p>Sushi Resturants in St. Louis and its Enviorns</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="sushi1.html">sushi1</a></code> </p>
@@ -245,14 +317,20 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-prepare-data">Prepare Data</a></li>
+      <li><a href="#section-dictionaries">Dictionaries</a></li>
+      <li><a href="#section-postal-codes">Postal Codes</a></li>
+      <li><a href="#section-states">States</a></li>
+      <li><a href="#section-cities">Cities</a></li>
+      <li><a href="#section-units">Units</a></li>
+      <li><a href="#section-sample-data">Sample Data</a></li>
     </ul>
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christopher Prener.</p>
+  <p>Developed by <a href='https://chris-prener.github.io'>Christopher Prener</a>.</p>
 </div>
 
 <div class="pkgdown">

@@ -1,0 +1,57 @@
+url: https://slu-openGIS.github.io/postmastr/
+
+authors:
+  Christopher Prener:
+    href: https://chris-prener.github.io
+
+reference:
+  - title: "Prepare Data"
+    desc: "Create `postmastr` and Validate Objects"
+    contents:
+    - pm_identify
+    - pm_prep
+    - pm_has_address
+    - pm_has_uid
+
+  - title: "Dictionaries"
+    desc: "Functions and Data for Creating Dictionaries"
+    contents:
+    - pm_dictionary
+    - pm_append
+    - dic_us_states
+
+  - title: "Postal Codes"
+    desc: "Work with Postal (Zip) Codes"
+    contents:
+    - pm_any_postal
+    - pm_all_postal
+    - pm_has_postal
+    - pm_parse_postal
+
+  - title: "States"
+    desc: "Work with State Names and Abbreviations"
+    contents:
+    - pm_any_state
+    - pm_all_state
+    - pm_has_state
+    - pm_parse_state
+
+  - title: "Cities"
+    desc: "Work with City Names"
+    contents:
+    - pm_any_city
+    - pm_all_city
+    - pm_has_city
+    - pm_no_city
+    - pm_parse_city
+
+  - title: "Units"
+    desc: "Work with Unit Names and Numbers"
+    contents:
+    - pm_has_unit
+
+  - title: "Sample Data"
+    desc: "Sushi Resturants in St. Louis and its Enviorns"
+    contents:
+    - sushi1
+    - sushi2

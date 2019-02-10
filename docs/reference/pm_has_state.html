@@ -35,7 +35,7 @@
 <meta property="og:description" content="Determine the presence of state names or abbreviations
     at the end of a string." />
 
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,14 +120,14 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_has_state</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>scalar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_has_state</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object (<code>pm_subset</code>)</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
       <th>dictionary</th>
@@ -136,27 +136,17 @@ as a master list for states. If none is provided, the <code>states</code>
 object will be used as the default directory.</p></td>
     </tr>
     <tr>
-      <th>scalar</th>
-      <td><p>If <code>TRUE</code>, a single logical scalar is returned; otherwise if
-<code>FALSE</code>, a logical vector is returned.</p></td>
-    </tr>
-    <tr>
       <th>locale</th>
       <td><p>A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.</p></td>
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tibble with a new logical variable <code>pm.isState</code> that is
-    <code>TRUE</code> if a state name or abbreviation is found in the address
-    and <code>FALSE</code> otherwise.</p>
-<p>If <code>scalar = TRUE</code>, a single logical scalar is returned that is
-    <code>TRUE</code> if the data contain statenames or abbreviations and <code>FALSE</code>
-    if they do not. If <code>scalar = FALSE</code> a tibble with a new logical variable
-    <code>pm.isState</code> that is <code>TRUE</code> if a state name or abbreviation is found
-    in the last word of the address and <code>FALSE</code> otherwise.</p>
+    <p>A tibble with a new logical variable <code>pm.hasState</code> that is
+    <code>TRUE</code> if a state name or abbreviation from the given dictionary is found
+    at the end of the address and <code>FALSE</code> otherwise.</p>
     
 
   </div>
@@ -173,7 +163,7 @@ current option is "us" but this is included to facilitate future expansion.</p><
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christopher Prener.</p>
+  <p>Developed by <a href='https://chris-prener.github.io'>Christopher Prener</a>.</p>
 </div>
 
 <div class="pkgdown">

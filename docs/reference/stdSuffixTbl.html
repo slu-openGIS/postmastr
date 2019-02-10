@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parse City Names — pm_parse_city • postmastr</title>
+<title>Standardized Street Suffixes — stdSuffixTbl • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,14 +30,9 @@
 
 
 
-<meta property="og:title" content="Parse City Names — pm_parse_city" />
+<meta property="og:title" content="Standardized Street Suffixes — stdSuffixTbl" />
 
-<meta property="og:description" content="Parse a city name or abbreviation from a string. These data
-    should be at the end of the string (i.e. the last several words). If a
-    state name or abbrevation follows the city, use pm_parse_state first
-    to remove those data from pm.address. Likewise, if a
-    postal code follows a name, use pm_parse_postal first to remove those
-    data from pm.address." />
+<meta property="og:description" content="A data set containing standardized street suffixes and accepted alternatives from the USPS." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -112,59 +107,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parse City Names</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/city.R'><code>R/city.R</code></a></small>
-    <div class="hidden name"><code>pm_parse_city.Rd</code></div>
+    <h1>Standardized Street Suffixes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/stdSuffixTbl.R'><code>R/stdSuffixTbl.R</code></a></small>
+    <div class="hidden name"><code>stdSuffixTbl.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Parse a city name or abbreviation from a string. These data
-    should be at the end of the string (i.e. the last several words). If a
-    state name or abbrevation follows the city, use <a href='pm_parse_state.html'>pm_parse_state</a> first
-    to remove those data from <code>pm.address</code>. Likewise, if a
-    postal code follows a name, use <a href='pm_parse_postal.html'>pm_parse_postal</a> first to remove those
-    data from <code>pm.address</code>.</p>
+    <p>A data set containing standardized street suffixes and accepted alternatives from the USPS.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_parse_city</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>.data</th>
-      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
-    </tr>
-    <tr>
-      <th>dictionary</th>
-      <td><p>A tbl created with <code>pm_dictionary</code> to be used
-as a master list for cities.</p></td>
-    </tr>
-    <tr>
-      <th>locale</th>
-      <td><p>A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='no'>stdSuffixTbl</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A tibble with a new character variable <code>pm.city</code> that contains
-    the city name. If a city name is not detected in the string, a value
-    of <code>NA</code> will be returned. If it does not yet exist, a copy of the
-    address variable will be created in <code>pm.address</code> and returned with
-    state name or abbreviation removed.</p>
+    <p>A data frame with 502 rows and 3 variables:</p><dl class='dl-horizontal'>
+  <dt>suf_pri</dt><dd><p>full category name</p></dd>
+  <dt>suf_com</dt><dd><p>commonly accepted alternatives</p></dd>
+  <dt>suf_std</dt><dd><p>standard abbreviation</p></dd>
+  </dl>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#format">Format</a></li>
           </ul>
 
   </div>

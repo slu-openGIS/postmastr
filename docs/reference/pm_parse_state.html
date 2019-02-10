@@ -34,10 +34,10 @@
 
 <meta property="og:description" content="Parse a state name or abbreviation from a string. These data
     should be at the end of the string (i.e. the last word or two). If a
-    zip-code follows the, use pm_parseZip first to remove those
+    postal code follows the, use pm_parse_postal first to remove those
     data from pm.address." />
 
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,7 +119,7 @@
     
     <p>Parse a state name or abbreviation from a string. These data
     should be at the end of the string (i.e. the last word or two). If a
-    zip-code follows the, use pm_parseZip first to remove those
+    postal code follows the, use <a href='pm_parse_postal.html'>pm_parse_postal</a> first to remove those
     data from <code>pm.address</code>.</p>
     
     </div>
@@ -131,7 +131,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object (<code>pm_subset</code>)</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
       <th>dictionary</th>
@@ -171,7 +171,7 @@ current option is "us" but this is included to facilitate future expansion.</p><
 
       <footer>
       <div class="copyright">
-  <p>Developed by Christopher Prener.</p>
+  <p>Developed by <a href='https://chris-prener.github.io'>Christopher Prener</a>.</p>
 </div>
 
 <div class="pkgdown">
