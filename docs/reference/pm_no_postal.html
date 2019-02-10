@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Standardize Parsed City Names — pm_std_city • postmastr</title>
+<title>Return Only Unmatched Observations From pm_has_postal — pm_no_postal • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Standardize Parsed City Names — pm_std_city" />
+<meta property="og:title" content="Return Only Unmatched Observations From pm_has_postal — pm_no_postal" />
 
-<meta property="og:description" content="Convert state names to the USPS approved two-letter abbreviation." />
+<meta property="og:description" content="Automatically subset the results of pm_has_postal to
+   return only observations that were not found to include a postal (zip) code." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -107,40 +108,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Standardize Parsed City Names</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/city.R'><code>R/city.R</code></a></small>
-    <div class="hidden name"><code>pm_std_city.Rd</code></div>
+    <h1>Return Only Unmatched Observations From pm_has_postal</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/postal.R'><code>R/postal.R</code></a></small>
+    <div class="hidden name"><code>pm_no_postal.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convert state names to the USPS approved two-letter abbreviation.</p>
+    <p>Automatically subset the results of pm_has_postal to
+   return only observations that were not found to include a postal (zip) code.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_std_city</span>(<span class='no'>.data</span>, <span class='no'>var</span>, <span class='no'>dictionary</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_no_postal</span>(<span class='no'>.data</span>,  <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object created with pm_prep, a tbl, or a data frame</p></td>
+      <td><p>A postmastr object created with pm_prep</p></td>
     </tr>
     <tr>
-      <th>var</th>
-      <td><p>A character variable that may contain city names</p></td>
-    </tr>
-    <tr>
-      <th>dictionary</th>
-      <td><p>A tbl created with <code>pm_dictionary</code> to be used
-as a master list for cities.</p></td>
+      <th>locale</th>
+      <td><p>A string indicating the country these data represent; the only
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tibble with an updated variable that contains the corrected city name.</p>
+    <p>A tibble containing only observations that were not found in
+    the dictionary. The variable created by pm_has_postal,
+    <code>pm.hasZip</code>, is removed.</p>
     
 
   </div>

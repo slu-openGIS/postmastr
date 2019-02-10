@@ -26,6 +26,7 @@ reference:
     - pm_any_postal
     - pm_all_postal
     - pm_has_postal
+    - pm_no_postal
     - pm_parse_postal
 
   - title: "States"
@@ -34,6 +35,7 @@ reference:
     - pm_any_state
     - pm_all_state
     - pm_has_state
+    - pm_no_state
     - pm_parse_state
 
   - title: "Cities"

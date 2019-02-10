@@ -55,6 +55,12 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_city.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_postal.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_state.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_city.html</loc>
   </url>
   <url>
