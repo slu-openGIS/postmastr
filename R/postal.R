@@ -152,6 +152,51 @@ pm_has_zip_us <- function(.data){
 
 }
 
+#' Return Only Unmatched Observations From pm_has_postal
+#'
+#' @description Automatically subset the results of \link{pm_has_postal} to
+#'    return only observations that were not found to include a postal (zip) code.
+#'
+#' @usage pm_no_postal(.data,  locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A tibble containing only observations that were not found in
+#'     the dictionary. The variable created by \link{pm_has_postal},
+#'     \code{pm.hasZip}, is removed.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#'
+#' @export
+pm_no_postal <- function(.data, locale = "us"){
+
+  # global bindings
+  pm.hasZip = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # create output
+  .data %>%
+    pm_has_postal(locale = locale) %>%
+    dplyr::filter(pm.hasZip == FALSE) %>%
+    dplyr::select(-pm.hasZip) -> out
+
+  # return output
+  return(out)
+
+}
+
 #' Parse Postal Codes
 #'
 #' @description Create a new column containing postal code data.

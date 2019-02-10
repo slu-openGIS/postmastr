@@ -145,6 +145,53 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 
 }
 
+#' Return Only Unmatched Observations From pm_has_state
+#'
+#' @description Automatically subset the results of \link{pm_has_state} to
+#'    return only observations that were not found in the dictionary.
+#'
+#' @usage pm_no_state(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A tibble containing only observations that were not found in
+#'     the dictionary. The variable created by \link{pm_has_state},
+#'     \code{pm.hasState}, is removed.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#'
+#' @export
+pm_no_state <- function(.data, dictionary, locale = "us"){
+
+  # global bindings
+  pm.hasState = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # create output
+  .data %>%
+    pm_has_state(dictionary = dictionary, locale = locale) %>%
+    dplyr::filter(pm.hasState == FALSE) %>%
+    dplyr::select(-pm.hasState) -> out
+
+  # return output
+  return(out)
+
+}
+
 #' Parse State Names and Abbreviation
 #'
 #' @description Parse a state name or abbreviation from a string. These data

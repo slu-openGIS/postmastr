@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^\.github
 ^docs$
+^_pkgdown\.yml$
 ^README\.Rmd$
 ^README-.*\.png$
 ^LICENSE$
