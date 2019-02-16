@@ -167,7 +167,7 @@ pm_no_house <- function(.data){
 pm_parse_house <- function(.data){
 
   # global bindings
-  pm.uid = pm.address = pm.house = NULL
+  pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouseRange = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -184,8 +184,76 @@ pm_parse_house <- function(.data){
     dplyr::mutate(pm.address = stringr::word(pm.address, start = 2, end = -1)) %>%
     dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> out
 
+  # address ranges
+  if (pm_any_houseRange(out) == TRUE){
+
+    out %>%
+      pm_has_houseRange() %>%
+      pm_parse_houseRange() %>%
+      dplyr::select(-pm.hasHouseRange, -pm.houseRange) %>%
+      dplyr::select(pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, dplyr::everything()) -> out
+
+  }
+
   # return output
   return(out)
 
 }
 
+# logic test for house ranges
+pm_any_houseRange <- function(.data){
+
+  # test and create output
+  .data <- pm_has_houseRange(.data)
+  out <- any(.data$pm.hasHouseRange)
+
+  # return output
+  return(out)
+
+}
+
+# detect address ranges
+pm_has_houseRange <- function(.data){
+
+  # global binding
+  pm.house = NULL
+
+  # detect pattern
+  .data <- dplyr::mutate(.data, pm.hasHouseRange = stringr::str_detect(pm.house, pattern = "-"))
+
+  # return output
+  return(.data)
+
+}
+
+# parse house range
+pm_parse_houseRange <- function(.data){
+
+  # global bindings
+  pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.houseShort = pm.house2 = NULL
+
+  # parse into two columns
+  .data %>%
+    dplyr::mutate(pm.houseRange = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
+    dplyr::mutate(pm.houseRange = stringr::str_replace(pm.houseRange, pattern = "-", replacement = " ")) %>%
+    dplyr::mutate(pm.houseLow = stringr::word(pm.houseRange, 1)) %>%
+    dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> out
+
+  # look for shortened house numbers
+  out %>%
+    dplyr::mutate(pm.houseShort = ifelse(stringr::str_length(pm.houseLow) > stringr::str_length(pm.houseHigh), TRUE, FALSE)) %>%
+    dplyr::mutate(pm.houseHigh = ifelse(pm.houseShort == TRUE,
+                                        stringr::str_c(stringr::str_sub(pm.houseLow,
+                                                                        start = 1,
+                                                                        end = stringr::str_length(pm.houseLow)-
+                                                                          stringr::str_length(pm.houseHigh)),
+                                                                        pm.houseHigh),
+                                        pm.houseHigh)) %>%
+    dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
+    dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
+    dplyr::select(-pm.house2, -pm.houseShort) -> out
+
+  # return output
+  return(out)
+
+}

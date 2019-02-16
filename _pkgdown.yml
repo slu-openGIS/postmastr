@@ -46,11 +46,21 @@ reference:
     - pm_has_city
     - pm_no_city
     - pm_parse_city
+    - pm_std_city
 
   - title: "Units"
     desc: "Work with Unit Names and Numbers"
     contents:
     - pm_has_unit
+
+  - title: "House Numbers"
+    desc: "Work with House Numbers"
+    contents:
+    - pm_any_house
+    - pm_all_house
+    - pm_has_house
+    - pm_no_house
+    - pm_parse_house
 
   - title: "Sample Data"
     desc: "Sushi Resturants in St. Louis and its Enviorns"

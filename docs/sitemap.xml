@@ -10,6 +10,9 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_city.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_house.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_postal.html</loc>
   </url>
   <url>
@@ -17,6 +20,9 @@
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_city.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_house.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_postal.html</loc>
@@ -37,6 +43,9 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_city.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_house.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_postal.html</loc>
   </url>
   <url>
@@ -55,6 +64,9 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_city.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_house.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_postal.html</loc>
   </url>
   <url>
@@ -62,6 +74,9 @@
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_city.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_house.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_postal.html</loc>
