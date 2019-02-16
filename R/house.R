@@ -167,7 +167,7 @@ pm_no_house <- function(.data){
 pm_parse_house <- function(.data){
 
   # global bindings
-  pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouseRange = NULL
+  pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouseRange = pm.hasHouse = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -178,20 +178,40 @@ pm_parse_house <- function(.data){
     stop("Error.")
   }
 
+  if ("pm.hasHouse" %in% names(.data) == FALSE){
+    .data <- pm_has_house(.data)
+  }
+
   # parse
   .data %>%
-    dplyr::mutate(pm.house = stringr::word(pm.address, 1)) %>%
-    dplyr::mutate(pm.address = stringr::word(pm.address, start = 2, end = -1)) %>%
+    dplyr::mutate(pm.house = ifelse(pm.hasHouse == TRUE, stringr::word(pm.address, 1), NA)) %>%
+    dplyr::mutate(pm.address = ifelse(pm.hasHouse == TRUE,
+                                      stringr::word(pm.address, start = 2, end = -1),
+                                      pm.address)) %>%
+    dplyr::select(-pm.hasHouse) %>%
     dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> out
 
   # address ranges
   if (pm_any_houseRange(out) == TRUE){
 
+    # set indicator
+    range <- TRUE
+
+    # parse
     out %>%
       pm_has_houseRange() %>%
-      pm_parse_houseRange() %>%
-      dplyr::select(-pm.hasHouseRange, -pm.houseRange) %>%
-      dplyr::select(pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, dplyr::everything()) -> out
+      pm_parse_houseRange() -> out
+
+  } else if (pm_any_houseRange(out) == FALSE){
+    range <- FALSE
+  }
+
+  # fractional addresses
+  if (pm_any_houseFrac(out) == TRUE){
+
+    out %>%
+      pm_has_houseFrac() %>%
+      pm_parse_houseFrac(range = range) -> out
 
   }
 
@@ -230,7 +250,7 @@ pm_has_houseRange <- function(.data){
 pm_parse_houseRange <- function(.data){
 
   # global bindings
-  pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.houseShort = pm.house2 = NULL
+  pm.address = pm.uid = pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.houseShort = pm.house2 = NULL
 
   # parse into two columns
   .data %>%
@@ -253,7 +273,64 @@ pm_parse_houseRange <- function(.data){
     dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
     dplyr::select(-pm.house2, -pm.houseShort) -> out
 
+  out %>%
+    dplyr::select(-pm.hasHouseRange, -pm.houseRange) %>%
+    dplyr::select(pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, dplyr::everything()) -> out
+
   # return output
   return(out)
 
 }
+
+# logic test for fractional addresses
+pm_any_houseFrac <- function(.data){
+
+  # test and create output
+  .data <- pm_has_houseFrac(.data)
+  out <- any(.data$pm.hasHouseFrac)
+
+  # return output
+  return(out)
+
+}
+
+# detect fractional addresses
+pm_has_houseFrac <- function(.data){
+
+  # global binding
+  pm.address = NULL
+
+  # detect pattern
+  .data <- dplyr::mutate(.data, pm.hasHouseFrac = stringr::str_detect(stringr::word(pm.address, 1), pattern = "[1-9]/"))
+
+  # return output
+  return(.data)
+
+}
+
+# parse fractional addresses
+pm_parse_houseFrac <- function(.data, range = TRUE){
+
+  # global binding
+  pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac = pm.hasHouseFrac = NULL
+
+  # parse
+  .data %>%
+    dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%
+    dplyr::mutate(pm.address = ifelse(pm.hasHouseFrac == TRUE,
+                                      stringr::word(pm.address, start = 2, end = -1),
+                                      pm.address)) %>%
+    dplyr::select(-pm.hasHouseFrac) -> out
+
+  # re-order variables
+  if (range == TRUE){
+    out <- dplyr::select(out, pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, pm.houseFrac, dplyr::everything())
+  } else if (range == FALSE){
+    out <- dplyr::select(out, pm.uid, pm.address, pm.house, pm.houseFrac, dplyr::everything())
+  }
+
+  # return output
+  return(out)
+
+}
+
