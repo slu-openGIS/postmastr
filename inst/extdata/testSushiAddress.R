@@ -89,4 +89,34 @@ sushi2 %>%
   pm_parse_house() %>%
   pm_parse_street_dir(dictionary = dirs) %>%
   pm_parse_street_suf(dictionary = sufs) %>%
-  pm_parse_street()
+  pm_parse_street() %>%
+  pm_rebuild() %>%
+  pm_replace(source = sushi2, newVar = clean_address)
+
+postmastr::sushi2 %>%
+  pm_identify(var = address) %>%
+  filter(pm.uid %in% c(3:4) == FALSE) %>%
+  pm_prep(var = "address") %>%
+  pm_parse_house() %>%
+  pm_parse_street_dir(dictionary = dirs) %>%
+  pm_parse_street_suf(dictionary = sufs) %>%
+  pm_parse_street() %>%
+  pm_rebuild() %>%
+  pm_replace(source = sushi2, newVar = clean_address)
+
+postmastr::sushi2 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(style = "short", newVar = clean_address, dirDictionary = dirs, suffixDictionary = sufs)
+
+moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = c("title", "upper"))
+cityDict <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis", "SAINT LOUIS", "Webster Groves"),
+                      output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(style = "full", newVar = clean_address,
+           dirDictionary = dirs,
+           suffixDictionary = sufs,
+           cityDictionary = cityDict,
+           stateDictionary = moDict)

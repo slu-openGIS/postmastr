@@ -235,6 +235,11 @@ pm_parse_postal <- function(.data, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
+  # check for zips
+  if (locale == "us" & "pm.hasZip" %in% names(.data) == FALSE){
+    .data <- pm_has_postal(.data)
+  }
+
   # parse
   if (locale == "us"){
     .data <- pm_parse_zip_us(.data)
@@ -248,11 +253,8 @@ pm_parse_postal <- function(.data, locale = "us"){
 # parse American zip codes
 pm_parse_zip_us <- function(.data){
 
-  # global bindings
-  pm.hasZip4 = NULL
-
   # create bindings for global variables
-  pm.address = pm.hasZip = NULL
+  pm.address = pm.hasZip = pm.hasZip4 = NULL
 
   # parse
   .data %>%

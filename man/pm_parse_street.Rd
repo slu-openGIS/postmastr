@@ -4,7 +4,7 @@
 \alias{pm_parse_street}
 \title{Parse Street Names}
 \usage{
-pm_parse_street(.data, dictionary)
+pm_parse_street(.data, dictionary, drop = TRUE)
 }
 \description{
 Parse Street Names
