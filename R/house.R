@@ -456,6 +456,19 @@ pm_parse_houseFrac <- function(.data){
   # global binding
   pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac = pm.hasHouseFrac = NULL
 
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error.")
+  }
+
+  if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
+    .data <- pm_has_houseFrac(.data)
+  }
+
   # parse
   .data %>%
     dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%

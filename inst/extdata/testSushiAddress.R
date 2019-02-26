@@ -28,4 +28,15 @@ pm_parse_house(sushi2_range4)
 rm(sushi2_range, sushi2_range2, sushi2_range3, sushi2_range4)
 
 sushi2_frac <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 1/2 Olive St", pm.address))
-pm_parse_house(sushi2_frac)
+sushi2_frac <- pm_parse_house(sushi2_frac)
+
+pm_has_houseFrac(sushi2_frac)
+
+pm_any_houseFrac(sushi2_frac)
+
+pm_all_houseFrac(sushi2_frac)
+
+pm_no_houseFrac(sushi2_frac)
+
+pm_parse_houseFrac(sushi2_frac)
+
