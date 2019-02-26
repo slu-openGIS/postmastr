@@ -3,6 +3,9 @@
 #' @export
 pm_rebuild <- function(.data, start, end, locale = "us"){
 
+  # global bindings
+  pm.rebuilt = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 
@@ -51,6 +54,9 @@ pm_rebuild <- function(.data, start, end, locale = "us"){
 #'
 #' @export
 pm_replace <- function(.data, source, newVar, keep_elements = FALSE, keep_ids = FALSE){
+
+  # global bindings
+  pm.id = pm.uid = pm.rebuilt = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())

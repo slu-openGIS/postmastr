@@ -3,6 +3,9 @@
 #' @export
 pm_parse <- function(.data, style, locale = "us", newVar, dirDictionary, suffixDictionary, cityDictionary, stateDictionary){
 
+  # global bindings
+  address = pm.house = pm.streetSuf = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 

@@ -4,7 +4,8 @@
 \alias{pm_parse}
 \title{Parse Street Address}
 \usage{
-pm_parse(.data, style, newVar, directionalDir, suffixDir)
+pm_parse(.data, style, locale = "us", newVar, dirDictionary,
+  suffixDictionary, cityDictionary, stateDictionary)
 }
 \description{
 Parse Street Address

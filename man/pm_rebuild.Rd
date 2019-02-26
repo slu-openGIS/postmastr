@@ -4,7 +4,7 @@
 \alias{pm_rebuild}
 \title{Rebuild Street Address}
 \usage{
-pm_rebuild(.data)
+pm_rebuild(.data, start, end, locale = "us")
 }
 \description{
 Rebuild Street Address
