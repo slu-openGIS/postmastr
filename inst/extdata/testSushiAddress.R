@@ -40,3 +40,19 @@ pm_no_houseFrac(sushi2_frac)
 
 pm_parse_houseFrac(sushi2_frac)
 
+dirs <- pm_dictionary(locale = "us", type = "directional", filter = c("N", "S", "E", "W"))
+sushi2_min <- pm_parse_house(sushi2_min)
+
+pm_has_dir(sushi2_min, dictionary = dirs)
+
+pm_all_dir(sushi2_min, dictionary = dirs)
+
+pm_no_dir(sushi2_min, dictionary = dirs)
+
+pm_parse_dir(sushi2_min, dictionary = dirs)
+
+pm_parse_dir(sushi2_min, dictionary = dirs)
+
+sushi2_suf <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 Olive St South", pm.address))
+
+pm_parse_dir(sushi2_suf, dictionary = dirs)

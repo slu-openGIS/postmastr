@@ -139,3 +139,246 @@ pm_has_dir <- function(.data, dictionary, locale = "us"){
   return(.data)
 
 }
+
+#' Return Only Unmatched Observations From pm_has_dir
+#'
+#' @description Automatically subset the results of \link{pm_has_dir} to
+#'    return only observations that were not found in the dictionary.
+#'
+#' @usage pm_no_dir(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for cities.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A tibble containing only observations that were not found in
+#'     the dictionary. The variable created by \link{pm_has_dir},
+#'     \code{pm.hasDir}, is removed.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#'
+#' @export
+pm_no_dir <- function(.data, dictionary, locale = "us"){
+
+  # global bindings
+  pm.hasDir = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # create output
+  .data %>%
+    pm_has_dir(dictionary = dictionary, locale = locale) %>%
+    dplyr::filter(pm.hasDir == FALSE) %>%
+    dplyr::select(-pm.hasDir) -> out
+
+  # return output
+  return(out)
+
+}
+
+#' Parse Prefix and Suffix Directionals
+#'
+#' @description Parse a prefix or suffix directional from a string. These data
+#'     should be at the beginning or end of the string (i.e. the first/last word or two).
+#'
+#' @usage pm_parse_dir(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for states. If none is provided, the \code{states}
+#'     object will be used as the default directory.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @return A tibble with a new character variable \code{pm.preDir} that contains
+#'     the abbreviation for the given directional for any prefix directional
+#'     and a second new character variable \code{pm.sufDir} that contains the
+#'     abbreviation for the given directional for any suffix directional.
+#'     The use of abbrevations follows USPS addressing standards. If a prefix
+#'     or suffix direction is not detected in the string, a value of \code{NA}
+#'     will be returned. If no prefix directions are found in the data at all,
+#'     that column will not be returned; the same is true for suffix directions.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom stringr str_c
+#' @importFrom stringr str_count
+#' @importFrom stringr str_replace
+#' @importFrom stringr word
+#'
+#' @export
+pm_parse_dir <- function(.data, dictionary, locale = "us"){
+
+  # create bindings for global variables
+  pm.address = pm.uid = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # parse states
+  if (locale == "us"){
+    .data <- pm_parse_dir_us(.data, dictionary = dictionary)
+  }
+
+  # re-order output
+  # if (locale == "us"){
+
+
+
+  # }
+
+  # return output
+  return(.data)
+
+}
+
+
+# parse us directionals
+pm_parse_dir_us <- function(.data, dictionary){
+
+  # minimize dictionary
+  dict <- paste(dictionary$dir.input, collapse = "|")
+
+  # parse
+  .data %>%
+    mutate(pm.preDir = ifelse(stringr::str_detect(pm.address, pattern = stringr::str_c("^\\b(", dict, ")\\b")) == TRUE,
+                              stringr::str_extract(pm.address, pattern = stringr::str_c("^\\b(", dict, ")\\b")), NA)) %>%
+    mutate(pm.sufDir = ifelse(stringr::str_detect(pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b$")) == TRUE,
+                              stringr::str_extract(pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b$")), NA)) -> .data
+
+  # clean address data
+  .data %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.preDir) == FALSE,
+                                      stringr::word(pm.address, start = 2, end = -1), pm.address)) %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.sufDir) == FALSE,
+                                      stringr::word(pm.address, start = 1, end = -2), pm.address)) -> .data
+
+  # standardize
+  if (all(is.na(.data$pm.preDir)) == TRUE){
+    .data <- dplyr::select(.data, -pm.preDir)
+  } else if (all(is.na(.data$pm.preDir)) == FALSE){
+    .data <- pm_std_dir(.data, var = pm.preDir, dictionary = dictionary)
+  }
+
+  if (all(is.na(.data$pm.sufDir)) == TRUE){
+    .data <- dplyr::select(.data, -pm.sufDir)
+  } else if (all(is.na(.data$pm.sufDir)) == FALSE){
+    .data <- pm_std_dir(.data, var = pm.sufDir, dictionary = dictionary)
+  }
+
+  # return output
+  return(.data)
+
+}
+
+#' Standardize Parsed State Names
+#'
+#' @description Convert directionals to the USPS preferred abbreviations
+#'
+#' @usage pm_std_dir(.data, var, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param var A character variable that may contain directionals
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default directory.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @return A tibble with an updated variable that contains the one or two-letter abbreviation
+#'     for the given directional. This follows USPS addressing standards.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr rename
+#' @importFrom rlang :=
+#' @importFrom rlang enquo
+#' @importFrom rlang quo
+#' @importFrom rlang sym
+#'
+#' @export
+pm_std_dir <- function(.data, var, dictionary, locale = "us"){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # standardize state names
+  if (locale == "us"){
+    out <- pm_std_dir_us(.data, var = !!varQ, dictionary = dictionary)
+  }
+
+  # return output
+  return(out)
+
+}
+
+# standardize us states
+pm_std_dir_us <- function(.data, var, dictionary){
+
+  # create bindings for global variables
+  . = dir.input = dir.output = NULL
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  dictionary %>%
+    dplyr::rename(!!varQN := dir.input) -> dictionary
+
+  # standardize
+  .data %>%
+    dplyr::left_join(., dictionary, by = varQN) %>%
+    dplyr::mutate(!!varQ := ifelse(is.na(dir.output) == FALSE, dir.output, !!varQ)) %>%
+    dplyr::select(-dir.output) -> out
+
+  # return output
+  return(out)
+
+}

@@ -55,6 +55,20 @@ pm_dictionary <- function(locale = "us", type, append, filter, case = c("title",
         out <- pm_dictionary_us_cities(states = filter)
       }
 
+    } else if (type == "directional"){
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_dir(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_dir(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_dir(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_dir()
+      }
+
+      out <- pm_case(working, locale = locale, type = type, case = case)
+
     }
 
   }
@@ -189,6 +203,36 @@ pm_parse_place <- function(.data, dictionary){
 
 }
 
+# us states
+pm_dictionary_us_dir <- function(append, filter){
+
+  # global bindings
+  dir.output = NULL
+
+  # load data
+  out <- postmastr::dic_us_dir
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$dir.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, dir.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
 # Dictionary Case
 pm_case <- function(.data, locale, type, case){
 
@@ -196,6 +240,8 @@ pm_case <- function(.data, locale, type, case){
 
     if (type == "state"){
       out <- pm_convert_case(.data, var = "state.input", orderVar = "state.output", case = case)
+    } else if (type == "directional"){
+      out <- pm_convert_case(.data, var = "dir.input", orderVar = "dir.output", case = case)
     }
 
   }
@@ -334,3 +380,19 @@ pm_append <- function(locale = "us", type, input, output){
 #' head(dic_us_states)
 #'
 "dic_us_states"
+
+#' Directional Dictionary, United States of America
+#'
+#' @description A list of abbreviations for full names for prefix and suffix directionals
+#'    in English.
+#'
+#' @docType data
+#'
+#' @usage data(dic_us_dir)
+#'
+#' @format A tibble with...
+#' \decribe{
+#'   \item{dir.output}{standard directional abbreviations}
+#'   \item{dir.input}{standard full names and directional abbreviations}
+#' }
+"dic_us_dir"
