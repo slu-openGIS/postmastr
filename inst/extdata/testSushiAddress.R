@@ -66,3 +66,5 @@ pm_any_street_suf(sushi2_min, dictionary = sufs)
 pm_all_street_suf(sushi2_min, dictionary = sufs)
 
 pm_no_street_suf(sushi2_min, dictionary = sufs)
+
+pm_parse_street_suf(sushi2_min, dictionary = sufs)

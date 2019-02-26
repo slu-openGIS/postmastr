@@ -173,7 +173,7 @@ pm_has_street_suf <- function(.data, dictionary, locale = "us"){
 pm_no_street_suf <- function(.data, dictionary, locale = "us"){
 
   # global bindings
-  pm.hasState = NULL
+  pm.hasStreetSuf = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -189,6 +189,163 @@ pm_no_street_suf <- function(.data, dictionary, locale = "us"){
     pm_has_street_suf(dictionary = dictionary, locale = locale) %>%
     dplyr::filter(pm.hasStreetSuf == FALSE) %>%
     dplyr::select(-pm.hasStreetSuf) -> out
+
+  # return output
+  return(out)
+
+}
+
+#' Parse State Names and Abbreviation
+#'
+#' @description Parse a state name or abbreviation from a string. These data
+#'     should be at the end of the string (i.e. the last word).
+#'
+#' @usage pm_parse_street_suf(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom stringr str_c
+#' @importFrom stringr str_count
+#' @importFrom stringr str_replace
+#' @importFrom stringr word
+#'
+#' @export
+pm_parse_street_suf <- function(.data, dictionary, locale = "us"){
+
+  # create bindings for global variables
+  pm.address = pm.streetSuf = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("Error 2.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # parse states
+  if (locale == "us"){
+    .data <- pm_parse_suf_us(.data, dictionary = dictionary)
+  }
+
+  # return output
+  return(.data)
+
+}
+
+# parse American states
+pm_parse_suf_us <- function(.data, dictionary){
+
+  # minimize dictionary
+  dict <- paste(dictionary$suf.input, collapse = "|")
+
+  # create bindings for global variables
+  pm.address = pm.streetSuf = NULL
+
+  # parse
+  .data <- dplyr::mutate(.data, pm.streetSuf =
+                           stringr::str_extract(pm.address,
+                                                pattern = stringr::str_c("\\b(", dict, ")\\b$")))
+
+  # clean address data
+  .data %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -2), pm.address)) %>% # -> .data # %>%
+    pm_std_street_suf(var = pm.streetSuf, dictionary = dictionary) -> .data
+
+}
+
+#' Standardize Parsed Street Suffixes
+#'
+#' @description Convert street suffixes to USPS preferred abbreviation.
+#'
+#' @usage pm_std_street_suf(.data, var, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param var A character variable that may contain street suffixes
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr rename
+#' @importFrom rlang :=
+#' @importFrom rlang enquo
+#' @importFrom rlang quo
+#' @importFrom rlang sym
+#'
+#' @export
+pm_std_street_suf <- function(.data, var, dictionary, locale = "us"){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # standardize state names
+  if (locale == "us"){
+    out <- pm_std_suf_us(.data, var = !!varQ, dictionary = dictionary)
+  }
+
+  # return output
+  return(out)
+
+}
+
+# standardize us street suffixes
+pm_std_suf_us <- function(.data, var, dictionary){
+
+  # create bindings for global variables
+  . = suf.input = suf.output = suf.type = NULL
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  dictionary %>%
+    dplyr::rename(!!varQ := suf.input) -> dictionary
+
+  # standardize
+  .data %>%
+    dplyr::left_join(., dictionary, by = varQN) %>%
+    dplyr::mutate(!!varQ := ifelse(is.na(suf.output) == FALSE, suf.output, !!varQ)) %>%
+    dplyr::select(-suf.output, -suf.type) -> out
 
   # return output
   return(out)

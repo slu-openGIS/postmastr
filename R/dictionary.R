@@ -251,7 +251,7 @@ pm_dictionary_us_dir <- function(append, filter){
 pm_dictionary_us_suffix <- function(append, filter){
 
   # global bindings
-  dir.output = NULL
+  suf.output = NULL
 
   # load data
   out <- postmastr::dic_us_suffix
