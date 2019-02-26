@@ -45,7 +45,7 @@ pm_any_dir <- function(.data, dictionary, locale = "us"){
 #' @description Determine whether the directional test returns matches for every
 #'     observation.
 #'
-#' @usage pm_all_dir(.data)
+#' @usage pm_all_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used

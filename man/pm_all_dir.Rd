@@ -4,7 +4,7 @@
 \alias{pm_all_dir}
 \title{Do All Addresses Have Prefix or Suffix Directionals}
 \usage{
-pm_all_dir(.data)
+pm_all_dir(.data, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
