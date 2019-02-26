@@ -2,7 +2,7 @@
 #'
 #' @description Determine whether the directional returns any matches.
 #'
-#' @usage pm_any_dir(.data, dictionary, locale = "us")
+#' @usage pm_any_street_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -14,7 +14,7 @@
 #'     one directional and \code{FALSE} if they do not.
 #'
 #' @export
-pm_any_dir <- function(.data, dictionary, locale = "us"){
+pm_any_street_dir <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -27,9 +27,9 @@ pm_any_dir <- function(.data, dictionary, locale = "us"){
 
   # test dictionary
   if (missing(dictionary) == TRUE){
-    .data <- pm_has_dir(.data, locale = locale)
+    .data <- pm_has_street_dir(.data, locale = locale)
   } else if (missing(dictionary) == FALSE){
-    .data <- pm_has_dir(.data, dictionary = dictionary, locale = locale)
+    .data <- pm_has_street_dir(.data, dictionary = dictionary, locale = locale)
   }
 
   # create output
@@ -45,7 +45,7 @@ pm_any_dir <- function(.data, dictionary, locale = "us"){
 #' @description Determine whether the directional test returns matches for every
 #'     observation.
 #'
-#' @usage pm_all_dir(.data, dictionary, locale = "us")
+#' @usage pm_all_street_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -57,7 +57,7 @@ pm_any_dir <- function(.data, dictionary, locale = "us"){
 #'     directionals and \code{FALSE} otherwise.
 #'
 #' @export
-pm_all_dir <- function(.data, dictionary, locale = "us"){
+pm_all_street_dir <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -70,9 +70,9 @@ pm_all_dir <- function(.data, dictionary, locale = "us"){
 
   # test dictionary
   if (missing(dictionary) == TRUE){
-    .data <- pm_has_dir(.data, locale = locale)
+    .data <- pm_has_street_dir(.data, locale = locale)
   } else if (missing(dictionary) == FALSE){
-    .data <- pm_has_dir(.data, dictionary = dictionary, locale = locale)
+    .data <- pm_has_street_dir(.data, dictionary = dictionary, locale = locale)
   }
 
   # create output
@@ -87,7 +87,7 @@ pm_all_dir <- function(.data, dictionary, locale = "us"){
 #'
 #' @description Determine the presence of house numbersin a string.
 #'
-#' @usage pm_has_dir(.data, dictionary, locale = "us")
+#' @usage pm_has_street_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -104,7 +104,7 @@ pm_all_dir <- function(.data, dictionary, locale = "us"){
 #' @importFrom stringr word
 #'
 #' @export
-pm_has_dir <- function(.data, dictionary, locale = "us"){
+pm_has_street_dir <- function(.data, dictionary, locale = "us"){
 
   # global bindings
   pm.address = ...preDir = ...sufDir = NULL
@@ -142,10 +142,10 @@ pm_has_dir <- function(.data, dictionary, locale = "us"){
 
 #' Return Only Unmatched Observations From pm_has_dir
 #'
-#' @description Automatically subset the results of \link{pm_has_dir} to
+#' @description Automatically subset the results of \link{pm_has_street_dir} to
 #'    return only observations that were not found in the dictionary.
 #'
-#' @usage pm_no_dir(.data, dictionary, locale = "us")
+#' @usage pm_no_street_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -154,7 +154,7 @@ pm_has_dir <- function(.data, dictionary, locale = "us"){
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A tibble containing only observations that were not found in
-#'     the dictionary. The variable created by \link{pm_has_dir},
+#'     the dictionary. The variable created by \link{pm_has_street_dir},
 #'     \code{pm.hasDir}, is removed.
 #'
 #' @importFrom dplyr %>%
@@ -162,7 +162,7 @@ pm_has_dir <- function(.data, dictionary, locale = "us"){
 #' @importFrom dplyr select
 #'
 #' @export
-pm_no_dir <- function(.data, dictionary, locale = "us"){
+pm_no_street_dir <- function(.data, dictionary, locale = "us"){
 
   # global bindings
   pm.hasDir = NULL
@@ -178,7 +178,7 @@ pm_no_dir <- function(.data, dictionary, locale = "us"){
 
   # create output
   .data %>%
-    pm_has_dir(dictionary = dictionary, locale = locale) %>%
+    pm_has_street_dir(dictionary = dictionary, locale = locale) %>%
     dplyr::filter(pm.hasDir == FALSE) %>%
     dplyr::select(-pm.hasDir) -> out
 
@@ -192,7 +192,7 @@ pm_no_dir <- function(.data, dictionary, locale = "us"){
 #' @description Parse a prefix or suffix directional from a string. These data
 #'     should be at the beginning or end of the string (i.e. the first/last word or two).
 #'
-#' @usage pm_parse_dir(.data, dictionary, locale = "us")
+#' @usage pm_parse_street_dir(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
@@ -219,7 +219,7 @@ pm_no_dir <- function(.data, dictionary, locale = "us"){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_dir <- function(.data, dictionary, locale = "us"){
+pm_parse_street_dir <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.address = pm.uid = NULL
@@ -283,14 +283,14 @@ pm_parse_dir_us <- function(.data, dictionary){
   if (all(is.na(.data$pm.preDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.preDir)
   } else if (all(is.na(.data$pm.preDir)) == FALSE){
-    .data <- pm_std_dir(.data, var = pm.preDir, dictionary = dictionary)
+    .data <- pm_std_street_dir(.data, var = pm.preDir, dictionary = dictionary)
   }
 
   # standardize suffix direction (or drop)
   if (all(is.na(.data$pm.sufDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.sufDir)
   } else if (all(is.na(.data$pm.sufDir)) == FALSE){
-    .data <- pm_std_dir(.data, var = pm.sufDir, dictionary = dictionary)
+    .data <- pm_std_street_dir(.data, var = pm.sufDir, dictionary = dictionary)
   }
 
   # return output
@@ -302,7 +302,7 @@ pm_parse_dir_us <- function(.data, dictionary){
 #'
 #' @description Convert directionals to the USPS preferred abbreviations
 #'
-#' @usage pm_std_dir(.data, var, dictionary, locale = "us")
+#' @usage pm_std_street_dir(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain directionals
@@ -326,7 +326,7 @@ pm_parse_dir_us <- function(.data, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_std_dir <- function(.data, var, dictionary, locale = "us"){
+pm_std_street_dir <- function(.data, var, dictionary, locale = "us"){
 
   # save parameters to list
   paramList <- as.list(match.call())

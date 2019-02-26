@@ -396,3 +396,20 @@ pm_append <- function(locale = "us", type, input, output){
 #'   \item{dir.input}{standard full names and directional abbreviations}
 #' }
 "dic_us_dir"
+
+#' Street Suffix Dictionary, United States of America
+#'
+#' @description A list of abbreviations for full names for street suffix types for the
+#'     United States.
+#'
+#' @docType data
+#'
+#' @usage data(dic_us_suffix)
+#'
+#' @format A tibble with 502 rows and 3 variables:
+#' \describe{
+#'   \item{suf.type}{suffix type}
+#'   \item{suf.output}{standard suffix abbreviation}
+#'   \item{suf.input}{standard full names and suffix abbreviations}
+#' }
+"dic_us_suffix"
