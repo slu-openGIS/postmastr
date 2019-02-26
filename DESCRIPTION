@@ -29,8 +29,7 @@ Imports:
     tibble,
     tidycensus,
     tidyr,
-    toOrdinal,
-    tm
+    toOrdinal
 Suggests: 
     testthat,
     knitr,
