@@ -170,7 +170,7 @@ pm_has_street_suf <- function(.data, dictionary, locale = "us"){
 #' @importFrom dplyr select
 #'
 #' @export
-pm_has_street_suf <- function(.data, dictionary, locale = "us"){
+pm_no_street_suf <- function(.data, dictionary, locale = "us"){
 
   # global bindings
   pm.hasState = NULL
@@ -186,7 +186,7 @@ pm_has_street_suf <- function(.data, dictionary, locale = "us"){
 
   # create output
   .data %>%
-    pm_has_state(dictionary = dictionary, locale = locale) %>%
+    pm_has_street_suf(dictionary = dictionary, locale = locale) %>%
     dplyr::filter(pm.hasStreetSuf == FALSE) %>%
     dplyr::select(-pm.hasStreetSuf) -> out
 

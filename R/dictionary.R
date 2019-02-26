@@ -69,6 +69,20 @@ pm_dictionary <- function(locale = "us", type, append, filter, case = c("title",
 
       out <- pm_case(working, locale = locale, type = type, case = case)
 
+    } else if (type == "suffix"){
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_suffix(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_suffix(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_suffix(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_suffix()
+      }
+
+      out <- pm_case(working, locale = locale, type = type, case = case)
+
     }
 
   }
@@ -203,7 +217,7 @@ pm_parse_place <- function(.data, dictionary){
 
 }
 
-# us states
+# us directions
 pm_dictionary_us_dir <- function(append, filter){
 
   # global bindings
@@ -233,6 +247,36 @@ pm_dictionary_us_dir <- function(append, filter){
 
 }
 
+# us street suffixes
+pm_dictionary_us_suffix <- function(append, filter){
+
+  # global bindings
+  dir.output = NULL
+
+  # load data
+  out <- postmastr::dic_us_suffix
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$suf.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, suf.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
 # Dictionary Case
 pm_case <- function(.data, locale, type, case){
 
@@ -242,6 +286,8 @@ pm_case <- function(.data, locale, type, case){
       out <- pm_convert_case(.data, var = "state.input", orderVar = "state.output", case = case)
     } else if (type == "directional"){
       out <- pm_convert_case(.data, var = "dir.input", orderVar = "dir.output", case = case)
+    } else if (type == "suffix"){
+      out <- pm_convert_case(.data, var = "suf.input", orderVar = "suf.output", case = case)
     }
 
   }

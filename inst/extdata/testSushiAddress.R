@@ -43,16 +43,26 @@ pm_parse_houseFrac(sushi2_frac)
 dirs <- pm_dictionary(locale = "us", type = "directional", filter = c("N", "S", "E", "W"))
 sushi2_min <- pm_parse_house(sushi2_min)
 
-pm_has_dir(sushi2_min, dictionary = dirs)
+pm_has_street_dir(sushi2_min, dictionary = dirs)
 
-pm_all_dir(sushi2_min, dictionary = dirs)
+pm_any_street_dir(sushi2_min, dictionary = dirs)
 
-pm_no_dir(sushi2_min, dictionary = dirs)
+pm_all_street_dir(sushi2_min, dictionary = dirs)
 
-pm_parse_dir(sushi2_min, dictionary = dirs)
-
-pm_parse_dir(sushi2_min, dictionary = dirs)
+pm_no_street_dir(sushi2_min, dictionary = dirs)
 
 sushi2_suf <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 Olive St South", pm.address))
 
-pm_parse_dir(sushi2_suf, dictionary = dirs)
+pm_parse_street_dir(sushi2_suf, dictionary = dirs)
+
+sushi2_min <- pm_parse_street_dir(sushi2_min, dictionary = dirs)
+
+sufs <- pm_dictionary(locale = "us", type = "suffix")
+
+pm_has_street_suf(sushi2_min, dictionary = sufs)
+
+pm_any_street_suf(sushi2_min, dictionary = sufs)
+
+pm_all_street_suf(sushi2_min, dictionary = sufs)
+
+pm_no_street_suf(sushi2_min, dictionary = sufs)

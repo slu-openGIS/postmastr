@@ -5,22 +5,12 @@
 \title{Detect Presence of State Name or Abbreviation}
 \usage{
 pm_has_street_suf(.data, dictionary, locale = "us")
-
-pm_no_street_suf(.data, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
 
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list for street suffixes}
-
-\item{locale}{A string indicating the country these data represent; the only
-current option is \code{"us"} but this is included to facilitate future expansion.}
-
-\item{.data}{A postmastr object created with \link{pm_prep}}
-
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list for street suffixes.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is \code{"us"} but this is included to facilitate future expansion.}
@@ -33,7 +23,4 @@ A tibble with a new logical variable \code{pm.hasStreetSuf} that is
 \description{
 Determine the presence of street suffix names or abbreviations
     at the end of a string.
-
-Automatically subset the results of \link{pm_has_state} to
-   return only observations that were not found in the dictionary.
 }
