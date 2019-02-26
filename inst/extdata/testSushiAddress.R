@@ -1,6 +1,9 @@
 devtools::load_all()
 
-sushi2 <- pm_identify(postmastr::sushi2, var = address)
+postmastr::sushi2 %>%
+  pm_identify(var = address) %>%
+  filter(pm.uid %in% c(3:4) == FALSE) -> sushi2
+
 sushi2_min <- pm_prep(sushi2, var = "address")
 
 pm_has_house(sushi2_min)
@@ -68,3 +71,22 @@ pm_all_street_suf(sushi2_min, dictionary = sufs)
 pm_no_street_suf(sushi2_min, dictionary = sufs)
 
 pm_parse_street_suf(sushi2_min, dictionary = sufs)
+
+
+# =============================
+
+devtools::load_all()
+
+postmastr::sushi2 %>%
+  pm_identify(var = address) %>%
+  filter(pm.uid %in% c(3:4) == FALSE) -> sushi2
+
+dirs <- pm_dictionary(locale = "us", type = "directional", filter = c("N", "S", "E", "W"))
+sufs <- pm_dictionary(locale = "us", type = "suffix")
+
+sushi2 %>%
+  pm_prep(var = "address") %>%
+  pm_parse_house() %>%
+  pm_parse_street_dir(dictionary = dirs) %>%
+  pm_parse_street_suf(dictionary = sufs) %>%
+  pm_parse_street()
