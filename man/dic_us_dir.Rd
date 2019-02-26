@@ -4,8 +4,8 @@
 \name{dic_us_dir}
 \alias{dic_us_dir}
 \title{Directional Dictionary, United States of America}
-\format{A tibble with...
-\decribe{
+\format{A tibble with 20 rows and 2 variables:
+\describe{
   \item{dir.output}{standard directional abbreviations}
   \item{dir.input}{standard full names and directional abbreviations}
 }}

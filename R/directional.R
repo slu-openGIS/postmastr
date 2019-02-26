@@ -259,6 +259,9 @@ pm_parse_dir <- function(.data, dictionary, locale = "us"){
 # parse us directionals
 pm_parse_dir_us <- function(.data, dictionary){
 
+  # global binding
+  pm.address = pm.preDir = pm.sufDir = NULL
+
   # minimize dictionary
   dict <- paste(dictionary$dir.input, collapse = "|")
 
@@ -276,13 +279,14 @@ pm_parse_dir_us <- function(.data, dictionary){
     dplyr::mutate(pm.address = ifelse(is.na(pm.sufDir) == FALSE,
                                       stringr::word(pm.address, start = 1, end = -2), pm.address)) -> .data
 
-  # standardize
+  # standardize prefix direction (or drop)
   if (all(is.na(.data$pm.preDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.preDir)
   } else if (all(is.na(.data$pm.preDir)) == FALSE){
     .data <- pm_std_dir(.data, var = pm.preDir, dictionary = dictionary)
   }
 
+  # standardize suffix direction (or drop)
   if (all(is.na(.data$pm.sufDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.sufDir)
   } else if (all(is.na(.data$pm.sufDir)) == FALSE){
