@@ -6,6 +6,16 @@
 \usage{
 pm_rebuild(.data, start, end, locale = "us")
 }
+\arguments{
+\item{.data}{A postmastr object created with \link{pm_prep}}
+
+\item{start}{Variable name to begin rebuilding process with, typically the house number}
+
+\item{end}{Variable name to end rebuilding process with, typically the street suffix or postal code}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
+}
 \description{
 Rebuild Street Address
 }

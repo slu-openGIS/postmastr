@@ -1,5 +1,11 @@
 #' Rebuild Street Address
 #'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param start Variable name to begin rebuilding process with, typically the house number
+#' @param end Variable name to end rebuilding process with, typically the street suffix or postal code
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
 #' @export
 pm_rebuild <- function(.data, start, end, locale = "us"){
 
