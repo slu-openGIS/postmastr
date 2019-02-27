@@ -2,7 +2,7 @@
 #'
 #' @description Determine whether the dictionary returns any matches.
 #'
-#' @usage pm_any_city(.data, dictionary)
+#' @usage pm_city_any(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -13,7 +13,7 @@
 #'     dictionary and \code{FALSE} if they do not.
 #'
 #' @export
-pm_any_city <- function(.data, dictionary){
+pm_city_any <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -25,7 +25,7 @@ pm_any_city <- function(.data, dictionary){
   }
 
   # test dictionary
-  .data <- pm_has_city(.data, dictionary = dictionary)
+  .data <- pm_city_detect(.data, dictionary = dictionary)
 
   # create output
   out <- any(.data$pm.hasCity)
@@ -39,7 +39,7 @@ pm_any_city <- function(.data, dictionary){
 #'
 #' @description Determine whether the dictionary returns any matches.
 #'
-#' @usage pm_all_city(.data, dictionary)
+#' @usage pm_city_all(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -50,7 +50,7 @@ pm_any_city <- function(.data, dictionary){
 #'     dictionary and \code{FALSE} if they do not.
 #'
 #' @export
-pm_all_city <- function(.data, dictionary){
+pm_city_all <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -62,7 +62,7 @@ pm_all_city <- function(.data, dictionary){
   }
 
   # test dictionary
-  .data <- pm_has_city(.data, dictionary = dictionary)
+  .data <- pm_city_detect(.data, dictionary = dictionary)
 
   # create output
   out <- all(.data$pm.hasCity)
@@ -76,7 +76,7 @@ pm_all_city <- function(.data, dictionary){
 #'
 #' @description Determine the presence of city names in a string.
 #'
-#' @usage pm_has_city(.data, dictionary)
+#' @usage pm_city_detect(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -92,7 +92,7 @@ pm_all_city <- function(.data, dictionary){
 #' @importFrom stringr str_detect
 #'
 #' @export
-pm_has_city <- function(.data, dictionary){
+pm_city_detect <- function(.data, dictionary){
 
   # create bindings for global variables
    pm.address = pm.hasCity = NULL
@@ -123,7 +123,7 @@ pm_has_city <- function(.data, dictionary){
 #' @description Automatically subset the results of \link{pm_has_city} to
 #'    return only observations that were not found in the dictionary.
 #'
-#' @usage pm_no_city(.data, dictionary)
+#' @usage pm_city_none(.data, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -138,7 +138,7 @@ pm_has_city <- function(.data, dictionary){
 #' @importFrom dplyr select
 #'
 #' @export
-pm_no_city <- function(.data, dictionary){
+pm_city_none <- function(.data, dictionary){
 
   # global bindings
   pm.hasCity = NULL
@@ -172,7 +172,7 @@ pm_no_city <- function(.data, dictionary){
 #'     postal code follows a name, use \link{pm_parse_postal} first to remove those
 #'     data from \code{pm.address}.
 #'
-#' @usage pm_parse_city(.data, dictionary, locale = "us")
+#' @usage pm_city_parse(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -193,7 +193,7 @@ pm_no_city <- function(.data, dictionary){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_city <- function(.data, dictionary, locale = "us"){
+pm_city_parse <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.uid = pm.city = pm.address = pm.hasCity = NULL
@@ -214,9 +214,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 
   # standardize if data available
   if ("city.output" %in% names(dictionary)){
-
-    .data <- pm_std_city(.data, var = pm.city, dictionary = dictionary)
-
+    .data <- pm_city_std(.data, var = pm.city, dictionary = dictionary)
   }
 
   # re-order output
@@ -232,6 +230,8 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 #' Standardize Parsed City Names
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
+#'
+#' @usage pm_city_std(.data, var, dictionary)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}, a tbl, or a data frame
 #' @param var A character variable that may contain city names
@@ -251,7 +251,7 @@ pm_parse_city <- function(.data, dictionary, locale = "us"){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_std_city <- function(.data, var, dictionary){
+pm_city_std <- function(.data, var, dictionary){
 
   # create bindings for global variables
   . = city.input = city.output = NULL

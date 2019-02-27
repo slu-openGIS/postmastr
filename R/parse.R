@@ -32,7 +32,7 @@ pm_parse <- function(.data, style, locale = "us", newVar, dirDictionary, suffixD
       pm_prep(var = "address") %>%
       pm_parse_postal(locale = locale) %>%
       pm_parse_state(dictionary = stateDictionary, locale = locale) %>%
-      pm_parse_city(dictionary = cityDictionary, locale = locale) %>%
+      pm_city_parse(dictionary = cityDictionary, locale = locale) %>%
       pm_parse_house() %>%
       pm_parse_houseFrac() %>%
       pm_parse_street_dir(dictionary = dirDictionary, locale = locale) %>%
