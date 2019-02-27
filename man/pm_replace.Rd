@@ -4,7 +4,7 @@
 \alias{pm_replace}
 \title{Add Address to Source Data}
 \usage{
-pm_replace(.data, source, newVar, keep_elements = FALSE,
+pm_replace(.data, source, newVar, keep_parsed = FALSE,
   keep_ids = FALSE)
 }
 \description{

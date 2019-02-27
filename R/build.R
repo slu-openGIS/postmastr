@@ -39,21 +39,66 @@ pm_rebuild <- function(.data, start, end, locale = "us"){
     }
   }
 
+  # re-order variables
+  vars <- pm_reorder_build(.data)
+  .data <- dplyr::select(.data, vars)
+
   # rebuild
   .data %>%
     tidyr::unite(pm.rebuilt, !!startQ:!!endQ, sep = " ", remove = FALSE) %>%
     dplyr::mutate(pm.rebuilt = stringr::str_replace_all(pm.rebuilt, pattern = "\\bNA\\b", replacement = "")) %>%
     dplyr::mutate(pm.rebuilt = stringr::str_squish(pm.rebuilt)) -> .data
 
+  # re-order variables again
+  vars <- pm_reorder(.data)
+  .data <- dplyr::select(.data, vars)
+
   # return output
   return(.data)
+
+}
+
+# Re-order Columns Prior to Build
+pm_reorder_build <- function(.data, locale = "us"){
+
+  if (locale == "us"){
+
+    # master list of variables for pm objects
+    master <- data.frame(
+      master.vars = c("pm.uid", "pm.address", "pm.rebuilt", "pm.house", "pm.houseLow", "pm.houseHigh",
+                      "pm.houseFrac",
+                      "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
+                      "pm.unitType", "pm.unitNum",  "pm.city",
+                      "pm.state", "pm.zip", "pm.zip4",
+                      "pm.hasHouse", "pm.hasHouseFrac", "pm.hasDir", "pm.hasStreetSuf",
+                      "pm.hasUnit", "pm.hasCity", "pm.hasState", "pm.hasZip"),
+      stringsAsFactors = FALSE
+    )
+
+    # create data frame of current variables
+    working <- data.frame(
+      master.vars = names(.data),
+      working.vars = names(.data),
+      stringsAsFactors = FALSE
+    )
+
+    # join master and working data
+    joined <- dplyr::left_join(master, working, by = "master.vars")
+
+    # create vector of re-ordered variables
+    out <- na.omit(joined$working.vars)
+
+  }
+
+  # return output
+  return(out)
 
 }
 
 #' Add Address to Source Data
 #'
 #' @export
-pm_replace <- function(.data, source, newVar, keep_elements = FALSE, keep_ids = FALSE){
+pm_replace <- function(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE){
 
   # global bindings
   pm.id = pm.uid = pm.rebuilt = NULL
@@ -69,9 +114,14 @@ pm_replace <- function(.data, source, newVar, keep_elements = FALSE, keep_ids = 
   }
 
   # optionally retain parsed elements
-  if (keep_elements == FALSE){
+  if (keep_parsed == FALSE){
 
     .data <- dplyr::select(.data, pm.uid, pm.rebuilt)
+
+  } else if (keep_parsed == TRUE){
+
+    vars <- pm_reorder_build(.data)
+    .data <- dplyr::select(.data, vars)
 
   }
 
@@ -89,6 +139,41 @@ pm_replace <- function(.data, source, newVar, keep_elements = FALSE, keep_ids = 
   if (keep_ids == FALSE){
 
     out <- dplyr::select(out, -pm.id, -pm.uid)
+
+  }
+
+  # return output
+  return(out)
+
+}
+
+# Re-order Columns Prior to Build
+pm_reorder_replace <- function(.data, locale = "us"){
+
+  if (locale == "us"){
+
+    # master list of variables for pm objects
+    master <- data.frame(
+      master.vars = c("pm.uid", "pm.rebuilt", "pm.house", "pm.houseLow", "pm.houseHigh",
+                      "pm.houseFrac",
+                      "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
+                      "pm.unitType", "pm.unitNum",  "pm.city",
+                      "pm.state", "pm.zip", "pm.zip4"),
+      stringsAsFactors = FALSE
+    )
+
+    # create data frame of current variables
+    working <- data.frame(
+      master.vars = names(.data),
+      working.vars = names(.data),
+      stringsAsFactors = FALSE
+    )
+
+    # join master and working data
+    joined <- dplyr::left_join(master, working, by = "master.vars")
+
+    # create vector of re-ordered variables
+    out <- na.omit(joined$working.vars)
 
   }
 

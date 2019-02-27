@@ -243,6 +243,8 @@ pm_parse_postal <- function(.data, locale = "us"){
   # parse
   if (locale == "us"){
     .data <- pm_parse_zip_us(.data)
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
   }
 
   # return output

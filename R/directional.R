@@ -244,11 +244,10 @@ pm_parse_street_dir <- function(.data, dictionary, locale = "us"){
   }
 
   # re-order output
-  # if (locale == "us"){
-
-
-
-  # }
+  if (locale == "us"){
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
+  }
 
   # return output
   return(.data)

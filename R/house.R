@@ -164,7 +164,7 @@ pm_no_house <- function(.data){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_house <- function(.data){
+pm_parse_house <- function(.data, locale = "us"){
 
   # global bindings
   pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouseRange = pm.hasHouse = NULL
@@ -204,6 +204,12 @@ pm_parse_house <- function(.data){
 
   } else if (pm_any_houseRange(out) == FALSE){
     range <- FALSE
+  }
+
+  # reorder variables
+  if (locale == "us"){
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
   }
 
   # return output
@@ -451,7 +457,7 @@ pm_no_houseFrac <- function(.data){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_houseFrac <- function(.data){
+pm_parse_houseFrac <- function(.data, locale = "us"){
 
   # global binding
   pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac = pm.hasHouseFrac = NULL
@@ -478,10 +484,9 @@ pm_parse_houseFrac <- function(.data){
     dplyr::select(-pm.hasHouseFrac) -> out
 
   # re-order variables
-  if ("pm.houseLow" %in% names(.data) == TRUE){
-    out <- dplyr::select(out, pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, pm.houseFrac, dplyr::everything())
-  } else if ("pm.houseLow" %in% names(.data) == FALSE){
-    out <- dplyr::select(out, pm.uid, pm.address, pm.house, pm.houseFrac, dplyr::everything())
+  if (locale == "us"){
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
   }
 
   # return output

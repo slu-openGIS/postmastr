@@ -63,6 +63,6 @@ pm_all_city(sushi1_min, dictionary = cityDict)
 
 pm_parse_city(sushi1_min, dictionary = cityDict)
 
-sushi1_min <- pm_parse_city(sushi1_min, dictionary = cityDict)
+sushi1_min <- pm_city_parse(sushi1_min, dictionary = cityDict)
 sushi1_min
 

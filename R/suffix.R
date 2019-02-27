@@ -239,6 +239,8 @@ pm_parse_street_suf <- function(.data, dictionary, locale = "us"){
   # parse states
   if (locale == "us"){
     .data <- pm_parse_suf_us(.data, dictionary = dictionary)
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
   }
 
   # return output

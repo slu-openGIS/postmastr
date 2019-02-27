@@ -245,11 +245,8 @@ pm_parse_state <- function(.data, dictionary, locale = "us"){
   # parse states
   if (locale == "us"){
     .data <- pm_parse_state_us(.data, dictionary = dictionary)
-  }
-
-  # re-order output
-  if (locale == "us"){
-    .data <- dplyr::select(.data, pm.uid, pm.address, pm.state, dplyr::everything())
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
   }
 
   # return output
