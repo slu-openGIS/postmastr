@@ -106,7 +106,7 @@ postmastr::sushi2 %>%
 
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
-  pm_parse(style = "short", newVar = clean_address, dirDictionary = dirs, suffixDictionary = sufs)
+  pm_parse(style = "short", newVar = clean_address, dirDict = dirs, suffixDict = sufs)
 
 moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = c("title", "upper"))
 cityDict <- pm_append(type = "city",
@@ -116,7 +116,8 @@ cityDict <- pm_append(type = "city",
 postmastr::sushi1 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(style = "full", newVar = clean_address,
-           dirDictionary = dirs,
-           suffixDictionary = sufs,
-           cityDictionary = cityDict,
-           stateDictionary = moDict)
+           dirDict = dirs,
+           suffixDict = sufs,
+           cityDict = cityDict,
+           stateDict = moDict)
+
