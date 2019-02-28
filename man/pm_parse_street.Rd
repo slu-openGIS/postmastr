@@ -6,6 +6,24 @@
 \usage{
 pm_parse_street(.data, dictionary, drop = TRUE)
 }
+\arguments{
+\item{.data}{A \code{postmastr} object created with \link{pm_prep}}
+
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
+as a master list for streets.}
+
+\item{drop}{A logical scalar; if \code{TRUE}, the \code{pm.address} variable will
+be dropped from the \code{postmastr} object.}
+}
+\value{
+A tibble with a new character variable \code{pm.street} that contains
+    the two-letter abbreviation for the given U.S. state. Variables are automatically
+    re-ordered, so the new vector will not be in the last position of the tibble.
+}
 \description{
-Parse Street Names
+Converts the remaining text of \code{pm.address} to title case and stores
+    it in a new variable named \code{pm.street}.
+}
+\details{
+This is typically the last function to be executed before rebuilding and replacing.
 }
