@@ -25,10 +25,13 @@
 pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE){
 
   # global bindings
-  pm.address = NULL
+  pm.address = pm.street = NULL
 
   # parse and convert to title case
   .data <- dplyr::mutate(.data, pm.street = stringr::str_to_title(pm.address))
+
+  # remove punctuation
+  .data <- dplyr::mutate(.data, pm.street = stringr::str_replace(pm.street, "[.]", ""))
 
   # reorder output
   vars <- pm_reorder(.data)

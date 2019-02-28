@@ -78,7 +78,7 @@ pm_parse <- function(.data, style, locale = "us", ordinal = TRUE, newVar, keep_p
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
       pm_street_parse(ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = "end", locale = locale) %>%
-      pm_replace(source = source, newVar = !!varQ) -> out
+      pm_replace(source = source, newVar = !!varQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
   } else if (style == "short"){
 
@@ -90,7 +90,7 @@ pm_parse <- function(.data, style, locale = "us", ordinal = TRUE, newVar, keep_p
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
       pm_street_parse(ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
-      pm_replace(source = source, newVar = !!varQ) -> out
+      pm_replace(source = source, newVar = !!varQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
   }
 
