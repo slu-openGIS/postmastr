@@ -43,15 +43,16 @@ rm(sushi2, sushi2_frac, sushi2_min, sushi2_suf)
 # =============================
 
 postmastr::sushi2 %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "4 SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-9 SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "4A SECOND AVE", address)) %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) %>%
   pm_prep(var = "address") %>%
   pm_house_parse() %>%
-  pm_streetDir_parse(dictionary = dirs) %>%
-  pm_streetSuf_parse(dictionary = sufs) %>%
-  pm_street_parse() %>%
-  pm_street_ord()
+  pm_houseAlpha_detect(position = "any") %>%
+  pm_houseAlpha_detect(position = "front") %>%
+  pm_houseAlpha_detect(position = "end") %>%
+  pm_houseAlpha_detect(position = "middle")
 
 # =============================
 
@@ -103,8 +104,6 @@ postmastr::sushi1 %>%
 
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
-  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-9 Olive St", address)) %>%
-  mutate(address = ifelse(name == "Cafe Mochi", "3221 South Grand Boulevard", address)) %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "4 NORTH AVE", address)) %>%
-  pm_parse(style = "short", newVar = clean_address, dirDict = dirs, suffixDict = sufs)
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407 A 1/2 Main Avenue Street", address)) %>%
+  pm_parse(style = "short", keep_parsed = TRUE, newVar = clean_address, dirDict = dirs, suffixDict = sufs)
 
