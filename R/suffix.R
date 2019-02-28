@@ -195,10 +195,18 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
 
 }
 
-#' Parse State Names and Abbreviation
+#' Parse Street Suffix
 #'
 #' @description Parse a state name or abbreviation from a string. These data
 #'     should be at the end of the string (i.e. the last word).
+#'
+#' @details If a street name is also a directional, like \code{North Ave}, it will be
+#'     will have been parsed by \link{pm_streetDir_parse} so that only the street suffix
+#'     remains (the directional element will be stored in \code{pm.preDir}. This function
+#'     includes a logic check for streets that have a prefix direction but not street name
+#'     after the street suffix is parsed. If those conditions are met, the street name
+#'     will be changed from \code{NA} to the directional's preferred spelling according
+#'     to the USPS.
 #'
 #' @usage pm_streetSuf_parse(.data, dictionary, locale = "us")
 #'
@@ -249,13 +257,26 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
 }
 
 # parse American states
-pm_parse_suf_us <- function(.data, dictionary){
+pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 
   # minimize dictionary
   dict <- paste(dictionary$suf.input, collapse = "|")
 
   # create bindings for global variables
   pm.address = pm.streetSuf = NULL
+
+  # detect directional streets
+  if ("pm.preDir" %in% names(.data)){
+
+    .data %>%
+      dplyr::mutate(...stDir = ifelse(
+        is.na(pm.preDir) == FALSE & stringr::str_count(pm.address, "\\w+") == 1,
+        TRUE, FALSE)) %>%
+      dplyr::mutate(pm.address = ifelse(...stDir == TRUE,
+        stringr::str_c(pm.preDir, " ", pm.address), pm.address)) %>%
+      dplyr::mutate(pm.preDir = ifelse(...stDir == TRUE, NA, pm.preDir)) -> .data
+
+  }
 
   # parse
   .data <- dplyr::mutate(.data, pm.streetSuf =
@@ -266,6 +287,26 @@ pm_parse_suf_us <- function(.data, dictionary){
   .data %>%
     dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -2), pm.address)) %>% # -> .data # %>%
     pm_streetSuf_std(var = pm.streetSuf, dictionary = dictionary) -> .data
+
+
+  # clean directional street names
+  if (locale == "us"){
+
+    # create dictionary
+    dict2 <- data.frame(
+      dir2.input = c("N", "E", "S", "W", "NE", "NW", "SE", "SW"),
+      dir2.output = c("North", "East", "South", "West", "Northeast", "Northwest", "Southeast", "Southwest"),
+      stringsAsFactors = FALSE
+    )
+
+    # add dictionary column
+    .data <- dplyr::left_join(.data, dict2, by = c("pm.address" = "dir2.input"))
+
+    # replace
+    .data %>%
+      dplyr::mutate(pm.address = ifelse(is.na(dir2.output) == FALSE, dir2.output, pm.address)) -> .data
+
+  }
 
 }
 

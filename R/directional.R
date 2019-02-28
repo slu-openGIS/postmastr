@@ -89,6 +89,10 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
 #'
 #' @usage pm_streetDir_detect(.data, dictionary, locale = "us")
 #'
+#' @details If a street name is also a directional, like \code{North Ave}, it will be
+#'     identified as such. See \link{pm_streetDir_parse} and \link{pm_streetSuf_parse}
+#'     for additional details on how these addresses are handled.
+#'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list of directionals.
@@ -147,6 +151,10 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
 #'
 #' @usage pm_streetDir_none(.data, dictionary, locale = "us")
 #'
+#' @details If a street name is also a directional, like \code{North Ave}, it will be
+#'     identified as such. See \link{pm_streetDir_parse} and \link{pm_streetSuf_parse}
+#'     for additional details on how these addresses are handled.
+#'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for cities.
@@ -191,6 +199,13 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
 #'
 #' @description Parse a prefix or suffix directional from a string. These data
 #'     should be at the beginning or end of the string (i.e. the first/last word or two).
+#'
+#' @details If a street name is also a directional, like \code{North Ave}, it will be
+#'     identified and parsed as such. The \link{pm_streetSuf_parse} function includes
+#'     a logic check for streets that have a prefix direction but not street name
+#'     after the street suffix is parsed. If those conditions are met, the street name
+#'     will be changed from \code{NA} to the directional's preferred spelling according
+#'     to the USPS.
 #'
 #' @usage pm_streetDir_parse(.data, dictionary, locale = "us")
 #'

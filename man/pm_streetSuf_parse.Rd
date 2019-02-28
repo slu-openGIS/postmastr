@@ -2,7 +2,7 @@
 % Please edit documentation in R/suffix.R
 \name{pm_streetSuf_parse}
 \alias{pm_streetSuf_parse}
-\title{Parse State Names and Abbreviation}
+\title{Parse Street Suffix}
 \usage{
 pm_streetSuf_parse(.data, dictionary, locale = "us")
 }
@@ -18,4 +18,13 @@ current option is "us" but this is included to facilitate future expansion.}
 \description{
 Parse a state name or abbreviation from a string. These data
     should be at the end of the string (i.e. the last word).
+}
+\details{
+If a street name is also a directional, like \code{North Ave}, it will be
+    will have been parsed by \link{pm_streetDir_parse} so that only the street suffix
+    remains (the directional element will be stored in \code{pm.preDir}. This function
+    includes a logic check for streets that have a prefix direction but not street name
+    after the street suffix is parsed. If those conditions are met, the street name
+    will be changed from \code{NA} to the directional's preferred spelling according
+    to the USPS.
 }

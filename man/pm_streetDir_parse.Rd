@@ -30,3 +30,11 @@ A tibble with a new character variable \code{pm.preDir} that contains
 Parse a prefix or suffix directional from a string. These data
     should be at the beginning or end of the string (i.e. the first/last word or two).
 }
+\details{
+If a street name is also a directional, like \code{North Ave}, it will be
+    identified and parsed as such. The \link{pm_streetSuf_parse} function includes
+    a logic check for streets that have a prefix direction but not street name
+    after the street suffix is parsed. If those conditions are met, the street name
+    will be changed from \code{NA} to the directional's preferred spelling according
+    to the USPS.
+}

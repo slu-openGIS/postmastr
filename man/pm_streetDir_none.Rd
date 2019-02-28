@@ -24,3 +24,8 @@ A tibble containing only observations that were not found in
 Automatically subset the results of \link{pm_streetDir_detect} to
    return only observations that were not found in the dictionary.
 }
+\details{
+If a street name is also a directional, like \code{North Ave}, it will be
+    identified as such. See \link{pm_streetDir_parse} and \link{pm_streetSuf_parse}
+    for additional details on how these addresses are handled.
+}

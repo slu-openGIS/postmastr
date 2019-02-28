@@ -23,3 +23,8 @@ A tibble with a new logical variable \code{pm.hasDir} that is
 \description{
 Determine the presence of house numbersin a string.
 }
+\details{
+If a street name is also a directional, like \code{North Ave}, it will be
+    identified as such. See \link{pm_streetDir_parse} and \link{pm_streetSuf_parse}
+    for additional details on how these addresses are handled.
+}
