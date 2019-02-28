@@ -2,7 +2,7 @@
 #'
 #' @description Determine whether the dictionary returns any matches.
 #'
-#' @usage pm_any_state(.data, dictionary, locale = "us")
+#' @usage pm_state_any(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -15,7 +15,7 @@
 #'     if they do not.
 #'
 #' @export
-pm_any_state <- function(.data, dictionary, locale = "us"){
+pm_state_any <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -28,9 +28,9 @@ pm_any_state <- function(.data, dictionary, locale = "us"){
 
   # test dictionary
   if (missing(dictionary) == TRUE){
-    .data <- pm_has_state(.data, locale = locale)
+    .data <- pm_state_detect(.data, locale = locale)
   } else if (missing(dictionary) == FALSE){
-    .data <- pm_has_state(.data, dictionary = dictionary, locale = locale)
+    .data <- pm_state_detect(.data, dictionary = dictionary, locale = locale)
   }
 
   # create output
@@ -45,7 +45,7 @@ pm_any_state <- function(.data, dictionary, locale = "us"){
 #'
 #' @description Determine whether the dictionary returns any matches.
 #'
-#' @usage pm_all_state(.data, dictionary, locale = "us")
+#' @usage pm_state_all(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -57,7 +57,7 @@ pm_any_state <- function(.data, dictionary, locale = "us"){
 #'     name or abbreviation for every observation in the data set and \code{FALSE} otherwise.
 #'
 #' @export
-pm_all_state <- function(.data, dictionary, locale = "us"){
+pm_state_all <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -70,9 +70,9 @@ pm_all_state <- function(.data, dictionary, locale = "us"){
 
   # test dictionary
   if (missing(dictionary) == TRUE){
-    .data <- pm_has_state(.data, locale = locale)
+    .data <- pm_state_detect(.data, locale = locale)
   } else if (missing(dictionary) == FALSE){
-    .data <- pm_has_state(.data, dictionary = dictionary, locale = locale)
+    .data <- pm_state_detect(.data, dictionary = dictionary, locale = locale)
   }
 
   # create output
@@ -88,7 +88,7 @@ pm_all_state <- function(.data, dictionary, locale = "us"){
 #' @description Determine the presence of state names or abbreviations
 #'     at the end of a string.
 #'
-#' @usage pm_has_state(.data, dictionary, locale = "us")
+#' @usage pm_state_detect(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
@@ -107,7 +107,7 @@ pm_all_state <- function(.data, dictionary, locale = "us"){
 #' @importFrom stringr str_detect
 #'
 #' @export
-pm_has_state <- function(.data, dictionary, locale = "us"){
+pm_state_detect <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.address = pm.hasState = NULL
@@ -143,12 +143,12 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 }
 
 
-#' Return Only Unmatched Observations From pm_has_state
+#' Return Only Unmatched Observations From pm_state_detect
 #'
-#' @description Automatically subset the results of \link{pm_has_state} to
+#' @description Automatically subset the results of \link{pm_state_detect} to
 #'    return only observations that were not found in the dictionary.
 #'
-#' @usage pm_no_state(.data, dictionary, locale = "us")
+#' @usage pm_state_none(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -157,7 +157,7 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A tibble containing only observations that were not found in
-#'     the dictionary. The variable created by \link{pm_has_state},
+#'     the dictionary. The variable created by \link{pm_state_detect},
 #'     \code{pm.hasState}, is removed.
 #'
 #' @importFrom dplyr %>%
@@ -165,7 +165,7 @@ pm_has_state <- function(.data, dictionary, locale = "us"){
 #' @importFrom dplyr select
 #'
 #' @export
-pm_no_state <- function(.data, dictionary, locale = "us"){
+pm_state_none <- function(.data, dictionary, locale = "us"){
 
   # global bindings
   pm.hasState = NULL
@@ -181,7 +181,7 @@ pm_no_state <- function(.data, dictionary, locale = "us"){
 
   # create output
   .data %>%
-    pm_has_state(dictionary = dictionary, locale = locale) %>%
+    pm_state_detect(dictionary = dictionary, locale = locale) %>%
     dplyr::filter(pm.hasState == FALSE) %>%
     dplyr::select(-pm.hasState) -> out
 
@@ -197,7 +197,7 @@ pm_no_state <- function(.data, dictionary, locale = "us"){
 #'     postal code follows the, use \link{pm_parse_postal} first to remove those
 #'     data from \code{pm.address}.
 #'
-#' @usage pm_parse_state(.data, dictionary, locale = "us")
+#' @usage pm_state_parse(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
@@ -223,7 +223,7 @@ pm_no_state <- function(.data, dictionary, locale = "us"){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_state <- function(.data, dictionary, locale = "us"){
+pm_state_parse <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.address = pm.state = pm.uid = NULL
@@ -273,7 +273,7 @@ pm_parse_state_us <- function(.data, dictionary){
     dplyr::mutate(pm.address = ifelse(is.na(pm.state) == FALSE,
                                       stringr::word(pm.address, start = 1,
                                                     end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address)) %>%
-    pm_std_states(var = pm.state, dictionary = dictionary) -> .data
+    pm_state_std(var = pm.state, dictionary = dictionary) -> .data
 
 }
 
@@ -281,7 +281,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #'
 #' @description Convert state names to the USPS approved two-letter abbreviation.
 #'
-#' @usage pm_std_states(.data, var, dictionary, locale = "us")
+#' @usage pm_state_std(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain city names
@@ -306,7 +306,7 @@ pm_parse_state_us <- function(.data, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_std_states <- function(.data, var, dictionary, locale = "us"){
+pm_state_std <- function(.data, var, dictionary, locale = "us"){
 
   # save parameters to list
   paramList <- as.list(match.call())

@@ -16,6 +16,6 @@ as a master list for street suffixes.}
 current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \description{
-Automatically subset the results of \link{pm_has_state} to
+Automatically subset the results of \link{pm_streetSuf_detect} to
    return only observations that were not found in the dictionary.
 }

@@ -154,7 +154,7 @@ pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
 
 #' Return Only Unmatched Observations From pm_streetSuf_detect
 #'
-#' @description Automatically subset the results of \link{pm_has_state} to
+#' @description Automatically subset the results of \link{pm_streetSuf_detect} to
 #'    return only observations that were not found in the dictionary.
 #'
 #' @usage pm_streetSuf_none(.data, dictionary, locale = "us")
