@@ -4,13 +4,18 @@
 \alias{pm_street_parse}
 \title{Parse Street Names}
 \usage{
-pm_street_parse(.data, dictionary, drop = TRUE)
+pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE)
 }
 \arguments{
 \item{.data}{A \code{postmastr} object created with \link{pm_prep}}
 
 \item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
 as a master list for streets.}
+
+\item{ordinal}{A logical scalar; if \code{TRUE}, street names that contain numeric words values
+(i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+default is \code{TRUE} because it returns much more compact clean addresses (i.e.
+"168th St" as opposed to "One Hundred Sixty Eigth St").}
 
 \item{drop}{A logical scalar; if \code{TRUE}, the \code{pm.address} variable will
 be dropped from the \code{postmastr} object.}

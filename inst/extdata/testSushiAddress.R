@@ -43,13 +43,15 @@ rm(sushi2, sushi2_frac, sushi2_min, sushi2_suf)
 # =============================
 
 postmastr::sushi2 %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "4 NORTH AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "4 SECOND AVE", address)) %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) %>%
   pm_prep(var = "address") %>%
   pm_house_parse() %>%
   pm_streetDir_parse(dictionary = dirs) %>%
-  pm_streetSuf_parse(dictionary = sufs)
+  pm_streetSuf_parse(dictionary = sufs) %>%
+  pm_street_parse() %>%
+  pm_street_ord(var = "pm.street")
 
 # =============================
 
@@ -101,7 +103,6 @@ postmastr::sushi1 %>%
 
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "4 NORTH AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "4 one hundred sixty eighth AVE", address)) %>%
   pm_parse(style = "short", newVar = clean_address, dirDict = dirs, suffixDict = sufs)
-
 

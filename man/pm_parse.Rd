@@ -4,8 +4,8 @@
 \alias{pm_parse}
 \title{Parse Street Address}
 \usage{
-pm_parse(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-    dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
+pm_parse(.data, style, locale = "us", ordinal = TRUE, newVar, keep_parsed = FALSE,
+    keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -17,6 +17,11 @@ address as well as a, at the most, a city, state, and postal code.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
+
+\item{ordinal}{A logical scalar; if \code{TRUE}, street names that contain numeric words values
+(i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+default is \code{TRUE} because it returns much more compact clean addresses (i.e.
+"168th St" as opposed to "One Hundred Sixty Eigth St").}
 
 \item{newVar}{Name of new variable to store rebuilt address in.}
 

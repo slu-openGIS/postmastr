@@ -4,8 +4,8 @@
 #'     of \code{postmastr}'s code down to a single function call once dictionaries
 #'     have been created and tested against the data.
 #'
-#' @usage pm_parse(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-#'     dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
+#' @usage pm_parse(.data, style, locale = "us", ordinal = TRUE, newVar, keep_parsed = FALSE,
+#'     keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
 #'
 #' @param .data A source data set to be parsed
 #' @param style One of either \code{"full"} or \code{"short"}. A short address contains,
@@ -14,6 +14,10 @@
 #'     address as well as a, at the most, a city, state, and postal code.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
+#' @param ordinal A logical scalar; if \code{TRUE}, street names that contain numeric words values
+#'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+#'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
+#'     "168th St" as opposed to "One Hundred Sixty Eigth St").
 #' @param keep_parsed Logical scalar; if \code{TRUE}, all parsed elements will be
 #'     added to the source data after replacement. Otherwise, if \code{FALSE},
 #'     only the rebuilt address will be added to the source data (default).
@@ -35,8 +39,8 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-                     dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict){
+pm_parse <- function(.data, style, locale = "us", ordinal = TRUE, newVar, keep_parsed = FALSE,
+                     keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict){
 
   # global bindings
   address = pm.house = pm.streetSuf = NULL
@@ -72,7 +76,7 @@ pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, k
       pm_houseFrac_parse() %>%
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
-      pm_street_parse() %>%
+      pm_street_parse(ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = "end", locale = locale) %>%
       pm_replace(source = source, newVar = !!varQ) -> out
 
@@ -84,7 +88,7 @@ pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, k
       pm_houseFrac_parse() %>%
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
-      pm_street_parse() %>%
+      pm_street_parse(ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
       pm_replace(source = source, newVar = !!varQ) -> out
 
