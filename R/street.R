@@ -3,6 +3,8 @@
 #' @description Converts the remaining text of \code{pm.address} to title case and stores
 #'     it in a new variable named \code{pm.street}.
 #'
+#' @usage pm_street_parse(.data, dictionary, drop = TRUE)
+#'
 #' @details This is typically the last function to be executed before rebuilding and replacing.
 #'
 #' @param .data A \code{postmastr} object created with \link{pm_prep}
@@ -16,7 +18,7 @@
 #'     re-ordered, so the new vector will not be in the last position of the tibble.
 #'
 #' @export
-pm_parse_street <- function(.data, dictionary, drop = TRUE){
+pm_street_parse <- function(.data, dictionary, drop = TRUE){
 
   # global bindings
   pm.address = NULL

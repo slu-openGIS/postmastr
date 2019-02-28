@@ -68,7 +68,7 @@ pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, k
       pm_parse_houseFrac() %>%
       pm_parse_street_dir(dictionary = dirDict, locale = locale) %>%
       pm_parse_street_suf(dictionary = suffixDict, locale = locale) %>%
-      pm_parse_street() %>%
+      pm_street_parse() %>%
       pm_rebuild(start = pm.house, end = "end", locale = locale) %>%
       pm_replace(source = source, newVar = !!varQ) -> out
 
@@ -80,7 +80,7 @@ pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, k
       pm_parse_houseFrac() %>%
       pm_parse_street_dir(dictionary = dirDict, locale = locale) %>%
       pm_parse_street_suf(dictionary = suffixDict, locale = locale) %>%
-      pm_parse_street() %>%
+      pm_street_parse() %>%
       pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
       pm_replace(source = source, newVar = !!varQ) -> out
 
