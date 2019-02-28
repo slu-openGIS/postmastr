@@ -149,9 +149,11 @@ pm_no_house <- function(.data){
 #'
 #' @description Create a new column containing house number data.
 #'
-#' @usage pm_parse_house(.data)
+#' @usage pm_parse_house(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new column \code{pm.house} that contains the house number.
 #'     If a house number is not detected in the string, a value of \code{NA} will be
@@ -442,9 +444,11 @@ pm_no_houseFrac <- function(.data){
 #'
 #' @description Create a new column containing fractional house number data.
 #'
-#' @usage pm_parse_houseFrac(.data)
+#' @usage pm_parse_houseFrac(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new column \code{pm.houseFrac} that contains the fractional house number.
 #'     If a house number is not detected in the string, a value of \code{NA} will be

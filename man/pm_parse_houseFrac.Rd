@@ -4,10 +4,13 @@
 \alias{pm_parse_houseFrac}
 \title{Parse Fractional House Numbers}
 \usage{
-pm_parse_houseFrac(.data)
+pm_parse_houseFrac(.data, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \value{
 A tibble with a new column \code{pm.houseFrac} that contains the fractional house number.
