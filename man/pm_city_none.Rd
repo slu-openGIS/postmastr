@@ -2,7 +2,7 @@
 % Please edit documentation in R/city.R
 \name{pm_city_none}
 \alias{pm_city_none}
-\title{Return Only Unmatched Observations From pm_has_city}
+\title{Return Only Unmatched Observations From pm_city_detect}
 \usage{
 pm_city_none(.data, dictionary)
 }
@@ -14,10 +14,10 @@ as a master list for cities.}
 }
 \value{
 A tibble containing only observations that were not found in
-    the dictionary. The variable created by \link{pm_has_city},
+    the dictionary. The variable created by \link{pm_city_detect},
     \code{pm.hasCity}, is removed.
 }
 \description{
-Automatically subset the results of \link{pm_has_city} to
+Automatically subset the results of \link{pm_city_detect} to
    return only observations that were not found in the dictionary.
 }

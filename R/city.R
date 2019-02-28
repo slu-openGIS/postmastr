@@ -118,9 +118,9 @@ pm_city_detect <- function(.data, dictionary){
 
 }
 
-#' Return Only Unmatched Observations From pm_has_city
+#' Return Only Unmatched Observations From pm_city_detect
 #'
-#' @description Automatically subset the results of \link{pm_has_city} to
+#' @description Automatically subset the results of \link{pm_city_detect} to
 #'    return only observations that were not found in the dictionary.
 #'
 #' @usage pm_city_none(.data, dictionary)
@@ -130,7 +130,7 @@ pm_city_detect <- function(.data, dictionary){
 #'     as a master list for cities.
 #'
 #' @return A tibble containing only observations that were not found in
-#'     the dictionary. The variable created by \link{pm_has_city},
+#'     the dictionary. The variable created by \link{pm_city_detect},
 #'     \code{pm.hasCity}, is removed.
 #'
 #' @importFrom dplyr %>%
@@ -154,7 +154,7 @@ pm_city_none <- function(.data, dictionary){
 
   # create output
   .data %>%
-    pm_has_city(dictionary = dictionary) %>%
+    pm_city_detect(dictionary = dictionary) %>%
     dplyr::filter(pm.hasCity == FALSE) %>%
     dplyr::select(-pm.hasCity) -> out
 
