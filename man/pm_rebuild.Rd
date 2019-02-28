@@ -16,6 +16,11 @@ pm_rebuild(.data, start, end, locale = "us")
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
 }
+\value{
+A copy of the pomstmastr object with a standardized address variable.
+}
 \description{
-Rebuild Street Address
+Create a single address from parsed components. Data are automatically re-ordered
+    as part of this process, so there is no need to subset columns prior to executing
+    this function.
 }

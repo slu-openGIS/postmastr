@@ -1,10 +1,25 @@
 #' Rebuild Street Address
 #'
+#' @description Create a single address from parsed components. Data are automatically re-ordered
+#'     as part of this process, so there is no need to subset columns prior to executing
+#'     this function.
+#'
+#' @usage pm_rebuild(.data, start, end, locale = "us")
+#'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param start Variable name to begin rebuilding process with, typically the house number
 #' @param end Variable name to end rebuilding process with, typically the street suffix or postal code
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @return A copy of the pomstmastr object with a standardized address variable.
+#'
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom stringr str_replace_all
+#' @importFrom stringr str_squish
+#' @importFrom tidyr unite
 #'
 #' @export
 pm_rebuild <- function(.data, start, end, locale = "us"){
@@ -103,6 +118,30 @@ pm_reorder_build <- function(.data, locale = "us"){
 
 #' Add Address to Source Data
 #'
+#' @description Adds standardized address and, optionally, parsed elements back into
+#'     original source data frame.
+#'
+#' @usage pm_replace(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE)
+#'
+#' @param .data A postmastr object created with \link{pm_prep} that has been readied
+#'     for replacement by (a) fully parsing the data and (b) rebuilding a sinle
+#'     address field.
+#' @param source Original source data to merge clean addresses with.
+#' @param newVar Name of new variable to store rebuilt address in.
+#' @param keep_parsed Logical scalar; if \code{TRUE}, all parsed elements will be
+#'     added to the source data after replacement. Otherwise, if \code{FALSE},
+#'     only the rebuilt address will be added to the source data (default).
+#' @param keep_ids Logical scalar; if \code{TRUE}, the identification numbers
+#'     will be kept in the source data after replacement. Otherwise, if \code{FALSE},
+#'     they will be removed (default).
+#'
+#' @return The source data with a standardized address variable and, optionally, parsed
+#'     address elements.
+#'
+#' @importFrom dplyr left_join
+#' @importFrom dplyr select
+#' @importFrom stats na.omit
+#'
 #' @export
 pm_replace <- function(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE){
 
@@ -179,7 +218,7 @@ pm_reorder_replace <- function(.data, locale = "us"){
     joined <- dplyr::left_join(master, working, by = "master.vars")
 
     # create vector of re-ordered variables
-    out <- na.omit(joined$working.vars)
+    out <- stats::na.omit(joined$working.vars)
 
   }
 

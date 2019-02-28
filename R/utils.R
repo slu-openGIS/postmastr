@@ -27,7 +27,7 @@ pm_reorder <- function(.data, locale = "us"){
     joined <- dplyr::left_join(master, working, by = "master.vars")
 
     # create vector of re-ordered variables
-    out <- na.omit(joined$working.vars)
+    out <- stats::na.omit(joined$working.vars)
 
   }
 

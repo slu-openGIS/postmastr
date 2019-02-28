@@ -4,9 +4,30 @@
 \alias{pm_replace}
 \title{Add Address to Source Data}
 \usage{
-pm_replace(.data, source, newVar, keep_parsed = FALSE,
-  keep_ids = FALSE)
+pm_replace(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE)
+}
+\arguments{
+\item{.data}{A postmastr object created with \link{pm_prep} that has been readied
+for replacement by (a) fully parsing the data and (b) rebuilding a sinle
+address field.}
+
+\item{source}{Original source data to merge clean addresses with.}
+
+\item{newVar}{Name of new variable to store rebuilt address in.}
+
+\item{keep_parsed}{Logical scalar; if \code{TRUE}, all parsed elements will be
+added to the source data after replacement. Otherwise, if \code{FALSE},
+only the rebuilt address will be added to the source data (default).}
+
+\item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
+will be kept in the source data after replacement. Otherwise, if \code{FALSE},
+they will be removed (default).}
+}
+\value{
+The source data with a standardized address variable and, optionally, parsed
+    address elements.
 }
 \description{
-Add Address to Source Data
+Adds standardized address and, optionally, parsed elements back into
+    original source data frame.
 }
