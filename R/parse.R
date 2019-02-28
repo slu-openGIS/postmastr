@@ -29,6 +29,10 @@
 #' @param stateDict Optional; name of state dictionary object
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang :=
+#' @importFrom rlang enquo
+#' @importFrom rlang quo
+#' @importFrom rlang sym
 #'
 #' @export
 pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
