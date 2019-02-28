@@ -5,7 +5,7 @@
 #'     have been created and tested against the data.
 #'
 #' @usage pm_parse(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-#'     dirDict, suffixDict, unitDict, cityDict, stateDict)
+#'     dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
 #'
 #' @param .data A source data set to be parsed
 #' @param style One of either \code{"full"} or \code{"short"}. A short address contains,
@@ -22,14 +22,17 @@
 #'     they will be removed (default).
 #' @param newVar Name of new variable to store rebuilt address in.
 #' @param dirDict Optional; name of directional dictionary object
+#' @param streetDict Optional; name of street dictionary object
 #' @param suffixDict Optional; name of street suffix dictionary object
 #' @param unitDict Optional; name of unit dictionary object
 #' @param cityDict Optional; name of city dictionary object
 #' @param stateDict Optional; name of state dictionary object
 #'
+#' @importFrom dplyr %>%
+#'
 #' @export
 pm_parse <- function(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-                     dirDict, suffixDict, unitDict, cityDict, stateDict){
+                     dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict){
 
   # global bindings
   address = pm.house = pm.streetSuf = NULL

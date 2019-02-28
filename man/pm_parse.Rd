@@ -5,7 +5,7 @@
 \title{Parse Street Address}
 \usage{
 pm_parse(.data, style, locale = "us", newVar, keep_parsed = FALSE, keep_ids = FALSE,
-    dirDict, suffixDict, unitDict, cityDict, stateDict)
+    dirDict, streetDict, suffixDict, unitDict, cityDict, stateDict)
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -29,6 +29,8 @@ will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 they will be removed (default).}
 
 \item{dirDict}{Optional; name of directional dictionary object}
+
+\item{streetDict}{Optional; name of street dictionary object}
 
 \item{suffixDict}{Optional; name of street suffix dictionary object}
 
