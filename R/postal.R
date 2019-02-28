@@ -2,7 +2,7 @@
 #'
 #' @description Determine whether the postal code test returns any matches.
 #'
-#' @usage pm_any_postal(.data, locale = "us")
+#' @usage pm_postal_any(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
@@ -12,7 +12,7 @@
 #'     one postal code and \code{FALSE} if they do not.
 #'
 #' @export
-pm_any_postal <- function(.data, locale = "us"){
+pm_postal_any <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -30,7 +30,7 @@ pm_any_postal <- function(.data, locale = "us"){
 
   # test and create output
   if (locale == "us"){
-    .data <- pm_has_postal(.data, locale = locale)
+    .data <- pm_postal_detect(.data, locale = locale)
 
     # create output
     out <- any(.data$pm.hasZip)
@@ -46,7 +46,7 @@ pm_any_postal <- function(.data, locale = "us"){
 #' @description Determine whether the postal code test returns matches for every
 #'     observation.
 #'
-#' @usage pm_all_postal(.data, locale = "us")
+#' @usage pm_postal_all(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
@@ -56,7 +56,7 @@ pm_any_postal <- function(.data, locale = "us"){
 #'     codes and \code{FALSE} otherwise.
 #'
 #' @export
-pm_all_postal <- function(.data, locale = "us"){
+pm_postal_all <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -74,7 +74,7 @@ pm_all_postal <- function(.data, locale = "us"){
 
   # test and create output
   if (locale == "us"){
-    .data <- pm_has_postal(.data, locale = locale)
+    .data <- pm_postal_detect(.data, locale = locale)
 
     # create output
     out <- all(.data$pm.hasZip)
@@ -92,7 +92,7 @@ pm_all_postal <- function(.data, locale = "us"){
 #'     codes (e.g. \code{63108-3412}). The zip-code must be the final word in
 #'     the string to return \code{TRUE}.
 #'
-#' @usage pm_has_postal(.data, locale = "us")
+#' @usage pm_postal_detect(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
@@ -109,7 +109,7 @@ pm_all_postal <- function(.data, locale = "us"){
 #' @importFrom stringr word
 #'
 #' @export
-pm_has_postal <- function(.data, locale = "us"){
+pm_postal_detect <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -152,19 +152,19 @@ pm_has_zip_us <- function(.data){
 
 }
 
-#' Return Only Unmatched Observations From pm_has_postal
+#' Return Only Unmatched Observations From pm_postal_detect
 #'
-#' @description Automatically subset the results of \link{pm_has_postal} to
+#' @description Automatically subset the results of \link{pm_postal_detect} to
 #'    return only observations that were not found to include a postal (zip) code.
 #'
-#' @usage pm_no_postal(.data,  locale = "us")
+#' @usage pm_postal_none(.data,  locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A tibble containing only observations that were not found in
-#'     the dictionary. The variable created by \link{pm_has_postal},
+#'     the dictionary. The variable created by \link{pm_postal_detect},
 #'     \code{pm.hasZip}, is removed.
 #'
 #' @importFrom dplyr %>%
@@ -172,7 +172,7 @@ pm_has_zip_us <- function(.data){
 #' @importFrom dplyr select
 #'
 #' @export
-pm_no_postal <- function(.data, locale = "us"){
+pm_postal_none <- function(.data, locale = "us"){
 
   # global bindings
   pm.hasZip = NULL
@@ -188,7 +188,7 @@ pm_no_postal <- function(.data, locale = "us"){
 
   # create output
   .data %>%
-    pm_has_postal(locale = locale) %>%
+    pm_postal_detect(locale = locale) %>%
     dplyr::filter(pm.hasZip == FALSE) %>%
     dplyr::select(-pm.hasZip) -> out
 
@@ -201,7 +201,7 @@ pm_no_postal <- function(.data, locale = "us"){
 #'
 #' @description Create a new column containing postal code data.
 #'
-#' @usage pm_parse_postal(.data, locale = "us")
+#' @usage pm_postal_parse(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
@@ -219,7 +219,7 @@ pm_no_postal <- function(.data, locale = "us"){
 #' @importFrom stringr word
 #'
 #' @export
-pm_parse_postal <- function(.data, locale = "us"){
+pm_postal_parse <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -237,7 +237,7 @@ pm_parse_postal <- function(.data, locale = "us"){
 
   # check for zips
   if (locale == "us" & "pm.hasZip" %in% names(.data) == FALSE){
-    .data <- pm_has_postal(.data)
+    .data <- pm_postal_detect(.data)
   }
 
   # parse
