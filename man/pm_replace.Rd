@@ -15,7 +15,7 @@ address field.}
 
 \item{newVar}{Name of new variable to store rebuilt address in.}
 
-\item{keep_parsed}{Character scalar; if \code{"yes"}, all parsed elements will be
+\item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
 added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 only the rebuilt address will be added to the source data (default).}

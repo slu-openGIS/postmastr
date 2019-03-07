@@ -140,7 +140,7 @@ pm_reorder_build <- function(.data, locale = "us"){
 #'     address field.
 #' @param source Original source data to merge clean addresses with.
 #' @param newVar Name of new variable to store rebuilt address in.
-#' @param keep_parsed Character scalar; if \code{"yes"}, all parsed elements will be
+#' @param keep_parsed Character string; if \code{"yes"}, all parsed elements will be
 #'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 #'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 #'     only the rebuilt address will be added to the source data (default).

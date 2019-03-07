@@ -33,8 +33,9 @@ default is \code{TRUE} because it returns much more compact clean addresses (i.e
 \item{add_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
 
-\item{keep_parsed}{Logical scalar; if \code{TRUE}, all parsed elements will be
-added to the source data after replacement. Otherwise, if \code{FALSE},
+\item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
+added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
+\code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 only the rebuilt address will be added to the source data (default).}
 
 \item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
