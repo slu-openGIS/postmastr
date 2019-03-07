@@ -4,9 +4,10 @@
 \alias{pm_parse}
 \title{Parse Street Address}
 \usage{
-pm_parse(.data, input, var, output, newVar, ordinal = TRUE, include_commas = FALSE,
-    include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict,
-    suffixDict, unitDict, cityDict, stateDict, locale = "us")
+pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
+    include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
+    keep_ids = FALSE, dir_dict, street_dict, suffix_dict, unit_dict,
+    city_dict, state_dict, locale = "us")
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -16,14 +17,14 @@ A short address contains, at the most, a house number, street directionals, a st
 a street suffix, and a unit type and number. A full address contains all of the selements of a
 short address as well as a, at the most, a city, state, and postal code.}
 
-\item{var}{A character variable containing address data to be parsed}
+\item{address}{A character variable containing address data to be parsed}
 
 \item{output}{Describes the format of the output address. One of either \code{"full"} or \code{"short"}.
 A short address contains, at the most, a house number, street directionals, a street name,
 a street suffix, and a unit type and number. A full address contains all of the selements of a
 short address as well as a, at the most, a city, state, and postal code.}
 
-\item{newVar}{Name of new variable to store rebuilt address in.}
+\item{new_address}{Name of new variable to store rebuilt address in.}
 
 \item{ordinal}{A logical scalar; if \code{TRUE}, street names that contain numeric words values
 (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
@@ -46,17 +47,17 @@ only the rebuilt address will be added to the source data (default).}
 will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 they will be removed (default).}
 
-\item{dirDict}{Optional; name of directional dictionary object}
+\item{dir_dict}{Optional; name of directional dictionary object}
 
-\item{streetDict}{Optional; name of street dictionary object}
+\item{street_dict}{Optional; name of street dictionary object}
 
-\item{suffixDict}{Optional; name of street suffix dictionary object}
+\item{suffix_dict}{Optional; name of street suffix dictionary object}
 
-\item{unitDict}{Optional; name of unit dictionary object}
+\item{unit_dict}{Optional; name of unit dictionary object}
 
-\item{cityDict}{Optional; name of city dictionary object}
+\item{city_dict}{Optional; name of city dictionary object}
 
-\item{stateDict}{Optional; name of state dictionary object}
+\item{state_dict}{Optional; name of state dictionary object}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
@@ -82,8 +83,13 @@ df <- sushi1
 # temporary code to subset unit
 df <- dplyr::filter(df, name != "Drunken Fish - Ballpark Village")
 
-# parse
-pm_parse(df, input = "full", var = address, output = "full",
-    dirDict = dirs, suffixDict = sufs, cityDict = cities, stateDict = mo)
+# parse, full output
+pm_parse(df, input = "full", address = address, output = "full",
+    dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo)
+
+# parse, short output
+pm_parse(df, input = "full", address = address, output = "short",
+    new_address = clean_address, dir_dict = dirs, suffix_dict = sufs,
+    city_dict = cities, state_dict = mo)
 
 }
