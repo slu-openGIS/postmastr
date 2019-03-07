@@ -128,7 +128,7 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
 pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
 
   # global bindings
-  pm.address = ...preDir = ...sufDir = NULL
+  pm.address = ...preDir = ...sufDir = dic_us_dir = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -275,7 +275,7 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
 pm_streetDir_parse <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.uid = NULL
+  pm.address = pm.uid = dic_us_dir = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -388,6 +388,9 @@ pm_parse_dir_us <- function(.data, dictionary){
 #'
 #' @export
 pm_streetDir_std <- function(.data, var, dictionary, locale = "us"){
+
+  # global bindings
+  dic_us_dir = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())

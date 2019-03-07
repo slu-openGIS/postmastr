@@ -44,6 +44,26 @@
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
+#' @examples
+#' # construct dictionaries
+#' dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
+#' sufs <- pm_dictionary(type = "suffix", locale = "us")
+#' mo <- pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
+#' cities <- pm_append(type = "city",
+#'     input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis",
+#'               "SAINT LOUIS", "Webster Groves"),
+#'     output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
+#'
+#' # add example data
+#' df <- sushi1
+#'
+#' # temporary code to subset unit
+#' df <- dplyr::filter(df, name != "Drunken Fish - Ballpark Village")
+#'
+#' # parse
+#' pm_parse(df, input = "full", var = address, output = "full",
+#'     dirDict = dirs, suffixDict = sufs, cityDict = cities, stateDict = mo)
+#'
 #' @importFrom dplyr %>%
 #' @importFrom rlang :=
 #' @importFrom rlang enquo
