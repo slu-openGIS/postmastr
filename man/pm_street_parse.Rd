@@ -9,8 +9,8 @@ pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE, locale = "us")
 \arguments{
 \item{.data}{A \code{postmastr} object created with \link{pm_prep}}
 
-\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
-as a master list for streets.}
+\item{dictionary}{Optional; a tbl created with \code{pm_append} to be used to standardize
+specific street names.}
 
 \item{ordinal}{A logical scalar; if \code{TRUE}, street names that contain numeric words values
 (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The

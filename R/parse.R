@@ -53,17 +53,42 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
   # global bindings
   address = pm.house = pm.streetSuf = NULL
 
-  # optional output
-  if (input == "short" & missing(output) == TRUE){
-    output <- "short"
-  }
-
   # save parameters to list
   paramList <- as.list(match.call())
 
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # optional output
+  if (input == "short" & missing(output) == TRUE){
+    output <- "short"
+  }
+
+  # optional dictionary parameters
+  if (missing(dirDict) == TRUE){
+    dirDict <- NULL
+  }
+
+  if (missing(streetDict) == TRUE){
+    streetDict <- NULL
+  }
+
+  if (missing(suffixDict) == TRUE){
+    suffixDict <- NULL
+  }
+
+  if (missing(unitDict) == TRUE){
+    unitDict <- NULL
+  }
+
+  if (missing(cityDict) == TRUE){
+    cityDict <- NULL
+  }
+
+  if (missing(stateDict) == TRUE){
+    stateDict <- NULL
   }
 
   # unquote variable
@@ -100,7 +125,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_houseFrac_parse() %>%
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
-      pm_street_parse(ordinal = ordinal) %>%
+      pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = "end", add_commas = add_commas, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
@@ -115,7 +140,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_houseFrac_parse() %>%
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
-      pm_street_parse(ordinal = ordinal) %>%
+      pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
@@ -127,7 +152,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_houseFrac_parse() %>%
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
-      pm_street_parse(ordinal = ordinal) %>%
+      pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
       pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 

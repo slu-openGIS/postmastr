@@ -11,8 +11,8 @@ pm_street_std(.data, var, dictionary, ordinal = TRUE, locale = "us")
 
 \item{var}{A character variable that may contain street suffixes}
 
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list for street suffixes.}
+\item{dictionary}{Optional; a tbl created with \code{pm_append} to be used to standardize
+specific street names.}
 
 \item{ordinal}{A logical scalar; if \code{TRUE}, street names that contain numeric words values
 (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The

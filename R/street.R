@@ -8,8 +8,8 @@
 #' @details This is typically the last function to be executed before rebuilding and replacing.
 #'
 #' @param .data A \code{postmastr} object created with \link{pm_prep}
-#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
-#'     as a master list for streets.
+#' @param dictionary Optional; a tbl created with \code{pm_append} to be used to standardize
+#'     specific street names.
 #' @param ordinal A logical scalar; if \code{TRUE}, street names that contain numeric words values
 #'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
@@ -41,12 +41,13 @@ pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE, loca
   vars <- pm_reorder(.data)
   .data <- dplyr::select(.data, vars)
 
-  # standardize street names
+  # set dictionary to null if not specified
   if (missing(dictionary) == TRUE){
-    .data <- pm_street_std(.data, var = "pm.street", ordinal = ordinal, locale = locale)
-  } else if (missing(dictionary) == FALSE){
-    .data <- pm_street_std(.data, var = "pm.street", dictionary = dictionary, ordinal = ordinal, locale = locale)
+    dictionary <- NULL
   }
+
+  # standardize street names
+  .data <- pm_street_std(.data, var = "pm.street", dictionary = dictionary, ordinal = ordinal, locale = locale)
 
   # optionally drop pm.address
   if (drop == TRUE){
@@ -70,8 +71,8 @@ pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE, loca
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain street suffixes
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes.
+#' @param dictionary Optional; a tbl created with \code{pm_append} to be used to standardize
+#'     specific street names.
 #' @param ordinal A logical scalar; if \code{TRUE}, street names that contain numeric words values
 #'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
@@ -130,15 +131,19 @@ pm_street_std <- function(.data, var, dictionary, ordinal = TRUE, locale = "us")
   # optionally standardize further with dictionary
   if (missing(dictionary) == FALSE){
 
-    # set-up dictionary
-    dictionary %>%
-      dplyr::rename(!!varQ := st.input) -> dictionary
+    if (is.null(dictionary) == FALSE){
 
-    # standardize
-    .data %>%
-      dplyr::left_join(., dictionary, by = varQN) %>%
-      dplyr::mutate(!!varQ := ifelse(is.na(st.output) == FALSE, st.output, !!varQ)) %>%
-      dplyr::select(-st.output) -> .data
+      # set-up dictionary
+      dictionary %>%
+        dplyr::rename(!!varQ := st.input) -> dictionary
+
+      # standardize
+      .data %>%
+        dplyr::left_join(., dictionary, by = varQN) %>%
+        dplyr::mutate(!!varQ := ifelse(is.na(st.output) == FALSE, st.output, !!varQ)) %>%
+        dplyr::select(-st.output) -> .data
+
+    }
 
   }
 
