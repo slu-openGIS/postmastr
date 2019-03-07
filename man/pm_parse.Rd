@@ -62,9 +62,14 @@ they will be removed (default).}
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
 }
+\value{
+An updated version of the source data with, at a minimum, a new variable containing
+    standardized street addresses for each observation. Options allow for columns containing
+    parsed elements to be returned as well.
+}
 \description{
 A wrapper around the parse functions that can be used to shorten all
-    of \code{postmastr}'s code down to a single function call once dictionaries
+    of \code{postmastr}'s core code down to a single function call once dictionaries
     have been created and tested against the data.
 }
 \examples{
@@ -92,4 +97,7 @@ pm_parse(df, input = "full", address = address, output = "short",
     new_address = clean_address, dir_dict = dirs, suffix_dict = sufs,
     city_dict = cities, state_dict = mo)
 
+}
+\seealso{
+\link{pm_prep}
 }

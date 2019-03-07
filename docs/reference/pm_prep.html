@@ -129,8 +129,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A tibble that has already had identification numbers added
-using pm_identify.</p></td>
+      <td><p>A source data frame that has already had identification
+numbers added using pm_identify.</p></td>
     </tr>
     <tr>
       <th>var</th>
@@ -138,13 +138,21 @@ using pm_identify.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A tibble with one observation per unique address in the source data
+   frame. The tibble will have two variables, <code>pm.uid</code> and <code>pm.address</code>,
+   which is used as the basis for exploratory parsing.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

@@ -6,7 +6,7 @@ authors:
 
 reference:
   - title: "Parse Data"
-    desc: "High Level Parsing"
+    desc: "High-level Parsing"
     contents:
     - pm_parse
 
@@ -20,7 +20,7 @@ reference:
     - dic_us_suffix
 
   - title: "Prepare Data"
-    desc: "Create `postmastr` and Validate Objects"
+    desc: "Create and Validate `postmastr` Objects"
     contents:
     - pm_identify
     - pm_prep

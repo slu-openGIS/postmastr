@@ -1,7 +1,7 @@
 #' Parse Street Address
 #'
 #' @description A wrapper around the parse functions that can be used to shorten all
-#'     of \code{postmastr}'s code down to a single function call once dictionaries
+#'     of \code{postmastr}'s core code down to a single function call once dictionaries
 #'     have been created and tested against the data.
 #'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
@@ -43,7 +43,13 @@
 #' @param city_dict Optional; name of city dictionary object
 #' @param state_dict Optional; name of state dictionary object
 #' @param locale A string indicating the country these data represent; the only
-#'    current option is "us" but this is included to facilitate future expansion.
+#'     current option is "us" but this is included to facilitate future expansion.
+#'
+#' @return An updated version of the source data with, at a minimum, a new variable containing
+#'     standardized street addresses for each observation. Options allow for columns containing
+#'     parsed elements to be returned as well.
+#'
+#' @seealso \link{pm_prep}
 #'
 #' @examples
 #' # construct dictionaries

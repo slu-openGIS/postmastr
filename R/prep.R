@@ -109,7 +109,7 @@ pm_identify <- function(.data, var){
 pm_prep <- function(.data, var){
 
   # create bindings for global variables
-  pm.address = pm.uid = NULL
+  pm.address = pm.uid = geometry = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
