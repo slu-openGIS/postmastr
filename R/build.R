@@ -4,11 +4,13 @@
 #'     as part of this process, so there is no need to subset columns prior to executing
 #'     this function.
 #'
-#' @usage pm_rebuild(.data, start, end, locale = "us")
+#' @usage pm_rebuild(.data, start, end, add_commas = FALSE, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param start Variable name to begin rebuilding process with, typically the house number
 #' @param end Variable name to end rebuilding process with, typically the street suffix or postal code
+#' @param add_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
+#'    name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -22,7 +24,7 @@
 #' @importFrom tidyr unite
 #'
 #' @export
-pm_rebuild <- function(.data, start, end, locale = "us"){
+pm_rebuild <- function(.data, start, end, add_commas = FALSE, locale = "us"){
 
   # global bindings
   pm.rebuilt = NULL
@@ -60,6 +62,15 @@ pm_rebuild <- function(.data, start, end, locale = "us"){
     }
   }
 
+  # add comma vars optionally
+  if (add_commas == TRUE){
+
+    .data <- mutate(.data,
+                    pm.preComma = ",",
+                    pm.postComma = ",")
+
+  }
+
   # re-order variables
   vars <- pm_reorder_build(.data)
   .data <- dplyr::select(.data, vars)
@@ -68,6 +79,7 @@ pm_rebuild <- function(.data, start, end, locale = "us"){
   .data %>%
     tidyr::unite(pm.rebuilt, !!startQ:!!endQ, sep = " ", remove = FALSE) %>%
     dplyr::mutate(pm.rebuilt = stringr::str_replace_all(pm.rebuilt, pattern = "\\bNA\\b", replacement = "")) %>%
+    dplyr::mutate(pm.rebuilt = stringr::str_replace_all(pm.rebuilt, pattern = " , ", replacement = ", ")) %>%
     dplyr::mutate(pm.rebuilt = stringr::str_squish(pm.rebuilt)) -> .data
 
   # re-order variables again
@@ -89,7 +101,7 @@ pm_reorder_build <- function(.data, locale = "us"){
       master.vars = c("pm.uid", "pm.address", "pm.rebuilt", "pm.house",
                       "pm.houseFrac",
                       "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
-                      "pm.unitType", "pm.unitNum",  "pm.city",
+                      "pm.unitType", "pm.unitNum", "pm.preComma", "pm.city", "pm.postComma",
                       "pm.state", "pm.zip", "pm.zip4", "pm.houseLow", "pm.houseHigh",
                       "pm.hasHouse", "pm.hasHouseFrac", "pm.hasDir", "pm.hasStreetSuf",
                       "pm.hasUnit", "pm.hasCity", "pm.hasState", "pm.hasZip"),
@@ -121,15 +133,16 @@ pm_reorder_build <- function(.data, locale = "us"){
 #' @description Adds standardized address and, optionally, parsed elements back into
 #'     original source data frame.
 #'
-#' @usage pm_replace(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE)
+#' @usage pm_replace(.data, source, newVar, keep_parsed, keep_ids = FALSE)
 #'
 #' @param .data A postmastr object created with \link{pm_prep} that has been readied
 #'     for replacement by (a) fully parsing the data and (b) rebuilding a sinle
 #'     address field.
 #' @param source Original source data to merge clean addresses with.
 #' @param newVar Name of new variable to store rebuilt address in.
-#' @param keep_parsed Logical scalar; if \code{TRUE}, all parsed elements will be
-#'     added to the source data after replacement. Otherwise, if \code{FALSE},
+#' @param keep_parsed Character scalar; if \code{"yes"}, all parsed elements will be
+#'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
+#'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 #'     only the rebuilt address will be added to the source data (default).
 #' @param keep_ids Logical scalar; if \code{TRUE}, the identification numbers
 #'     will be kept in the source data after replacement. Otherwise, if \code{FALSE},
@@ -144,10 +157,10 @@ pm_reorder_build <- function(.data, locale = "us"){
 #' @importFrom stats na.omit
 #'
 #' @export
-pm_replace <- function(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE){
+pm_replace <- function(.data, source, newVar, keep_parsed, keep_ids = FALSE){
 
   # global bindings
-  pm.id = pm.uid = pm.rebuilt = NULL
+  pm.id = pm.uid = pm.rebuilt = pm.city = pm.state = pm.zip = pm.zip4 = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -160,11 +173,19 @@ pm_replace <- function(.data, source, newVar, keep_parsed = FALSE, keep_ids = FA
   }
 
   # optionally retain parsed elements
-  if (keep_parsed == FALSE){
+  if (keep_parsed == "no"){
 
     .data <- dplyr::select(.data, pm.uid, pm.rebuilt)
 
-  } else if (keep_parsed == TRUE){
+  } else if (keep_parsed == "limited") {
+
+    if ("pm.zip4" %in% names(.data) == TRUE){
+      .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip, pm.zip4)
+    } else if ("pm.zip4" %in% names(.data) == FALSE){
+      .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip)
+    }
+
+  } else if (keep_parsed == "yes"){
 
     vars <- pm_reorder_replace(.data)
     .data %>%

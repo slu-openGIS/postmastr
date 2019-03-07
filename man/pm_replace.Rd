@@ -4,7 +4,7 @@
 \alias{pm_replace}
 \title{Add Address to Source Data}
 \usage{
-pm_replace(.data, source, newVar, keep_parsed = FALSE, keep_ids = FALSE)
+pm_replace(.data, source, newVar, keep_parsed, keep_ids = FALSE)
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep} that has been readied
@@ -15,8 +15,9 @@ address field.}
 
 \item{newVar}{Name of new variable to store rebuilt address in.}
 
-\item{keep_parsed}{Logical scalar; if \code{TRUE}, all parsed elements will be
-added to the source data after replacement. Otherwise, if \code{FALSE},
+\item{keep_parsed}{Character scalar; if \code{"yes"}, all parsed elements will be
+added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
+\code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 only the rebuilt address will be added to the source data (default).}
 
 \item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers

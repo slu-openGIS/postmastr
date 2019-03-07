@@ -98,7 +98,89 @@ cityDict <- pm_append(type = "city",
 
 postmastr::sushi1 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
-  pm_parse(style = "full", newVar = clean_address,
+  pm_identify(var = address) %>%
+  pm_prep(var = "address") %>%
+  pm_postal_parse() %>%
+  pm_state_parse(dictionary = moDict) %>%
+  pm_city_parse(dictionary = cityDict) %>%
+  pm_house_parse() %>%
+  pm_houseFrac_parse() %>%
+  pm_streetDir_parse(dictionary = dirs) %>%
+  pm_streetSuf_parse(dictionary = sufs) %>%
+  pm_street_parse(ordinal = TRUE) %>%
+  pm_rebuild(start = pm.house, end = "end", add_commas = TRUE)
+
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_identify(var = address) %>%
+  pm_prep(var = "address") %>%
+  pm_postal_parse() %>%
+  pm_state_parse(dictionary = moDict) %>%
+  pm_city_parse(dictionary = cityDict) %>%
+  pm_house_parse() %>%
+  pm_houseFrac_parse() %>%
+  pm_streetDir_parse(dictionary = dirs) %>%
+  pm_streetSuf_parse(dictionary = sufs) %>%
+  pm_street_parse(ordinal = TRUE) %>%
+  pm_rebuild(start = pm.house, end = pm.streetSuf) %>%
+  pm_replace(source = sushi1, newVar = clean_address, keep_parsed = "limited")
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_identify(var = address) -> sushi1
+
+sushi1 %>%
+  pm_prep(var = "address") %>%
+  pm_postal_parse() %>%
+  pm_state_parse(dictionary = moDict) %>%
+  pm_city_parse(dictionary = cityDict) %>%
+  pm_house_parse() %>%
+  pm_houseFrac_parse() %>%
+  pm_streetDir_parse(dictionary = dirs) %>%
+  pm_streetSuf_parse(dictionary = sufs) %>%
+  pm_street_parse(ordinal = TRUE) %>%
+  pm_rebuild(start = pm.house, end = pm.streetSuf) %>%
+  pm_replace(source = sushi1, keep_parsed = "limited")
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "full",
+           var = "address",
+           output = "full",
+           dirDict = dirs,
+           suffixDict = sufs,
+           cityDict = cityDict,
+           stateDict = moDict)
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "full",
+           var = address,
+           output = "full",
+           dirDict = dirs,
+           suffixDict = sufs,
+           cityDict = cityDict,
+           stateDict = moDict)
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "full",
+           var = address,
+           output = "short",
+           add_commas = TRUE,
+           dirDict = dirs,
+           suffixDict = sufs,
+           cityDict = cityDict,
+           stateDict = moDict)
+
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "full",
+           var = address,
+           output = "short",
+           keep_parsed = "limited",
            dirDict = dirs,
            suffixDict = sufs,
            cityDict = cityDict,
@@ -106,6 +188,10 @@ postmastr::sushi1 %>%
 
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
-  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407 A 1/2 Main Avenue Street", address)) %>%
-  pm_parse(style = "short", keep_parsed = TRUE, newVar = clean_address, dirDict = dirs, suffixDict = sufs)
+  pm_parse(input = "short",
+           var = address,
+           dirDict = dirs,
+           suffixDict = sufs,
+           cityDict = cityDict,
+           stateDict = moDict)
 
