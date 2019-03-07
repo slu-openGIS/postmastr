@@ -11,9 +11,9 @@ pm_streetDir_std(.data, var, dictionary, locale = "us")
 
 \item{var}{A character variable that may contain directionals}
 
-\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
-as a master list for directionals. If none is provided, the \code{dic_us_dir}
-object will be used as the default directory.}
+\item{dictionary}{Optional; A tbl created with \code{pm_dictionary} to be used
+as a master list of directionals. If none is provided, the \code{dic_us_dir}
+object will be used as the default dictionary when \code{locale = "us"}.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}

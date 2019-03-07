@@ -9,8 +9,9 @@ pm_streetDir_all(.data, dictionary, locale = "us")
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
 
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list of directionals.}
+\item{dictionary}{Optional; A tbl created with \code{pm_dictionary} to be used
+as a master list of directionals. If none is provided, the \code{dic_us_dir}
+object will be used as the default dictionary when \code{locale = "us"}.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is \code{"us"} but this is included to facilitate future expansion.}

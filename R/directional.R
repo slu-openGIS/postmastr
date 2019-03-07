@@ -5,8 +5,9 @@
 #' @usage pm_streetDir_any(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list of directionals.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -23,6 +24,11 @@ pm_streetDir_any <- function(.data, dictionary, locale = "us"){
 
   if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
   # test dictionary
@@ -48,8 +54,9 @@ pm_streetDir_any <- function(.data, dictionary, locale = "us"){
 #' @usage pm_streetDir_all(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list of directionals.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -66,6 +73,11 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
 
   if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
   # test dictionary
@@ -94,8 +106,9 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
 #'     for additional details on how these addresses are handled.
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list of directionals.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -127,6 +140,13 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
+  # dictionary if none specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- dic_us_dir
+    }
+  }
+
   # minimize dictionary
   if (locale == "us"){
     dict <- paste(dictionary$dir.input, collapse = "|")
@@ -156,8 +176,9 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
 #'     for additional details on how these addresses are handled.
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for cities.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -182,6 +203,11 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
 
   if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
   # create output
@@ -210,9 +236,9 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
 #' @usage pm_streetDir_parse(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
-#'     as a master list for states. If none is provided, the \code{states}
-#'     object will be used as the default directory.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -251,6 +277,13 @@ pm_streetDir_parse <- function(.data, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # dictionary if none specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- dic_us_dir
+    }
   }
 
   # parse states
@@ -320,9 +353,9 @@ pm_parse_dir_us <- function(.data, dictionary){
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain directionals
-#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
-#'     as a master list for directionals. If none is provided, the \code{dic_us_dir}
-#'     object will be used as the default directory.
+#' @param dictionary Optional; A tbl created with \code{pm_dictionary} to be used
+#'     as a master list of directionals. If none is provided, the \code{dic_us_dir}
+#'     object will be used as the default dictionary when \code{locale = "us"}.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -357,6 +390,13 @@ pm_streetDir_std <- function(.data, var, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # dictionary if none specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- dic_us_dir
+    }
   }
 
   # standardize state names
