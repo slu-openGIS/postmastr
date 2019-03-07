@@ -3,12 +3,11 @@
 #' @description This function allows for the creation of dictionary objects that are
 #'     either optional or required elements of other \code{postmastr} functions.
 #'
-#' @usage pm_dictionary(locale = "us", type, append, filter, case = c("title", "lower", "upper"))
+#' @usage pm_dictionary(type, append, filter, case = c("title", "lower", "upper"), locale = "us")
 #'
-#' @param locale A string indicating the country these data represent; the only
-#'     current option is "us" but this is included to facilitate future expansion.
 #' @param type A string indicating the grammatical address element the dictionary
-#'     should represent. Current options are \code{"state"} and \code{"city"}.
+#'     should represent. Current options are \code{"state"}, \code{"city"},
+#'     \code{"directional"}, and \code{"suffix"}.
 #' @param append An optional dictionary appendix object created with \code{\link{pm_append}}
 #' @param filter An optional character scalar or vector with output elements that should
 #'     be retained.
@@ -16,6 +15,8 @@
 #'     options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
 #'     \code{"upper"} (e.g. "MISSOURI"). These are used to create a more robust dictionary of
 #'     input terms.
+#' @param locale A string indicating the country these data represent; the only
+#'     current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A \code{postmastr} dictionary object, which will always include an input column
 #'     of possible terms for the given grammatical address element and an output column
@@ -25,7 +26,7 @@
 #' @importFrom dplyr filter
 #'
 #' @export
-pm_dictionary <- function(locale = "us", type, append, filter, case = c("title", "lower", "upper")){
+pm_dictionary <- function(type, append, filter, case = c("title", "lower", "upper"), locale = "us"){
 
   if (locale == "us"){
 
@@ -338,22 +339,22 @@ pm_convert_case <- function(.data, var, orderVar, case){
 #' @description This function allows for the creation of dictionary objects that are
 #'     either optional or required elements of other \code{postmastr} functions.
 #'
-#' @usage pm_append(locale = "us", type, input, output)
+#' @usage pm_append(type, input, output, locale = "us")
 #'
-#' @param locale A string indicating the country these data represent; the only
-#'     current option is "us" but this is included to facilitate future expansion.
 #' @param type A string indicating the grammatical address element the dictionary
-#'     should represent. Current options are \code{"state"} and \code{"city"}.
+#'     should represent. Current options are \code{"state"}, \code{"city"},
+#'     \code{"street"}, \code{"directional"}, and \code{"suffix"}.
 #' @param input A character scalar or vector containing possible terms existing in
 #'     the data. This should be the same length as \code{output}.
 #' @param output A character scalar or vector containing desired output for each input.
-#'     This should be the same length as \code{input}. This argument is required for
-#'     \code{locale = "state"} and optional for \code{locale = "city"}.
+#'     This should be the same length as \code{input}.
+#' @param locale A string indicating the country these data represent; the only
+#'     current option is "us" but this is included to facilitate future expansion.
 #'
 #' @importFrom dplyr as_tibble
 #'
 #' @export
-pm_append <- function(locale = "us", type, input, output){
+pm_append <- function(type, input, output, locale = "us"){
 
   # global binding
   state.output = state.input = city.output = city.input = NULL
@@ -372,32 +373,40 @@ pm_append <- function(locale = "us", type, input, output){
                            state.output = stringr::str_to_upper(state.output),
                            state.input = stringr::str_to_title(state.input))
 
-      out <- dplyr::as_tibble(out)
-
     } else if (type == "city"){
 
-      if (missing(output) == FALSE){
-        out <- data.frame(
-          city.output = c(output),
-          city.input = c(input),
-          stringsAsFactors = FALSE
-        )
+      out <- data.frame(
+        city.output = c(output),
+        city.input = c(input),
+        stringsAsFactors = FALSE)
 
-      } else if (missing(output) == TRUE){
-        out <- data.frame(
-          city.input = c(input),
-          stringsAsFactors = FALSE
-        )
+    } else if (type == "directional"){
 
-      }
+      out <- data.frame(
+        dir.output = c(output),
+        dir.input = c(input),
+        stringsAsFactors = FALSE)
 
-      out <- dplyr::as_tibble(out)
+    } else if (type == "suffix"){
+
+      out <- data.frame(
+        suf.output = c(output),
+        suf.input = c(input),
+        stringsAsFactors = FALSE)
+
+    } else if (type == "street"){
+
+      out <- data.frame(
+        st.output = c(output),
+        st.input = c(input),
+        stringsAsFactors = FALSE)
 
     }
 
   }
 
-  # return output
+  # create and return output
+  out <- dplyr::as_tibble(out)
   return(out)
 
 }

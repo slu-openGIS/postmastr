@@ -4,14 +4,12 @@
 \alias{pm_dictionary}
 \title{Create Dictionary Objects}
 \usage{
-pm_dictionary(locale = "us", type, append, filter, case = c("title", "lower", "upper"))
+pm_dictionary(type, append, filter, case = c("title", "lower", "upper"), locale = "us")
 }
 \arguments{
-\item{locale}{A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.}
-
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"} and \code{"city"}.}
+should represent. Current options are \code{"state"}, \code{"city"},
+\code{"directional"}, and \code{"suffix"}.}
 
 \item{append}{An optional dictionary appendix object created with \code{\link{pm_append}}}
 
@@ -22,6 +20,9 @@ be retained.}
 options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
 \code{"upper"} (e.g. "MISSOURI"). These are used to create a more robust dictionary of
 input terms.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \value{
 A \code{postmastr} dictionary object, which will always include an input column

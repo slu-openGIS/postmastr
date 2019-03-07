@@ -4,21 +4,21 @@
 \alias{pm_append}
 \title{Append Custom Vectors to Dictionary Objects}
 \usage{
-pm_append(locale = "us", type, input, output)
+pm_append(type, input, output, locale = "us")
 }
 \arguments{
-\item{locale}{A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.}
-
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"} and \code{"city"}.}
+should represent. Current options are \code{"state"}, \code{"city"},
+\code{"street"}, \code{"directional"}, and \code{"suffix"}.}
 
 \item{input}{A character scalar or vector containing possible terms existing in
 the data. This should be the same length as \code{output}.}
 
 \item{output}{A character scalar or vector containing desired output for each input.
-This should be the same length as \code{input}. This argument is required for
-\code{locale = "state"} and optional for \code{locale = "city"}.}
+This should be the same length as \code{input}.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \description{
 This function allows for the creation of dictionary objects that are
