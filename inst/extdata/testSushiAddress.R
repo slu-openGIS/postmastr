@@ -25,6 +25,8 @@ sushi2_frac <- pm_house_parse(sushi2_frac)
 
 pm_houseFrac_parse(sushi2_frac)
 
+rm(sushi2_frac)
+
 dirs <- pm_dictionary(locale = "us", type = "directional", filter = c("N", "S", "E", "W"))
 sushi2_min <- pm_house_parse(sushi2_min)
 
@@ -78,11 +80,11 @@ postmastr::sushi2 %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) %>%
   pm_prep(var = "address") %>%
-  pm_parse_house() %>%
-  pm_parse_street_dir(dictionary = dirs) %>%
-  pm_parse_street_suf(dictionary = sufs) %>%
-  pm_parse_street() %>%
-  pm_rebuild() %>%
+  pm_house_parse() %>%
+  pm_streetDir_parse(dictionary = dirs) %>%
+  pm_streetSuf_parse(dictionary = sufs) %>%
+  pm_street_parse() %>%
+  pm_rebuild(start = pm.house, end = pm.streetSuf) %>%
   pm_replace(source = sushi2, newVar = clean_address)
 
 postmastr::sushi2 %>%
