@@ -4,7 +4,7 @@
 \alias{pm_street_parse}
 \title{Parse Street Names}
 \usage{
-pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE)
+pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE, locale = "us")
 }
 \arguments{
 \item{.data}{A \code{postmastr} object created with \link{pm_prep}}
@@ -19,6 +19,9 @@ default is \code{TRUE} because it returns much more compact clean addresses (i.e
 
 \item{drop}{A logical scalar; if \code{TRUE}, the \code{pm.address} variable will
 be dropped from the \code{postmastr} object.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \value{
 A tibble with a new character variable \code{pm.street} that contains

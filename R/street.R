@@ -3,7 +3,7 @@
 #' @description Converts the remaining text of \code{pm.address} to title case and stores
 #'     it in a new variable named \code{pm.street}.
 #'
-#' @usage pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE)
+#' @usage pm_street_parse(.data, dictionary, ordinal = TRUE, drop = TRUE, locale = "us")
 #'
 #' @details This is typically the last function to be executed before rebuilding and replacing.
 #'
@@ -16,39 +16,129 @@
 #'     "168th St" as opposed to "One Hundred Sixty Eigth St").
 #' @param drop A logical scalar; if \code{TRUE}, the \code{pm.address} variable will
 #'     be dropped from the \code{postmastr} object.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new character variable \code{pm.street} that contains
 #'     the two-letter abbreviation for the given U.S. state. Variables are automatically
 #'     re-ordered, so the new vector will not be in the last position of the tibble.
 #'
 #' @export
-pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE){
+pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE, locale = "us"){
 
   # global bindings
   pm.address = pm.street = NULL
 
-  # parse and convert to title case
-  .data <- dplyr::mutate(.data, pm.street = stringr::str_to_title(pm.address))
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
 
-  # remove punctuation
-  .data <- dplyr::mutate(.data, pm.street = stringr::str_replace(pm.street, "[.]", ""))
+  # parse
+  .data <- dplyr::mutate(.data, pm.street = pm.address)
 
   # reorder output
   vars <- pm_reorder(.data)
   .data <- dplyr::select(.data, vars)
 
-  # optionally convert ordinal street names
-  # i.e. Second to 2nd
-  if (ordinal == TRUE){
-
-    .data <- pm_street_ord(.data, locale = "us")
-
+  # standardize street names
+  if (missing(dictionary) == TRUE){
+    .data <- pm_street_std(.data, var = "pm.street", ordinal = ordinal, locale = locale)
+  } else if (missing(dictionary) == FALSE){
+    .data <- pm_street_std(.data, var = "pm.street", dictionary = dictionary, ordinal = ordinal, locale = locale)
   }
 
   # optionally drop pm.address
   if (drop == TRUE){
 
     .data <- dplyr::select(.data, -pm.address)
+
+  }
+
+  # return output
+  return(.data)
+
+}
+
+
+#' Standardize Street Names
+#'
+#' @description Standardize street names by converting to title case, removing punctuation,
+#'     and optionally applying ordinal conversion as well as a dictionary to the data.
+#'
+#' @usage pm_street_std(.data, var, dictionary, ordinal = TRUE, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param var A character variable that may contain street suffixes
+#' @param dictionary A tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes.
+#' @param ordinal A logical scalar; if \code{TRUE}, street names that contain numeric words values
+#'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+#'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
+#'     "168th St" as opposed to "One Hundred Sixty Eigth St").
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is "us" but this is included to facilitate future expansion.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr arrange
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr filter
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom rlang :=
+#' @importFrom rlang enquo
+#' @importFrom rlang quo
+#' @importFrom rlang sym
+#'
+#' @export
+pm_street_std <- function(.data, var, dictionary, ordinal = TRUE, locale = "us"){
+
+  # global bindings
+  . = st.input = st.output = NULL
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # convert to title case
+  .data <- dplyr::mutate(.data, !!varQ := stringr::str_to_title(!!varQ))
+
+  # remove punctuation
+  .data <- dplyr::mutate(.data, !!varQ := stringr::str_replace(!!varQ, "[.]", ""))
+
+  # optionally convert ordinal street names
+  # i.e. Second to 2nd
+  if (ordinal == TRUE){
+
+    .data <- pm_street_ord(.data, locale = locale)
+
+  }
+
+  # optionally standardize further with dictionary
+  if (missing(dictionary) == FALSE){
+
+    # set-up dictionary
+    dictionary %>%
+      dplyr::rename(!!varQ := st.input) -> dictionary
+
+    # standardize
+    .data %>%
+      dplyr::left_join(., dictionary, by = varQN) %>%
+      dplyr::mutate(!!varQ := ifelse(is.na(st.output) == FALSE, st.output, !!varQ)) %>%
+      dplyr::select(-st.output) -> .data
 
   }
 
@@ -71,7 +161,6 @@ pm_street_ord <- function(.data, locale = "us"){
   return(.data)
 
 }
-
 
 # U.S. ordinal street names
 pm_street_ord_us <- function(.data){
