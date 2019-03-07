@@ -119,6 +119,58 @@
     <tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-parse-data" class="hasAnchor"><a href="#section-parse-data" class="anchor"></a>Parse Data</h2>
+          <p class="section-desc"><p>High Level Parsing</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_parse.html">pm_parse()</a></code> </p>
+        </td>
+        <td><p>Parse Street Address</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-dictionaries" class="hasAnchor"><a href="#section-dictionaries" class="anchor"></a>Dictionaries</h2>
+          <p class="section-desc"><p>Functions and Data for Creating Dictionaries</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_dictionary.html">pm_dictionary()</a></code> </p>
+        </td>
+        <td><p>Create Dictionary Objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_append.html">pm_append()</a></code> </p>
+        </td>
+        <td><p>Append Custom Vectors to Dictionary Objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dic_us_dir.html">dic_us_dir</a></code> </p>
+        </td>
+        <td><p>Directional Dictionary, United States of America</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dic_us_states.html">dic_us_states</a></code> </p>
+        </td>
+        <td><p>State Dictionary, United States of America</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dic_us_suffix.html">dic_us_suffix</a></code> </p>
+        </td>
+        <td><p>Street Suffix Dictionary, United States of America</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-prepare-data" class="hasAnchor"><a href="#section-prepare-data" class="anchor"></a>Prepare Data</h2>
           <p class="section-desc"><p>Create <code>postmastr</code> and Validate Objects</p></p>
         </th>
@@ -151,32 +203,6 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-dictionaries" class="hasAnchor"><a href="#section-dictionaries" class="anchor"></a>Dictionaries</h2>
-          <p class="section-desc"><p>Functions and Data for Creating Dictionaries</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="pm_dictionary.html">pm_dictionary()</a></code> </p>
-        </td>
-        <td><p>Create Dictionary Objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pm_append.html">pm_append()</a></code> </p>
-        </td>
-        <td><p>Append Custom Vectors to Dictionary Objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dic_us_states.html">dic_us_states</a></code> </p>
-        </td>
-        <td><p>State Dictionary, United States of America</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
           <h2 id="section-postal-codes" class="hasAnchor"><a href="#section-postal-codes" class="anchor"></a>Postal Codes</h2>
           <p class="section-desc"><p>Work with Postal (Zip) Codes</p></p>
         </th>
@@ -184,31 +210,31 @@
       <tr>
         
         <td>
-          <p><code><a href="pm_any_postal.html">pm_any_postal()</a></code> </p>
+          <p><code><a href="pm_postal_any.html">pm_postal_any()</a></code> </p>
         </td>
         <td><p>Do Any Addresses Have Postal Codes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_all_postal.html">pm_all_postal()</a></code> </p>
+          <p><code><a href="pm_postal_all.html">pm_postal_all()</a></code> </p>
         </td>
         <td><p>Do All Addresses Have Postal Codes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_has_postal.html">pm_has_postal()</a></code> </p>
+          <p><code><a href="pm_postal_detect.html">pm_postal_detect()</a></code> </p>
         </td>
         <td><p>Detect Presence of Postal Codes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_no_postal.html">pm_no_postal()</a></code> </p>
+          <p><code><a href="pm_postal_none.html">pm_postal_none()</a></code> </p>
         </td>
-        <td><p>Return Only Unmatched Observations From pm_has_postal</p></td>
+        <td><p>Return Only Unmatched Observations From pm_postal_detect</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_parse_postal.html">pm_parse_postal()</a></code> </p>
+          <p><code><a href="pm_postal_parse.html">pm_postal_parse()</a></code> </p>
         </td>
         <td><p>Parse Postal Codes</p></td>
       </tr>
@@ -222,33 +248,39 @@
       <tr>
         
         <td>
-          <p><code><a href="pm_any_state.html">pm_any_state()</a></code> </p>
+          <p><code><a href="pm_state_any.html">pm_state_any()</a></code> </p>
         </td>
         <td><p>Does State Dictionary Return Any Matches</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_all_state.html">pm_all_state()</a></code> </p>
+          <p><code><a href="pm_state_all.html">pm_state_all()</a></code> </p>
         </td>
         <td><p>Does State Dictionary Return a Match for All Observations</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_has_state.html">pm_has_state()</a></code> </p>
+          <p><code><a href="pm_state_detect.html">pm_state_detect()</a></code> </p>
         </td>
         <td><p>Detect Presence of State Name or Abbreviation</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_no_state.html">pm_no_state()</a></code> </p>
+          <p><code><a href="pm_state_none.html">pm_state_none()</a></code> </p>
         </td>
-        <td><p>Return Only Unmatched Observations From pm_has_state</p></td>
+        <td><p>Return Only Unmatched Observations From pm_state_detect</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_parse_state.html">pm_parse_state()</a></code> </p>
+          <p><code><a href="pm_state_parse.html">pm_state_parse()</a></code> </p>
         </td>
         <td><p>Parse State Names and Abbreviation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_state_std.html">pm_state_std()</a></code> </p>
+        </td>
+        <td><p>Standardize Parsed State Names</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -260,37 +292,37 @@
       <tr>
         
         <td>
-          <p><code><a href="pm_any_city.html">pm_any_city()</a></code> </p>
+          <p><code><a href="pm_city_any.html">pm_city_any()</a></code> </p>
         </td>
         <td><p>Does City Name Dictionary Return Any Matches</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_all_city.html">pm_all_city()</a></code> </p>
+          <p><code><a href="pm_city_all.html">pm_city_all()</a></code> </p>
         </td>
         <td><p>Does City Name Dictionary Return a Match for All Observations</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_has_city.html">pm_has_city()</a></code> </p>
+          <p><code><a href="pm_city_detect.html">pm_city_detect()</a></code> </p>
         </td>
         <td><p>Detect Presence of City Name in Address</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_no_city.html">pm_no_city()</a></code> </p>
+          <p><code><a href="pm_city_none.html">pm_city_none()</a></code> </p>
         </td>
-        <td><p>Return Only Unmatched Observations From pm_has_city</p></td>
+        <td><p>Return Only Unmatched Observations From pm_city_detect</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_parse_city.html">pm_parse_city()</a></code> </p>
+          <p><code><a href="pm_city_parse.html">pm_city_parse()</a></code> </p>
         </td>
         <td><p>Parse City Names</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_std_city.html">pm_std_city()</a></code> </p>
+          <p><code><a href="pm_city_std.html">pm_city_std()</a></code> </p>
         </td>
         <td><p>Standardize Parsed City Names</p></td>
       </tr>
@@ -318,33 +350,193 @@
       <tr>
         
         <td>
-          <p><code><a href="pm_any_house.html">pm_any_house()</a></code> </p>
+          <p><code><a href="pm_house_any.html">pm_house_any()</a></code> </p>
         </td>
         <td><p>Do Any Addresses Have House Numbers</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_all_house.html">pm_all_house()</a></code> </p>
+          <p><code><a href="pm_house_all.html">pm_house_all()</a></code> </p>
         </td>
         <td><p>Do All Addresses Have House Numbers</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_has_house.html">pm_has_house()</a></code> </p>
+          <p><code><a href="pm_house_detect.html">pm_house_detect()</a></code> </p>
         </td>
         <td><p>Detect Presence of House Numbers</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_no_house.html">pm_no_house()</a></code> </p>
+          <p><code><a href="pm_house_none.html">pm_house_none()</a></code> </p>
         </td>
-        <td><p>Return Only Unmatched Observations From pm_has_house</p></td>
+        <td><p>Return Only Unmatched Observations From pm_house_detect</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pm_parse_house.html">pm_parse_house()</a></code> </p>
+          <p><code><a href="pm_house_parse.html">pm_house_parse()</a></code> </p>
         </td>
         <td><p>Parse House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseAlpha_any.html">pm_houseAlpha_any()</a></code> </p>
+        </td>
+        <td><p>Do Any Addresses Have Alphanumeric House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseAlpha_all.html">pm_houseAlpha_all()</a></code> </p>
+        </td>
+        <td><p>Do All Addresses Have Alphanumeric House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseAlpha_detect.html">pm_houseAlpha_detect()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of Alphanumeric House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseFrac_any.html">pm_houseFrac_any()</a></code> </p>
+        </td>
+        <td><p>Do Any Addresses Have Fractional House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseFrac_all.html">pm_houseFrac_all()</a></code> </p>
+        </td>
+        <td><p>Do All Addresses Have House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseFrac_detect.html">pm_houseFrac_detect()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of Fractional House Numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseFrac_none.html">pm_houseFrac_none()</a></code> </p>
+        </td>
+        <td><p>Return Only Unmatched Observations From pm_houseFrac_detect</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_houseFrac_parse.html">pm_houseFrac_parse()</a></code> </p>
+        </td>
+        <td><p>Parse Fractional House Numbers</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-streets" class="hasAnchor"><a href="#section-streets" class="anchor"></a>Streets</h2>
+          <p class="section-desc"><p>Work with Street Elements</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_street_parse.html">pm_street_parse()</a></code> </p>
+        </td>
+        <td><p>Parse Street Names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_street_std.html">pm_street_std()</a></code> </p>
+        </td>
+        <td><p>Standardize Street Names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_any.html">pm_streetDir_any()</a></code> </p>
+        </td>
+        <td><p>Do Any Addresses Have Prefix or Suffix Directionals</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_all.html">pm_streetDir_all()</a></code> </p>
+        </td>
+        <td><p>Do All Addresses Have Prefix or Suffix Directionals</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_detect.html">pm_streetDir_detect()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of Prefix or Suffix Directionals</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_none.html">pm_streetDir_none()</a></code> </p>
+        </td>
+        <td><p>Return Only Unmatched Observations From pm_has_dir</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_parse.html">pm_streetDir_parse()</a></code> </p>
+        </td>
+        <td><p>Parse Prefix and Suffix Directionals</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetDir_std.html">pm_streetDir_std()</a></code> </p>
+        </td>
+        <td><p>Standardize Parsed State Names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_any.html">pm_streetSuf_any()</a></code> </p>
+        </td>
+        <td><p>Does Street Suffix Dictionary Return Any Matches</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_all.html">pm_streetSuf_all()</a></code> </p>
+        </td>
+        <td><p>Does State Dictionary Return a Match for All Observations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_detect.html">pm_streetSuf_detect()</a></code> </p>
+        </td>
+        <td><p>Detect Presence of State Name or Abbreviation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_none.html">pm_streetSuf_none()</a></code> </p>
+        </td>
+        <td><p>Return Only Unmatched Observations From pm_streetSuf_detect</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_parse.html">pm_streetSuf_parse()</a></code> </p>
+        </td>
+        <td><p>Parse Street Suffix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_streetSuf_std.html">pm_streetSuf_std()</a></code> </p>
+        </td>
+        <td><p>Standardize Parsed Street Suffixes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-reconstruct-data" class="hasAnchor"><a href="#section-reconstruct-data" class="anchor"></a>Reconstruct Data</h2>
+          <p class="section-desc"><p>Add Parsed Data Back into Source</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="pm_rebuild.html">pm_rebuild()</a></code> </p>
+        </td>
+        <td><p>Rebuild Street Address</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pm_replace.html">pm_replace()</a></code> </p>
+        </td>
+        <td><p>Add Address to Source Data</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -373,13 +565,16 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-prepare-data">Prepare Data</a></li>
+      <li><a href="#section-parse-data">Parse Data</a></li>
       <li><a href="#section-dictionaries">Dictionaries</a></li>
+      <li><a href="#section-prepare-data">Prepare Data</a></li>
       <li><a href="#section-postal-codes">Postal Codes</a></li>
       <li><a href="#section-states">States</a></li>
       <li><a href="#section-cities">Cities</a></li>
       <li><a href="#section-units">Units</a></li>
       <li><a href="#section-house-numbers">House Numbers</a></li>
+      <li><a href="#section-streets">Streets</a></li>
+      <li><a href="#section-reconstruct-data">Reconstruct Data</a></li>
       <li><a href="#section-sample-data">Sample Data</a></li>
     </ul>
   </div>

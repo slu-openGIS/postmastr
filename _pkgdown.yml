@@ -5,6 +5,20 @@ authors:
     href: https://chris-prener.github.io
 
 reference:
+  - title: "Parse Data"
+    desc: "High Level Parsing"
+    contents:
+    - pm_parse
+
+  - title: "Dictionaries"
+    desc: "Functions and Data for Creating Dictionaries"
+    contents:
+    - pm_dictionary
+    - pm_append
+    - dic_us_dir
+    - dic_us_states
+    - dic_us_suffix
+
   - title: "Prepare Data"
     desc: "Create `postmastr` and Validate Objects"
     contents:
@@ -13,40 +27,34 @@ reference:
     - pm_has_address
     - pm_has_uid
 
-  - title: "Dictionaries"
-    desc: "Functions and Data for Creating Dictionaries"
-    contents:
-    - pm_dictionary
-    - pm_append
-    - dic_us_states
-
   - title: "Postal Codes"
     desc: "Work with Postal (Zip) Codes"
     contents:
-    - pm_any_postal
-    - pm_all_postal
-    - pm_has_postal
-    - pm_no_postal
-    - pm_parse_postal
+    - pm_postal_any
+    - pm_postal_all
+    - pm_postal_detect
+    - pm_postal_none
+    - pm_postal_parse
 
   - title: "States"
     desc: "Work with State Names and Abbreviations"
     contents:
-    - pm_any_state
-    - pm_all_state
-    - pm_has_state
-    - pm_no_state
-    - pm_parse_state
+    - pm_state_any
+    - pm_state_all
+    - pm_state_detect
+    - pm_state_none
+    - pm_state_parse
+    - pm_state_std
 
   - title: "Cities"
     desc: "Work with City Names"
     contents:
-    - pm_any_city
-    - pm_all_city
-    - pm_has_city
-    - pm_no_city
-    - pm_parse_city
-    - pm_std_city
+    - pm_city_any
+    - pm_city_all
+    - pm_city_detect
+    - pm_city_none
+    - pm_city_parse
+    - pm_city_std
 
   - title: "Units"
     desc: "Work with Unit Names and Numbers"
@@ -56,11 +64,43 @@ reference:
   - title: "House Numbers"
     desc: "Work with House Numbers"
     contents:
-    - pm_any_house
-    - pm_all_house
-    - pm_has_house
-    - pm_no_house
-    - pm_parse_house
+    - pm_house_any
+    - pm_house_all
+    - pm_house_detect
+    - pm_house_none
+    - pm_house_parse
+    - pm_houseAlpha_any
+    - pm_houseAlpha_all
+    - pm_houseAlpha_detect
+    - pm_houseFrac_any
+    - pm_houseFrac_all
+    - pm_houseFrac_detect
+    - pm_houseFrac_none
+    - pm_houseFrac_parse
+
+  - title: "Streets"
+    desc: "Work with Street Elements"
+    contents:
+    - pm_street_parse
+    - pm_street_std
+    - pm_streetDir_any
+    - pm_streetDir_all
+    - pm_streetDir_detect
+    - pm_streetDir_none
+    - pm_streetDir_parse
+    - pm_streetDir_std
+    - pm_streetSuf_any
+    - pm_streetSuf_all
+    - pm_streetSuf_detect
+    - pm_streetSuf_none
+    - pm_streetSuf_parse
+    - pm_streetSuf_std
+
+  - title: "Reconstruct Data"
+    desc: "Add Parsed Data Back into Source"
+    contents:
+    - pm_rebuild
+    - pm_replace
 
   - title: "Sample Data"
     desc: "Sushi Resturants in St. Louis and its Enviorns"

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Append Custom Vectors to Dictionary Objects — pm_append • postmastr</title>
+<title>Detect Presence of State Name or Abbreviation — pm_state_detect • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Append Custom Vectors to Dictionary Objects — pm_append" />
+<meta property="og:title" content="Detect Presence of State Name or Abbreviation — pm_state_detect" />
 
-<meta property="og:description" content="This function allows for the creation of dictionary objects that are
-    either optional or required elements of other postmastr functions." />
+<meta property="og:description" content="Determine the presence of state names or abbreviations
+    at the end of a string." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -108,45 +108,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Append Custom Vectors to Dictionary Objects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/dictionary.R'><code>R/dictionary.R</code></a></small>
-    <div class="hidden name"><code>pm_append.Rd</code></div>
+    <h1>Detect Presence of State Name or Abbreviation</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/state.R'><code>R/state.R</code></a></small>
+    <div class="hidden name"><code>pm_state_detect.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function allows for the creation of dictionary objects that are
-    either optional or required elements of other <code>postmastr</code> functions.</p>
+    <p>Determine the presence of state names or abbreviations
+    at the end of a string.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_append</span>(<span class='no'>type</span>, <span class='no'>input</span>, <span class='no'>output</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_state_detect</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>type</th>
-      <td><p>A string indicating the grammatical address element the dictionary
-should represent. Current options are <code>"state"</code>, <code>"city"</code>,
-<code>"street"</code>, <code>"directional"</code>, and <code>"suffix"</code>.</p></td>
+      <th>.data</th>
+      <td><p>A postmastr object created with pm_prep</p></td>
     </tr>
     <tr>
-      <th>input</th>
-      <td><p>A character scalar or vector containing possible terms existing in
-the data. This should be the same length as <code>output</code>.</p></td>
-    </tr>
-    <tr>
-      <th>output</th>
-      <td><p>A character scalar or vector containing desired output for each input.
-This should be the same length as <code>input</code>.</p></td>
+      <th>dictionary</th>
+      <td><p>Optional; a tbl created with <code>pm_dictionary</code> to be used
+as a master list for states. If none is provided, the <code>states</code>
+object will be used as the default directory.</p></td>
     </tr>
     <tr>
       <th>locale</th>
       <td><p>A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.</p></td>
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A tibble with a new logical variable <code>pm.hasState</code> that is
+    <code>TRUE</code> if a state name or abbreviation from the given dictionary is found
+    at the end of the address and <code>FALSE</code> otherwise.</p>
     
 
   </div>
@@ -154,7 +154,9 @@ current option is "us" but this is included to facilitate future expansion.</p><
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

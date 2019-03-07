@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Append Custom Vectors to Dictionary Objects — pm_append • postmastr</title>
+<title>Standardize Street Names — pm_street_std • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Append Custom Vectors to Dictionary Objects — pm_append" />
+<meta property="og:title" content="Standardize Street Names — pm_street_std" />
 
-<meta property="og:description" content="This function allows for the creation of dictionary objects that are
-    either optional or required elements of other postmastr functions." />
+<meta property="og:description" content="Standardize street names by converting to title case, removing punctuation,
+    and optionally applying ordinal conversion as well as a dictionary to the data." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -108,38 +108,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Append Custom Vectors to Dictionary Objects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/dictionary.R'><code>R/dictionary.R</code></a></small>
-    <div class="hidden name"><code>pm_append.Rd</code></div>
+    <h1>Standardize Street Names</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/street.R'><code>R/street.R</code></a></small>
+    <div class="hidden name"><code>pm_street_std.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function allows for the creation of dictionary objects that are
-    either optional or required elements of other <code>postmastr</code> functions.</p>
+    <p>Standardize street names by converting to title case, removing punctuation,
+    and optionally applying ordinal conversion as well as a dictionary to the data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_append</span>(<span class='no'>type</span>, <span class='no'>input</span>, <span class='no'>output</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_street_std</span>(<span class='no'>.data</span>, <span class='no'>var</span>, <span class='no'>dictionary</span>, <span class='kw'>ordinal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>type</th>
-      <td><p>A string indicating the grammatical address element the dictionary
-should represent. Current options are <code>"state"</code>, <code>"city"</code>,
-<code>"street"</code>, <code>"directional"</code>, and <code>"suffix"</code>.</p></td>
+      <th>.data</th>
+      <td><p>A postmastr object created with pm_prep</p></td>
     </tr>
     <tr>
-      <th>input</th>
-      <td><p>A character scalar or vector containing possible terms existing in
-the data. This should be the same length as <code>output</code>.</p></td>
+      <th>var</th>
+      <td><p>A character variable that may contain street suffixes</p></td>
     </tr>
     <tr>
-      <th>output</th>
-      <td><p>A character scalar or vector containing desired output for each input.
-This should be the same length as <code>input</code>.</p></td>
+      <th>dictionary</th>
+      <td><p>Optional; a tbl created with <code>pm_append</code> to be used to standardize
+specific street names.</p></td>
+    </tr>
+    <tr>
+      <th>ordinal</th>
+      <td><p>A logical scalar; if <code>TRUE</code>, street names that contain numeric words values
+(i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+default is <code>TRUE</code> because it returns much more compact clean addresses (i.e.
+"168th St" as opposed to "One Hundred Sixty Eigth St").</p></td>
     </tr>
     <tr>
       <th>locale</th>

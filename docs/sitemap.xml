@@ -4,34 +4,34 @@
     <loc>https://slu-openGIS.github.io/postmastr//index.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_dir.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_states.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_city.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_house.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_postal.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_all_state.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_city.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_house.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_postal.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_any_state.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_suffix.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_append.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_std.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_dictionary.html</loc>
@@ -40,61 +40,139 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_address.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_city.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_house.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_postal.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_state.html</loc>
-  </url>
-  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_uid.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_unit.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseAlpha_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseAlpha_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseAlpha_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_house_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_house_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_house_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_house_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_house_parse.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_identify.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_city.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_house.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_postal_all.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_postal.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_postal_any.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_no_state.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_postal_detect.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_city.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_postal_none.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_house.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_postal.html</loc>
-  </url>
-  <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse_state.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_postal_parse.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_prep.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_std_city.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_rebuild.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_std_states.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_replace.html</loc>
   </url>
   <url>
-    <loc>https://slu-openGIS.github.io/postmastr//reference/stdSuffixTbl.html</loc>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_state_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetDir_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_streetSuf_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_street_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_street_std.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/sushi1.html</loc>

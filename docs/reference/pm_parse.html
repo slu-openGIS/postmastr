@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Append Custom Vectors to Dictionary Objects — pm_append • postmastr</title>
+<title>Parse Street Address — pm_parse • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Append Custom Vectors to Dictionary Objects — pm_append" />
+<meta property="og:title" content="Parse Street Address — pm_parse" />
 
-<meta property="og:description" content="This function allows for the creation of dictionary objects that are
-    either optional or required elements of other postmastr functions." />
+<meta property="og:description" content="A wrapper around the parse functions that can be used to shorten all
+    of postmastr's code down to a single function call once dictionaries
+    have been created and tested against the data." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -108,38 +109,99 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Append Custom Vectors to Dictionary Objects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/dictionary.R'><code>R/dictionary.R</code></a></small>
-    <div class="hidden name"><code>pm_append.Rd</code></div>
+    <h1>Parse Street Address</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/parse.R'><code>R/parse.R</code></a></small>
+    <div class="hidden name"><code>pm_parse.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function allows for the creation of dictionary objects that are
-    either optional or required elements of other <code>postmastr</code> functions.</p>
+    <p>A wrapper around the parse functions that can be used to shorten all
+    of <code>postmastr</code>'s code down to a single function call once dictionaries
+    have been created and tested against the data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_append</span>(<span class='no'>type</span>, <span class='no'>input</span>, <span class='no'>output</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_parse</span>(<span class='no'>.data</span>, <span class='no'>input</span>, <span class='no'>var</span>, <span class='no'>output</span>, <span class='no'>newVar</span>, <span class='kw'>ordinal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>add_commas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <span class='kw'>keep_parsed</span> <span class='kw'>=</span> <span class='st'>"no"</span>, <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>dirDict</span>, <span class='no'>streetDict</span>, <span class='no'>suffixDict</span>, <span class='no'>unitDict</span>,
+    <span class='no'>cityDict</span>, <span class='no'>stateDict</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>type</th>
-      <td><p>A string indicating the grammatical address element the dictionary
-should represent. Current options are <code>"state"</code>, <code>"city"</code>,
-<code>"street"</code>, <code>"directional"</code>, and <code>"suffix"</code>.</p></td>
+      <th>.data</th>
+      <td><p>A source data set to be parsed</p></td>
     </tr>
     <tr>
       <th>input</th>
-      <td><p>A character scalar or vector containing possible terms existing in
-the data. This should be the same length as <code>output</code>.</p></td>
+      <td><p>Describes the format of the source address. One of either <code>"full"</code> or <code>"short"</code>.
+A short address contains, at the most, a house number, street directionals, a street name,
+a street suffix, and a unit type and number. A full address contains all of the selements of a
+short address as well as a, at the most, a city, state, and postal code.</p></td>
+    </tr>
+    <tr>
+      <th>var</th>
+      <td><p>A character variable containing address data to be parsed</p></td>
     </tr>
     <tr>
       <th>output</th>
-      <td><p>A character scalar or vector containing desired output for each input.
-This should be the same length as <code>input</code>.</p></td>
+      <td><p>Describes the format of the output address. One of either <code>"full"</code> or <code>"short"</code>.
+A short address contains, at the most, a house number, street directionals, a street name,
+a street suffix, and a unit type and number. A full address contains all of the selements of a
+short address as well as a, at the most, a city, state, and postal code.</p></td>
+    </tr>
+    <tr>
+      <th>newVar</th>
+      <td><p>Name of new variable to store rebuilt address in.</p></td>
+    </tr>
+    <tr>
+      <th>ordinal</th>
+      <td><p>A logical scalar; if <code>TRUE</code>, street names that contain numeric words values
+(i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
+default is <code>TRUE</code> because it returns much more compact clean addresses (i.e.
+"168th St" as opposed to "One Hundred Sixty Eigth St").</p></td>
+    </tr>
+    <tr>
+      <th>add_commas</th>
+      <td><p>A logical scalar; if <code>TRUE</code>, a comma is added both before and after the city
+name in rebuild addresses. If <code>FALSE</code> (default), no punctuation is added.</p></td>
+    </tr>
+    <tr>
+      <th>keep_parsed</th>
+      <td><p>Logical scalar; if <code>TRUE</code>, all parsed elements will be
+added to the source data after replacement. Otherwise, if <code>FALSE</code>,
+only the rebuilt address will be added to the source data (default).</p></td>
+    </tr>
+    <tr>
+      <th>keep_ids</th>
+      <td><p>Logical scalar; if <code>TRUE</code>, the identification numbers
+will be kept in the source data after replacement. Otherwise, if <code>FALSE</code>,
+they will be removed (default).</p></td>
+    </tr>
+    <tr>
+      <th>dirDict</th>
+      <td><p>Optional; name of directional dictionary object</p></td>
+    </tr>
+    <tr>
+      <th>streetDict</th>
+      <td><p>Optional; name of street dictionary object</p></td>
+    </tr>
+    <tr>
+      <th>suffixDict</th>
+      <td><p>Optional; name of street suffix dictionary object</p></td>
+    </tr>
+    <tr>
+      <th>unitDict</th>
+      <td><p>Optional; name of unit dictionary object</p></td>
+    </tr>
+    <tr>
+      <th>cityDict</th>
+      <td><p>Optional; name of city dictionary object</p></td>
+    </tr>
+    <tr>
+      <th>stateDict</th>
+      <td><p>Optional; name of state dictionary object</p></td>
     </tr>
     <tr>
       <th>locale</th>
