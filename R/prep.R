@@ -86,11 +86,16 @@ pm_identify <- function(.data, var){
 #'
 #' @usage pm_prep(.data, var)
 #'
-#' @param .data A tibble that has already had identification numbers added
-#'    using \link{pm_identify}.
+#' @param .data A source data frame that has already had identification
+#'    numbers added using \link{pm_identify}.
 #' @param var A character variable containing address data to be parsed
 #'
+#' @return A tibble with one observation per unique address in the source data
+#'    frame. The tibble will have two variables, \code{pm.uid} and \code{pm.address},
+#'    which is used as the basis for exploratory parsing.
+#'
 #' @importFrom dplyr %>%
+#' @importFrom dplyr as_tibble
 #' @importFrom dplyr distinct
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
@@ -118,6 +123,12 @@ pm_prep <- function(.data, var){
 
   varQN <- rlang::quo_name(rlang::enquo(var))
 
+  # ensure sf objects are convert to tibbles
+  if ("sf" %in% class(.data)){
+    .data <- as.data.frame(.data)
+    .data <- dplyr::select(.data, -geometry)
+  }
+
   # error if variables are not already present
   if ("pm.id" %in% names(.data) == FALSE | "pm.uid" %in% names(.data) == FALSE){
     stop("Identification numbers variables 'pm.id' and/or 'pm.uid' do not exist in your data.
@@ -134,7 +145,8 @@ pm_prep <- function(.data, var){
     dplyr::distinct(pm.uid, .keep_all = TRUE) %>%
     dplyr::mutate(pm.address := !!varQ) %>%
     dplyr::mutate(pm.address = stringr::str_replace_all(pm.address, pattern = ",", replace = "")) %>%
-    dplyr::select(pm.uid, pm.address) -> out
+    dplyr::select(pm.uid, pm.address) %>%
+    dplyr::as_tibble(.data) -> out
 
   # return output
   return(out)

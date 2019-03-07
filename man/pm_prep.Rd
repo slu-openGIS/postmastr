@@ -7,10 +7,15 @@
 pm_prep(.data, var)
 }
 \arguments{
-\item{.data}{A tibble that has already had identification numbers added
-using \link{pm_identify}.}
+\item{.data}{A source data frame that has already had identification
+numbers added using \link{pm_identify}.}
 
 \item{var}{A character variable containing address data to be parsed}
+}
+\value{
+A tibble with one observation per unique address in the source data
+   frame. The tibble will have two variables, \code{pm.uid} and \code{pm.address},
+   which is used as the basis for exploratory parsing.
 }
 \description{
 Once identification numbers have been been added, this
