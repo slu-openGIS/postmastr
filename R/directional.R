@@ -19,11 +19,13 @@ pm_streetDir_any <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object.
+         Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object.
+         Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues
@@ -68,11 +70,13 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object.
+         Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object.
+         Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues
@@ -128,11 +132,13 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.uid' is missing from the given object.
+         Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.address' is missing from the given object.
+         Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues
@@ -202,11 +208,13 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object.
+         Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object.
+         Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues
@@ -271,11 +279,13 @@ pm_streetDir_parse <- function(.data, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object.
+         Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object.
+         Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues
