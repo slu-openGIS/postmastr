@@ -4,12 +4,12 @@
 #'     as part of this process, so there is no need to subset columns prior to executing
 #'     this function.
 #'
-#' @usage pm_rebuild(.data, start, end, add_commas = FALSE, locale = "us")
+#' @usage pm_rebuild(.data, start, end, include_commas = FALSE, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param start Variable name to begin rebuilding process with, typically the house number
 #' @param end Variable name to end rebuilding process with, typically the street suffix or postal code
-#' @param add_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
+#' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 #'    name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
@@ -24,7 +24,7 @@
 #' @importFrom tidyr unite
 #'
 #' @export
-pm_rebuild <- function(.data, start, end, add_commas = FALSE, locale = "us"){
+pm_rebuild <- function(.data, start, end, include_commas = FALSE, locale = "us"){
 
   # global bindings
   pm.rebuilt = NULL
@@ -63,7 +63,7 @@ pm_rebuild <- function(.data, start, end, add_commas = FALSE, locale = "us"){
   }
 
   # add comma vars optionally
-  if (add_commas == TRUE){
+  if (include_commas == TRUE){
 
     .data <- mutate(.data,
                     pm.preComma = ",",

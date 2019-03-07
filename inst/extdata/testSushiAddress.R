@@ -151,8 +151,8 @@ postmastr::sushi1 %>%
            output = "full",
            dirDict = dirs,
            suffixDict = sufs,
-           cityDict = cityDict,
-           stateDict = moDict)
+           cityDict = cities,
+           stateDict = mo)
 
 postmastr::sushi1 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
@@ -161,8 +161,8 @@ postmastr::sushi1 %>%
            output = "full",
            dirDict = dirs,
            suffixDict = sufs,
-           cityDict = cityDict,
-           stateDict = moDict)
+           cityDict = cities,
+           stateDict = mo)
 
 postmastr::sushi1 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
@@ -171,8 +171,8 @@ postmastr::sushi1 %>%
            output = "short",
            dirDict = dirs,
            suffixDict = sufs,
-           cityDict = cityDict,
-           stateDict = moDict)
+           cityDict = cities,
+           stateDict = mo)
 
 
 postmastr::sushi1 %>%

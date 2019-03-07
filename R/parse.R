@@ -4,9 +4,10 @@
 #'     of \code{postmastr}'s code down to a single function call once dictionaries
 #'     have been created and tested against the data.
 #'
-#' @usage pm_parse(.data, input, var, output, newVar, ordinal = TRUE, add_commas = FALSE,
-#'     keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict,
-#'     cityDict, stateDict, locale = "us")
+#' @usage pm_parse(.data, input, var, output, newVar, ordinal = TRUE, include_commas = FALSE,
+#'     include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict,
+#'     suffixDict, unitDict, cityDict, stateDict, locale = "us")
+#'
 #' @param .data A source data set to be parsed
 #' @param input Describes the format of the source address. One of either \code{"full"} or \code{"short"}.
 #'     A short address contains, at the most, a house number, street directionals, a street name,
@@ -22,8 +23,11 @@
 #'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 #'     "168th St" as opposed to "One Hundred Sixty Eigth St").
-#' @param add_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
-#'    name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
+#' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
+#'     name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
+#' @param include_unit A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
+#'     will be included in the output string. Otherwise if \code{FALSE}, the unit name and number
+#'     will not be included.
 #' @param keep_parsed Character string; if \code{"yes"}, all parsed elements will be
 #'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 #'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
@@ -47,9 +51,9 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_commas = FALSE,
-                     keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict,
-                     cityDict, stateDict, locale = "us"){
+pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, include_commas = FALSE,
+                     include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict,
+                     suffixDict, unitDict, cityDict, stateDict, locale = "us"){
 
   # global bindings
   address = pm.house = pm.streetSuf = NULL
@@ -110,6 +114,20 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
     newVarQ <- rlang::quo(!! rlang::sym("pm.address"))
   }
 
+  # include units?
+  # if (include_unit == TRUE){
+
+  #  endVarQ <- rlang::quo(!! rlang::sym("pm.unitNum"))
+
+  # } else if (include_unit == FALSE){
+
+  #  endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
+
+  # }
+
+  # temporary!
+  endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
+
   # create id variables
   .data %>%
     pm_identify(var = !!varQ) -> source
@@ -127,7 +145,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
       pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = "end", add_commas = add_commas, locale = locale) %>%
+      pm_rebuild(start = pm.house, end = "end", include_commas = include_commas, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
   } else if (input == "full" & output == "short") {
@@ -142,7 +160,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
       pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
+      pm_rebuild(start = pm.house, end = !!endVarQ, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
   } else if (input == "short" & output == "short"){
@@ -154,7 +172,7 @@ pm_parse <- function(.data, input, var, output, newVar, ordinal = TRUE, add_comm
       pm_streetDir_parse(dictionary = dirDict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffixDict, locale = locale) %>%
       pm_street_parse(dictionary = streetDict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = pm.streetSuf, locale = locale) %>%
+      pm_rebuild(start = pm.house, end = !!endVarQ, locale = locale) %>%
       pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
 
   }

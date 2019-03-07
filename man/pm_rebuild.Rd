@@ -4,7 +4,7 @@
 \alias{pm_rebuild}
 \title{Rebuild Street Address}
 \usage{
-pm_rebuild(.data, start, end, add_commas = FALSE, locale = "us")
+pm_rebuild(.data, start, end, include_commas = FALSE, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
@@ -13,7 +13,7 @@ pm_rebuild(.data, start, end, add_commas = FALSE, locale = "us")
 
 \item{end}{Variable name to end rebuilding process with, typically the street suffix or postal code}
 
-\item{add_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
+\item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
 
 \item{locale}{A string indicating the country these data represent; the only

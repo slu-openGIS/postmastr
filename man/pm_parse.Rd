@@ -4,9 +4,9 @@
 \alias{pm_parse}
 \title{Parse Street Address}
 \usage{
-pm_parse(.data, input, var, output, newVar, ordinal = TRUE, add_commas = FALSE,
-    keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict, suffixDict, unitDict,
-    cityDict, stateDict, locale = "us")
+pm_parse(.data, input, var, output, newVar, ordinal = TRUE, include_commas = FALSE,
+    include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, dirDict, streetDict,
+    suffixDict, unitDict, cityDict, stateDict, locale = "us")
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -30,8 +30,12 @@ short address as well as a, at the most, a city, state, and postal code.}
 default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 "168th St" as opposed to "One Hundred Sixty Eigth St").}
 
-\item{add_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
+\item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
+
+\item{include_unit}{A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
+will be included in the output string. Otherwise if \code{FALSE}, the unit name and number
+will not be included.}
 
 \item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
 added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
