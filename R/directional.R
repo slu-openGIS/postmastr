@@ -145,6 +145,10 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
     if (locale == "us"){
       dictionary <- dic_us_dir
     }
+  } else if (missing(dictionary) == FALSE & is.null(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- dic_us_dir
+    }
   }
 
   # minimize dictionary
