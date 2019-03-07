@@ -91,9 +91,10 @@ postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(style = "short", newVar = clean_address, dirDict = dirs, suffixDict = sufs)
 
-moDict <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = c("title", "upper"))
-cityDict <- pm_append(type = "city",
-                      input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis", "SAINT LOUIS", "Webster Groves"),
+mo <- pm_dictionary(locale = "us", type = "state", filter = "MO", case = c("title", "upper"))
+cities <- pm_append(type = "city",
+                      input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood",
+                                "St. Louis", "SAINT LOUIS", "Webster Groves"),
                       output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
 
 postmastr::sushi1 %>%
@@ -168,7 +169,6 @@ postmastr::sushi1 %>%
   pm_parse(input = "full",
            var = address,
            output = "short",
-           add_commas = TRUE,
            dirDict = dirs,
            suffixDict = sufs,
            cityDict = cityDict,

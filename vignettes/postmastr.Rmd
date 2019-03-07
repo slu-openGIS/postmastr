@@ -57,10 +57,11 @@ To parse our *grammar of street addresses*, functions can be grouped in two ways
 First, we have major groups of functions based on their associated grammatical element:
 
 * `house` - *house number*
-* `house_suf` - *house number* suffix
+* `houseAlpha` - alphanumeric *house number*
+* `houseFrac` - fractional *house number*
 * `street` - *street* name
-* `street_suf` - *street* suffix
-* `street_dir` - *street* prefix and suffix direction
+* `streetDir` - *street* prefix and suffix direction
+* `streetSuf` - *street* suffix
 * `unit` - *unit* name and number
 * `city` - *city*
 * `state` - *state*
@@ -68,14 +69,16 @@ First, we have major groups of functions based on their associated grammatical e
 
 For each group of function, we have a similar menu of options that describe the *verb* (action) the function implements. For the `state` family of functions, for instance:
 
-* `pm_has_state()` - does a given street address contain a state name or abbreviation?
-* `pm_any_state()` - does a any street address contain a state name or abbreviation?
-* `pm_all_state()` - do all street addresses contain a state name or abbreviation?
-* `pm_no_state()` - returns a tibble of street addresses that *do not* contain a state name or abbreviation
-* `pm_parse_state()` - parses street addresses that *do* contain a street name or abbreviation
-* `pm_std_state()` - standardizes the parsed state data to return upper-case abbreviations
+* `pm_state_detect()` - does a given street address contain a state name or abbreviation?
+* `pm_state_any()` - does a any street address contain a state name or abbreviation?
+* `pm_state_all()` - do all street addresses contain a state name or abbreviation?
+* `pm_state_none()` - returns a tibble of street addresses that *do not* contain a state name or abbreviation
+* `pm_state_parse()` - parses street addresses that *do* contain a street name or abbreviation
+* `pm_state_std()` - standardizes the parsed state data to return upper-case abbreviations
 
 ## Creating Dictionaries
+Dictionaries are a critical component of the `postmastr` workflow because they allow you to define the terms that need to be parsed and standardized. Using well-defined dictionaries can speed up the parsing process and ensure that it is accurate.
+
 ### State Dictionaries
 `postmastr` comes with a built-in dictionary of states and their abbreviations that can be expanded and filterd using `pm_dictionary()` and `pm_append()`. On its own, `pm_dictionary()` will return that built-in dictionary with a variety of entries based on what we specify for case:
 
@@ -173,21 +176,10 @@ Once this has been created, we can combine it with the default state dictionary 
 
 All of the different inputs for Mississippi will now return the same `MS` output.
 
-## Order of Operations in `postmastr`
-`postmast`'s functionality rests on an order of operations that *must* be followed to ensure correct parsing:
+### Other Dictionaries
+The only required dictionary for U.S. street addresses is the city dictionary, because there municipalities and place names in the U.S. are so numerous that we cannot build a single, efficient object to use as a default. `postmastr` comes with default U.S. dictionaries for states (shown above), street directionals, street suffixes, and unit types. It is also possible to build street name dictionaries to correct common misspellings.
 
-1. prep
-2. postal code
-3. state
-4. city
-5. unit
-6. house number
-7. street
-8. construct
-
-If no street address in the given data set contains one of the grammatical elements (for example, if none of the addresses contain units), the associated functions in the workflow can be skipped.
-
-## The `postmastr` Workflow
+## Sample Data
 To illustrate the core components of the `postmastr` workflow, we'll use some data on sushi resturants in the St. Louis, Missouri region. These are "long" data - some resturants appear multiple times. Here is a quick preview of the data:
 
 ```r
@@ -225,6 +217,123 @@ Similarly, Wasabi Sushi Bar has its address fully capitalized, but the prefix di
 ```
 
 This vignette will walk through the process of addressing these issues.
+
+## Omnibus Parsing Functionality
+The `postmastr` package has a single high-level function for parsing, `pm_parse()`, which wraps all of prepratory, parsing, and reconstruction functions into a single call. This can be used if the problem-space is exceptionally well defined - all dictionaries need to be created ahead of time, so you must know what dictionary elements are necessary. This may be possible for you if you consistently work with specific data sources and have a good understanding what cities, states, and other elements of the grammar are present. If you are not sure what dictionary elements are needed, you will need to use the workflow illustrated below to develop these objects.
+
+For the `sushi1` data, the required dictionaries are:
+
+```r
+> dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
+> sufs <- pm_dictionary(type = "suffix", locale = "us")
+> mo <- pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
+> cities <- pm_append(type = "city",
++                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", 
++                                 "St. Louis", "SAINT LOUIS", "Webster Groves"),
++                       output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
+```
+
+Once those dictionaries are built, we can parse the data. The `input` argument is used to define how the address data are structured, and `output` is used to specify what type of output you recieve. 
+
+```r
+> postmastr::sushi1 %>%
++   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
++   pm_parse(input = "full",
++            var = address,
++            output = "full",
++            dirDict = dirs,
++            suffixDict = sufs,
++            cityDict = cities,
++            stateDict = mo)
+# A tibble: 27 x 4
+   name                            address                                        visit    pm.address                                  
+   <chr>                           <chr>                                          <chr>    <chr>                                       
+ 1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103       3/20/18  3407 Olive St St. Louis MO 63103            
+ 2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112          10/26/18 6335 Delmar Blvd St. Louis MO 63112         
+ 3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118    10/10/18 3221 S Grand Blvd St. Louis MO 63118        
+ 4 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108          12/2/18  1 Maryland Plz St. Louis MO 63108           
+ 5 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132     1/1/18   9443 Olive Blvd St. Louis MO 63132          
+ 6 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108          2/13/18  4949 W Pine Blvd St. Louis MO 63108         
+ 7 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108      3/4/18   3674 Forest Park Ave St. Louis MO 63108     
+ 8 Mizu Sushi Bar                  1013 Washington Avenue, St. Louis, MO 63101    9/12/18  1013 Washington Ave St. Louis MO 63101      
+ 9 Robata Maplewood                7260 Manchester Road, Maplewood, MO 63143      11/1/18  7260 Manchester Rd Maplewood MO 63143       
+10 SanSai Japanese Grill Maplewood 1803 Maplewood Commons Dr, St. Louis, MO 63143 2/14/18  1803 Maplewood Commons Dr St. Louis MO 63143
+# … with 17 more rows
+```
+
+We can limit our output to just the house and street data:
+
+```r
+> postmastr::sushi1 %>%
++   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
++   pm_parse(input = "full",
++            var = address,
++            output = "short",
++            dirDict = dirs,
++            suffixDict = sufs,
++            cityDict = cities,
++            stateDict = mo)
+# A tibble: 27 x 4
+   name                            address                                        visit    pm.address               
+   <chr>                           <chr>                                          <chr>    <chr>                    
+ 1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103       3/20/18  3407 Olive St            
+ 2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112          10/26/18 6335 Delmar Blvd         
+ 3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118    10/10/18 3221 S Grand Blvd        
+ 4 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108          12/2/18  1 Maryland Plz           
+ 5 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132     1/1/18   9443 Olive Blvd          
+ 6 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108          2/13/18  4949 W Pine Blvd         
+ 7 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108      3/4/18   3674 Forest Park Ave     
+ 8 Mizu Sushi Bar                  1013 Washington Avenue, St. Louis, MO 63101    9/12/18  1013 Washington Ave      
+ 9 Robata Maplewood                7260 Manchester Road, Maplewood, MO 63143      11/1/18  7260 Manchester Rd       
+10 SanSai Japanese Grill Maplewood 1803 Maplewood Commons Dr, St. Louis, MO 63143 2/14/18  1803 Maplewood Commons Dr
+# … with 17 more rows
+```
+
+We can also add the city, state, and postal code data as separate columns:
+
+```r
+> postmastr::sushi1 %>%
++   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
++   pm_parse(input = "full",
++            var = address,
++            output = "short",
++            keep_parsed = "limited",
++            dirDict = dirs,
++            suffixDict = sufs,
++            cityDict = cities,
++            stateDict = mo)
+# A tibble: 27 x 8
+   name                            address                                        visit    pm.address                pm.city   pm.state pm.zip pm.zip4
+   <chr>                           <chr>                                          <chr>    <chr>                     <chr>     <chr>    <chr>  <chr>  
+ 1 BaiKu Sushi Lounge              3407 Olive St, St. Louis, Missouri 63103       3/20/18  3407 Olive St             St. Louis MO       63103  NA     
+ 2 Blue Ocean Restaurant           6335 Delmar Blvd, St. Louis, MO 63112          10/26/18 6335 Delmar Blvd          St. Louis MO       63112  NA     
+ 3 Cafe Mochi                      3221 S Grand Boulevard, St. Louis, MO 63118    10/10/18 3221 S Grand Blvd         St. Louis MO       63118  NA     
+ 4 Drunken Fish - Central West End 1 Maryland Plaza, St. Louis, MO 63108          12/2/18  1 Maryland Plz            St. Louis MO       63108  NA     
+ 5 I Love Mr Sushi                 9443 Olive Blvd, St. Louis, Missouri 63132     1/1/18   9443 Olive Blvd           St. Louis MO       63132  NA     
+ 6 Kampai Sushi Bar                4949 W Pine Blvd, St. Louis, MO 63108          2/13/18  4949 W Pine Blvd          St. Louis MO       63108  NA     
+ 7 Midtown Sushi & Ramen           3674 Forest Park Ave, St. Louis, MO 63108      3/4/18   3674 Forest Park Ave      St. Louis MO       63108  NA     
+ 8 Mizu Sushi Bar                  1013 Washington Avenue, St. Louis, MO 63101    9/12/18  1013 Washington Ave       St. Louis MO       63101  NA     
+ 9 Robata Maplewood                7260 Manchester Road, Maplewood, MO 63143      11/1/18  7260 Manchester Rd        Maplewood MO       63143  NA     
+10 SanSai Japanese Grill Maplewood 1803 Maplewood Commons Dr, St. Louis, MO 63143 2/14/18  1803 Maplewood Commons Dr St. Louis MO       63143  NA     
+# … with 17 more rows
+```
+
+## The `postmastr` Workflow
+If you do not have a strong sense of the problem-space you are confronted with, and therefore do not know exactly what is needed for dictionaries, `postmastr` has a full-featured workflow for step-by-step parsing of street addresses.
+
+### Order of Operations in `postmastr`
+`postmast`'s functionality rests on an order of operations that *must* be followed to ensure correct parsing:
+
+1. prep
+2. postal code
+3. state
+4. city
+5. unit
+6. house number
+7. street
+8. construct
+
+If no street address in the given data set contains one of the grammatical elements (for example, if none of the addresses contain units), the associated functions in the workflow can be skipped.
 
 ### Prep
 There are two initial prepretory steps that *must* be taken with these data. First, we want to ensure that they have a unique identification number for each row (to preserve the original sort order; `pm.id`) as well as a unique identification number for each *unique* street address string (`pm.uid`). These can both be applied using `pm.identify()`:
