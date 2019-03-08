@@ -82,6 +82,7 @@ reference:
     - pm_houseSuf_detect
     - pm_houseSuf_none
     - pm_houseSuf_parse
+    - pm_houseSuf_std
 
   - title: "Streets"
     desc: "Work with Street Elements"

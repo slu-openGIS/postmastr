@@ -6,10 +6,10 @@ postmastr::sushi2 %>%
 
 sushi2_min <- pm_prep(sushi2, var = "address")
 
-sushi2_alpha <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 Rear Olive St", pm.address))
+sushi2_alpha <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 R Olive St", pm.address))
 sushi2_alpha <- pm_house_parse(sushi2_alpha)
 
-houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear"), output = c("Front", "Rear"))
+houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear", "F", "R"), output = c("Front", "Rear", "Front", "Rear"))
 
 pm_houseSuf_any(sushi2_alpha, dictionary = houseSufs)
 pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
@@ -203,9 +203,7 @@ postmastr::sushi1 %>%
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(input = "short",
-           var = address,
-           dirDict = dirs,
-           suffixDict = sufs,
-           cityDict = cityDict,
-           stateDict = moDict)
+           address = address,
+           dir_dict = dirs,
+           suffix_dict = sufs)
 

@@ -443,9 +443,6 @@ pm_houseSuf_none <- function(.data, dictionary, locale = "us"){
 #' @export
 pm_houseSuf_parse <- function(.data, dictionary, locale = "us"){
 
-  # create bindings for global variables
-  pm.address = pm.streetSuf = NULL
-
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
     stop("Error 2.")
@@ -485,6 +482,7 @@ pm_houseSuf_parse <- function(.data, dictionary, locale = "us"){
 pm_parse_houseSuf_us <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
+  pm.address = pm.houseSuf = NULL
 
   # minimize dictionary
   dict <- paste(dictionary$houseSuf.input, collapse = "|")
@@ -498,7 +496,75 @@ pm_parse_houseSuf_us <- function(.data, dictionary, locale = "us"){
   .data %>%
     dplyr::mutate(pm.address = ifelse(is.na(pm.houseSuf) == FALSE,
                                       stringr::word(pm.address, start = 1+stringr::str_count(pm.houseSuf, pattern = "\\w+"),
-                                                    end = -1), pm.address)) -> .data # %>%
-    # pm_houseSuf_std(var = pm.houseSuf, dictionary = dictionary) -> .data
+                                                    end = -1), pm.address)) %>%
+    pm_houseSuf_std(var = pm.houseSuf, dictionary = dictionary) -> .data
+
+}
+
+#' Standardize Parsed House Suffix Names
+#'
+#' @description Convert house suffix values to desired outputs
+#'
+#' @usage pm_houseSuf_std(.data, var, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param var A character variable that may contain street suffix values
+#' @param dictionary A tbl created with \code{pm_append} to be used
+#'     as a master list for house suffixes
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A tibble with an updated variable that contains standardized house suffix values.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr rename
+#' @importFrom rlang :=
+#' @importFrom rlang enquo
+#' @importFrom rlang quo
+#' @importFrom rlang sym
+#'
+#' @export
+pm_houseSuf_std <- function(.data, var, dictionary, locale = "us"){
+
+  # global bindings
+  . = houseSuf.input = houseSuf.output = NULL
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # missing dictionary
+  if (missing(dictionary) == TRUE){
+    stop("A house suffix dictionary created with pm_append is required.")
+  }
+
+  # standardize state names
+  dictionary %>%
+    dplyr::rename(!!varQN := houseSuf.input) -> dictionary
+
+  # standardize
+  .data %>%
+    dplyr::left_join(., dictionary, by = varQN) %>%
+    dplyr::mutate(!!varQ := ifelse(is.na(houseSuf.output) == FALSE, houseSuf.output, !!varQ)) %>%
+    dplyr::select(-houseSuf.output) -> out
+
+  # return output
+  return(out)
 
 }

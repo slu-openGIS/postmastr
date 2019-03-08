@@ -124,7 +124,7 @@
 
     <pre class="usage"><span class='fu'>pm_parse</span>(<span class='no'>.data</span>, <span class='no'>input</span>, <span class='no'>address</span>, <span class='no'>output</span>, <span class='no'>new_address</span>, <span class='kw'>ordinal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>include_commas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>include_unit</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep_parsed</span> <span class='kw'>=</span> <span class='st'>"no"</span>,
-    <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>dir_dict</span>, <span class='no'>street_dict</span>, <span class='no'>suffix_dict</span>, <span class='no'>unit_dict</span>,
+    <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>houseSuf_dict</span>, <span class='no'>dir_dict</span>, <span class='no'>street_dict</span>, <span class='no'>suffix_dict</span>, <span class='no'>unit_dict</span>,
     <span class='no'>city_dict</span>, <span class='no'>state_dict</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -186,6 +186,10 @@ only the rebuilt address will be added to the source data (default).</p></td>
       <td><p>Logical scalar; if <code>TRUE</code>, the identification numbers
 will be kept in the source data after replacement. Otherwise, if <code>FALSE</code>,
 they will be removed (default).</p></td>
+    </tr>
+    <tr>
+      <th>houseSuf_dict</th>
+      <td><p>Optiona; name of house suffix dictionary object</p></td>
     </tr>
     <tr>
       <th>dir_dict</th>
