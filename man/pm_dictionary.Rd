@@ -38,7 +38,7 @@ A \code{postmastr} dictionary object, which will always include an input column
 \description{
 This function allows for the creation of dictionary objects that are
     either optional or required elements of other \code{postmastr} functions. Once created,
-    dictionary objects should not be modified as te formatting of dictionary elements provides
+    dictionary objects should not be modified as the formatting of dictionary elements provides
     other \code{postmastr} functions with predictable inputs. The \code{"state"},
     \code{"directional"}, and \code{"suffix"} dictionaries are based on tables that are also
     exported so that they can be previewed and tested.
@@ -85,5 +85,6 @@ pm_dictionary(type = "suffix", filter = c("Ave", "Rd"), locale = "us")
 
 }
 \seealso{
-\code{\link{dic_us_dir}}, \code{\link{dic_us_states}}, \code{\link{dic_us_suffix}}
+\code{\link{pm_append}}, \code{\link{dic_us_dir}}, \code{\link{dic_us_states}},
+    \code{\link{dic_us_suffix}}
 }

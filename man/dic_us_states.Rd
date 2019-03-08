@@ -19,7 +19,6 @@ A listing of abbreviations and full names for U.S. states, territories,
     abbreviations by the U.S. Postal Service.
 }
 \examples{
-str(dic_us_states)
 head(dic_us_states)
 
 }

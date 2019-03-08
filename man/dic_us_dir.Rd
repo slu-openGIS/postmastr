@@ -16,4 +16,11 @@ data(dic_us_dir)
 A list of abbreviations for full names for prefix and suffix directionals
    in English.
 }
+\examples{
+head(dic_us_dir)
+
+}
+\seealso{
+\href{https://pe.usps.com/text/pub28/28c2_014.htm}{U.S. Postal Service, Publication 28, Part 2-33}
+}
 \keyword{datasets}

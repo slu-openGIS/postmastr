@@ -17,4 +17,11 @@ data(dic_us_suffix)
 A list of abbreviations for full names for street suffix types for the
     United States.
 }
+\examples{
+head(dic_us_suffix)
+
+}
+\seealso{
+\href{https://pe.usps.com/text/pub28/28apc_002.htm}{U.S. Postal Service, Publication 28, Appendix C1}
+}
 \keyword{datasets}

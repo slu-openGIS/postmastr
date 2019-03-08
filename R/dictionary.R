@@ -2,7 +2,7 @@
 #'
 #' @description This function allows for the creation of dictionary objects that are
 #'     either optional or required elements of other \code{postmastr} functions. Once created,
-#'     dictionary objects should not be modified as te formatting of dictionary elements provides
+#'     dictionary objects should not be modified as the formatting of dictionary elements provides
 #'     other \code{postmastr} functions with predictable inputs. The \code{"state"},
 #'     \code{"directional"}, and \code{"suffix"} dictionaries are based on tables that are also
 #'     exported so that they can be previewed and tested.
@@ -42,7 +42,8 @@
 #'     preferred output for each input. For American addresses, these outputs follow United States
 #'     Postal Service guidelines.
 #'
-#' @seealso \code{\link{dic_us_dir}}, \code{\link{dic_us_states}}, \code{\link{dic_us_suffix}}
+#' @seealso \code{\link{pm_append}}, \code{\link{dic_us_dir}}, \code{\link{dic_us_states}},
+#'     \code{\link{dic_us_suffix}}
 #'
 #' @examples
 #' # build state dictionary, title case only
@@ -385,10 +386,18 @@ pm_convert_case <- function(.data, var, orderVar, case){
 
 }
 
-#' Append Custom Vectors to Dictionary Objects
+#' Create Dictionary Object Appendicies
 #'
 #' @description This function allows for the creation of dictionary objects that are
-#'     either optional or required elements of other \code{postmastr} functions.
+#'     either optional or required elements of other \code{postmastr} functions. These
+#'     objects are appendicies that can serve either as stand-alone dictionaries or
+#'     used in a \code{\link{pm_dictionary}} call as the input  for the \code{append}
+#'     parameter.
+#'
+#'     Once created, dictionary objects should not be modified as the formatting of dictionary
+#'     elements provides other \code{postmastr} functions with predictable inputs. The
+#'     \code{"state"}, \code{"directional"}, and \code{"suffix"} dictionaries are based on
+#'     tables that are also exported so that they can be previewed and tested.
 #'
 #' @usage pm_append(type, input, output, locale = "us")
 #'
@@ -398,9 +407,47 @@ pm_convert_case <- function(.data, var, orderVar, case){
 #' @param input A character scalar or vector containing possible terms existing in
 #'     the data. This should be the same length as \code{output}.
 #' @param output A character scalar or vector containing desired output for each input.
-#'     This should be the same length as \code{input}.
+#'     This should be the same length as \code{input}. You may use \code{NA} values
+#'     in the \code{output} vector for inputs that already are in the preferred,
+#'     standardized form.
 #' @param locale A string indicating the country these data represent; the only
-#'     current option is "us" but this is included to facilitate future expansion.
+#'     current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A \code{postmastr} dictionary object, which will always include an input column
+#'     of possible terms for the given grammatical address element. All dictionary objects
+#'     except for city dictionaries will also contain an output column with the
+#'     preferred output for each input. For American addresses, these outputs should follow
+#'     United States Postal Service guidelines. These dictionary objects can be used as
+#'     stand-alone dictionaries or fed into a \code{\link{pm_dictionary}} call as the input
+#'     for the \code{append} parameter.
+#'
+#' @seealso \code{pm_dictionary}
+#'
+#' @examples
+#' # create stand-alone state dictionary
+#' mo <- pm_append(type = "state", input = c("Missouri", "MO", "MISSOURI"),
+#'     output = c("MO", "MO", "MO"), locale = "us")
+#'
+#' # add custom abbreviation for Massachusetts to state dictionary
+#' ## create dictionary appendix
+#' ma <- pm_append(type = "state", input = "Mass", output = "MA", locale = "us")
+#'
+#' ## add dictionary appendix to dictionary
+#' pm_dictionary(type = "state", filter = c("CT", "MA", "ME", "NH", "RI", "VT"),
+#'     append = ma, case = "title", locale = "us")
+#'
+#' # create stand-alone city dictionary, with spelling correction for some cities
+#' cities <- pm_append(type = "city",
+#'     input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", "St. Louis",
+#'               "SAINT LOUIS", "Webster Groves"),
+#'     output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA),
+#'     locale = "us")
+#'
+#' # create stand-alone street dictionary
+#' cities <- pm_append(type = "street",
+#'     input = c("MLK", "M.L.K."),
+#'     output = c("Dr. Martin Luther King, Jr.", "Dr. Martin Luther King, Jr."),
+#'     locale = "us")
 #'
 #' @importFrom dplyr as_tibble
 #'
@@ -482,7 +529,6 @@ pm_append <- function(type, input, output, locale = "us"){
 #' @seealso \href{https://pe.usps.com/text/pub28/28apb.htm}{U.S. Postal Service, Publication 28, Appendix B}
 #'
 #' @examples
-#' str(dic_us_states)
 #' head(dic_us_states)
 #'
 "dic_us_states"
@@ -501,6 +547,12 @@ pm_append <- function(type, input, output, locale = "us"){
 #'   \item{dir.output}{standard directional abbreviations}
 #'   \item{dir.input}{standard full names and directional abbreviations}
 #' }
+#'
+#' @seealso \href{https://pe.usps.com/text/pub28/28c2_014.htm}{U.S. Postal Service, Publication 28, Part 2-33}
+#'
+#' @examples
+#' head(dic_us_dir)
+#'
 "dic_us_dir"
 
 #' Street Suffix Dictionary, United States of America
@@ -518,4 +570,10 @@ pm_append <- function(type, input, output, locale = "us"){
 #'   \item{suf.output}{standard suffix abbreviation}
 #'   \item{suf.input}{standard full names and suffix abbreviations}
 #' }
+#'
+#' @seealso \href{https://pe.usps.com/text/pub28/28apc_002.htm}{U.S. Postal Service, Publication 28, Appendix C1}
+#'
+#' @examples
+#' head(dic_us_suffix)
+#'
 "dic_us_suffix"
