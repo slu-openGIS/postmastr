@@ -53,7 +53,7 @@ test_that("correctly specified functions execute without error", {
 })
 
 test_that("correctly specified functions execute without error", {
-  expect_error(pm_parse(sushi2, input = "short", address = "address",
-                        dir_dict = dirs, city_dict = cities, state_dict = mo), NA)
+  expect_error(pm_parse(sushi1, input = "short", address = "address", city_dict = cities), NA)
+  expect_error(pm_parse(sushi2, input = "short", address = "address"), NA)
 })
 
