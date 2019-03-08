@@ -17,11 +17,11 @@ pm_city_any <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test dictionary
@@ -54,11 +54,11 @@ pm_city_all <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test dictionary
@@ -99,11 +99,11 @@ pm_city_detect <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # minimize dictionary
@@ -145,11 +145,11 @@ pm_city_none <- function(.data, dictionary){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # create output
