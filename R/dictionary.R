@@ -66,7 +66,7 @@
 #'     append = ma, case = "title", locale = "us")
 #'
 #' # build Missouri city dictionary
-#' \notrun{
+#' \dontrun{
 #' # tidycensus::census_api_key("YOUR API KEY GOES HERE")
 #' pm_dictionary(type = "city", filter = "MO", case = "upper", locale = "us")
 #' }
