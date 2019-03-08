@@ -6,7 +6,7 @@
 #'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
 #'     include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
-#'     keep_ids = FALSE, dir_dict, street_dict, suffix_dict, unit_dict,
+#'     keep_ids = FALSE, houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict,
 #'     city_dict, state_dict, locale = "us")
 #'
 #' @param .data A source data set to be parsed
@@ -36,6 +36,7 @@
 #' @param keep_ids Logical scalar; if \code{TRUE}, the identification numbers
 #'     will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 #'     they will be removed (default).
+#' @param houseSuf_dict Optiona; name of house suffix dictionary object
 #' @param dir_dict Optional; name of directional dictionary object
 #' @param street_dict Optional; name of street dictionary object
 #' @param suffix_dict Optional; name of street suffix dictionary object
@@ -82,8 +83,8 @@
 #'
 #' @export
 pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE, include_commas = FALSE,
-                     include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, dir_dict, street_dict,
-                     suffix_dict, unit_dict, city_dict, state_dict, locale = "us"){
+                     include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, houseSuf_dict, dir_dict,
+                     street_dict, suffix_dict, unit_dict, city_dict, state_dict, locale = "us"){
 
   # global bindings
   address = pm.house = pm.streetSuf = NULL
@@ -102,6 +103,10 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
   }
 
   # optional dictionary parameters
+  if (missing(houseSuf_dict) == TRUE){
+    houseSuf_dict <- NULL
+  }
+
   if (missing(dir_dict) == TRUE){
     dir_dict <- NULL
   }
@@ -177,6 +182,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
       pm_house_parse() %>%
       pm_houseFrac_parse() %>%
+      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
@@ -192,6 +198,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
       pm_house_parse() %>%
       pm_houseFrac_parse() %>%
+      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
@@ -204,6 +211,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_prep(var = "address") %>%
       pm_house_parse() %>%
       pm_houseFrac_parse() %>%
+      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%

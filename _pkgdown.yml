@@ -77,6 +77,11 @@ reference:
     - pm_houseFrac_detect
     - pm_houseFrac_none
     - pm_houseFrac_parse
+    - pm_houseSuf_any
+    - pm_houseSuf_all
+    - pm_houseSuf_detect
+    - pm_houseSuf_none
+    - pm_houseSuf_parse
 
   - title: "Streets"
     desc: "Work with Street Elements"

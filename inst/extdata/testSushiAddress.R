@@ -6,6 +6,20 @@ postmastr::sushi2 %>%
 
 sushi2_min <- pm_prep(sushi2, var = "address")
 
+sushi2_alpha <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 Rear Olive St", pm.address))
+sushi2_alpha <- pm_house_parse(sushi2_alpha)
+
+houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear"), output = c("Front", "Rear"))
+
+pm_houseSuf_any(sushi2_alpha, dictionary = houseSufs)
+pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
+
+pm_houseSuf_detect(sushi2_alpha, dictionary = houseSufs)
+
+pm_houseSuf_none(sushi2_alpha, dictionary = houseSufs)
+
+pm_houseSuf_parse(sushi2_alpha, dictionary = houseSufs)
+
 sushi2_range <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407-3409 Olive St", pm.address))
 pm_house_parse(sushi2_range)
 

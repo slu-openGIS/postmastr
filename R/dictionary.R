@@ -518,7 +518,7 @@ pm_append <- function(type, input, output, locale = "us"){
 
       out <- data.frame(
         houseSuf.output = c(output),
-        houseSuf.output.input = c(input),
+        houseSuf.input = c(input),
         stringsAsFactors = FALSE)
 
     }

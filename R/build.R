@@ -99,11 +99,12 @@ pm_reorder_build <- function(.data, locale = "us"){
     # master list of variables for pm objects
     master <- data.frame(
       master.vars = c("pm.uid", "pm.address", "pm.rebuilt", "pm.house",
-                      "pm.houseFrac",
+                      "pm.houseFrac", "pm.houseSuf",
                       "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
                       "pm.unitType", "pm.unitNum", "pm.preComma", "pm.city", "pm.postComma",
                       "pm.state", "pm.zip", "pm.zip4", "pm.houseLow", "pm.houseHigh",
-                      "pm.hasHouse", "pm.hasHouseFrac", "pm.hasDir", "pm.hasStreetSuf",
+                      "pm.hasHouse", "pm.hasHouseFrac", "pm.hasAlpha", "pm.hasHouseSuf",
+                      "pm.hasDir", "pm.hasStreetSuf",
                       "pm.hasUnit", "pm.hasCity", "pm.hasState", "pm.hasZip"),
       stringsAsFactors = FALSE
     )
@@ -224,7 +225,7 @@ pm_reorder_replace <- function(.data, locale = "us"){
     # master list of variables for pm objects
     master <- data.frame(
       master.vars = c("pm.uid", "pm.rebuilt", "pm.house", "pm.houseLow", "pm.houseHigh",
-                      "pm.houseFrac",
+                      "pm.houseFrac", "pm.houseSuf",
                       "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
                       "pm.unitType", "pm.unitNum",  "pm.city",
                       "pm.state", "pm.zip", "pm.zip4"),

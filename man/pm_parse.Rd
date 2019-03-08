@@ -6,7 +6,7 @@
 \usage{
 pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
     include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
-    keep_ids = FALSE, dir_dict, street_dict, suffix_dict, unit_dict,
+    keep_ids = FALSE, houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict,
     city_dict, state_dict, locale = "us")
 }
 \arguments{
@@ -46,6 +46,8 @@ only the rebuilt address will be added to the source data (default).}
 \item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
 will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 they will be removed (default).}
+
+\item{houseSuf_dict}{Optiona; name of house suffix dictionary object}
 
 \item{dir_dict}{Optional; name of directional dictionary object}
 
