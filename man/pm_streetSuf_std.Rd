@@ -11,8 +11,9 @@ pm_streetSuf_std(.data, var, dictionary, locale = "us")
 
 \item{var}{A character variable that may contain street suffixes}
 
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list for street suffixes.}
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
+as a master list for street suffixes. If none is specified, the full default
+street suffix dictionary will be used.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}

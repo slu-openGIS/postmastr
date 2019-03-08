@@ -5,8 +5,9 @@
 #' @usage pm_streetSuf_any(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -46,15 +47,16 @@ pm_streetSuf_any <- function(.data, dictionary, locale = "us"){
 
 }
 
-#' Does State Dictionary Return a Match for All Observations
+#' Does Street Suffix Dictionary Return a Match for All Observations
 #'
 #' @description Determine whether the street suffix dictionary returns matches for all observations.
 #'
 #' @usage pm_streetSuf_all(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -93,7 +95,7 @@ pm_streetSuf_all <- function(.data, dictionary, locale = "us"){
 
 }
 
-#' Detect Presence of State Name or Abbreviation
+#' Detect Presence of Street Suffix
 #'
 #' @description Determine the presence of street suffix names or abbreviations
 #'     at the end of a string.
@@ -101,8 +103,9 @@ pm_streetSuf_all <- function(.data, dictionary, locale = "us"){
 #' @usage pm_streetSuf_detect(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -119,7 +122,7 @@ pm_streetSuf_all <- function(.data, dictionary, locale = "us"){
 pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.hasState = NULL
+  pm.address = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -133,6 +136,11 @@ pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    dictionary <- postmastr::dic_us_suffix
   }
 
   # minimize dictionary
@@ -160,8 +168,9 @@ pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
 #' @usage pm_streetSuf_none(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes.
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
@@ -184,6 +193,11 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
     stop("Error 3.")
   }
 
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    dictionary <- postmastr::dic_us_suffix
+  }
+
   # create output
   .data %>%
     pm_streetSuf_detect(dictionary = dictionary, locale = locale) %>%
@@ -197,7 +211,7 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
 
 #' Parse Street Suffix
 #'
-#' @description Parse a state name or abbreviation from a string. These data
+#' @description Parse a street suffix from a string. These data
 #'     should be at the end of the string (i.e. the last word).
 #'
 #' @details If a street name is also a directional, like \code{North Ave}, it will be
@@ -211,8 +225,9 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
 #' @usage pm_streetSuf_parse(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes.
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -244,7 +259,17 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # parse states
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    dictionary <- postmastr::dic_us_suffix
+  }
+
+  # load dictionary if NULL
+  if (is.null(dictionary) == TRUE){
+    dictionary <- postmastr::dic_us_suffix
+  }
+
+  # parse street suffixes
   if (locale == "us"){
     .data <- pm_parse_suf_us(.data, dictionary = dictionary)
     vars <- pm_reorder(.data)
@@ -256,7 +281,7 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
 
 }
 
-# parse American states
+# parse American street suffixes
 pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 
   # global bindings
@@ -321,8 +346,9 @@ pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable that may contain street suffixes
-#' @param dictionary A tbl created with \code{pm_dictionary} to be used
-#'     as a master list for street suffixes.
+#' @param dictionary Optional; a tbl created with \code{pm_dictionary} to be used
+#'     as a master list for street suffixes. If none is specified, the full default
+#'     street suffix dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
@@ -356,7 +382,12 @@ pm_streetSuf_std <- function(.data, var, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # standardize state names
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    dictionary <- postmastr::dic_us_suffix
+  }
+
+  # standardize street suffix names
   if (locale == "us"){
     out <- pm_std_suf_us(.data, var = !!varQ, dictionary = dictionary)
   }

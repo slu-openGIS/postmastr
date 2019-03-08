@@ -9,14 +9,15 @@ pm_streetSuf_parse(.data, dictionary, locale = "us")
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
 
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list for street suffixes.}
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
+as a master list for street suffixes. If none is specified, the full default
+street suffix dictionary will be used.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
 }
 \description{
-Parse a state name or abbreviation from a string. These data
+Parse a street suffix from a string. These data
     should be at the end of the string (i.e. the last word).
 }
 \details{

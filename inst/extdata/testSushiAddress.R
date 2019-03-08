@@ -207,3 +207,8 @@ postmastr::sushi2 %>%
            dir_dict = dirs,
            suffix_dict = sufs)
 
+postmastr::sushi2 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "short",
+           address = address,
+           dir_dict = dirs)

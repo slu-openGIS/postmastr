@@ -47,17 +47,18 @@ only the rebuilt address will be added to the source data (default).}
 will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 they will be removed (default).}
 
-\item{houseSuf_dict}{Optiona; name of house suffix dictionary object}
+\item{houseSuf_dict}{Optional; name of house suffix dictionary object}
 
 \item{dir_dict}{Optional; name of directional dictionary object}
 
 \item{street_dict}{Optional; name of street dictionary object}
 
-\item{suffix_dict}{Optional; name of street suffix dictionary object}
+\item{suffix_dict}{Optional; name of street suffix dictionary object. If none is specified,
+the full default street suffix dictionary will be used.}
 
 \item{unit_dict}{Optional; name of unit dictionary object}
 
-\item{city_dict}{Optional; name of city dictionary object}
+\item{city_dict}{Required for \code{"full"} addresses; name of city dictionary object}
 
 \item{state_dict}{Optional; name of state dictionary object}
 

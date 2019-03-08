@@ -2,15 +2,16 @@
 % Please edit documentation in R/suffix.R
 \name{pm_streetSuf_all}
 \alias{pm_streetSuf_all}
-\title{Does State Dictionary Return a Match for All Observations}
+\title{Does Street Suffix Dictionary Return a Match for All Observations}
 \usage{
 pm_streetSuf_all(.data, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
 
-\item{dictionary}{A tbl created with \code{pm_dictionary} to be used
-as a master list for street suffixes}
+\item{dictionary}{Optional; a tbl created with \code{pm_dictionary} to be used
+as a master list for street suffixes. If none is specified, the full default
+street suffix dictionary will be used.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is \code{"us"} but this is included to facilitate future expansion.}

@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Parse Street Suffix — pm_streetSuf_parse" />
 
-<meta property="og:description" content="Parse a state name or abbreviation from a string. These data
+<meta property="og:description" content="Parse a street suffix from a string. These data
     should be at the end of the string (i.e. the last word)." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
@@ -115,7 +115,7 @@
 
     <div class="ref-description">
     
-    <p>Parse a state name or abbreviation from a string. These data
+    <p>Parse a street suffix from a string. These data
     should be at the end of the string (i.e. the last word).</p>
     
     </div>
@@ -131,8 +131,9 @@
     </tr>
     <tr>
       <th>dictionary</th>
-      <td><p>A tbl created with <code>pm_dictionary</code> to be used
-as a master list for street suffixes.</p></td>
+      <td><p>Optional; a tbl created with <code>pm_dictionary</code> to be used
+as a master list for street suffixes. If none is specified, the full default
+street suffix dictionary will be used.</p></td>
     </tr>
     <tr>
       <th>locale</th>

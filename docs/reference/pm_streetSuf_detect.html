@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Detect Presence of State Name or Abbreviation — pm_streetSuf_detect • postmastr</title>
+<title>Detect Presence of Street Suffix — pm_streetSuf_detect • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Detect Presence of State Name or Abbreviation — pm_streetSuf_detect" />
+<meta property="og:title" content="Detect Presence of Street Suffix — pm_streetSuf_detect" />
 
 <meta property="og:description" content="Determine the presence of street suffix names or abbreviations
     at the end of a string." />
@@ -108,7 +108,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Detect Presence of State Name or Abbreviation</h1>
+    <h1>Detect Presence of Street Suffix</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/suffix.R'><code>R/suffix.R</code></a></small>
     <div class="hidden name"><code>pm_streetSuf_detect.Rd</code></div>
     </div>
@@ -131,8 +131,9 @@
     </tr>
     <tr>
       <th>dictionary</th>
-      <td><p>A tbl created with <code>pm_dictionary</code> to be used
-as a master list for street suffixes</p></td>
+      <td><p>Optional; a tbl created with <code>pm_dictionary</code> to be used
+as a master list for street suffixes. If none is specified, the full default
+street suffix dictionary will be used.</p></td>
     </tr>
     <tr>
       <th>locale</th>
