@@ -126,6 +126,13 @@ pm_state_detect <- function(.data, dictionary, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_states
+    }
+  }
+
   # minimize dictionary
   if (locale == "us"){
     dict <- paste(dictionary$state.input, collapse = "|")
@@ -177,6 +184,13 @@ pm_state_none <- function(.data, dictionary, locale = "us"){
 
   if (pm_has_address(.data) == FALSE){
     stop("Error 3.")
+  }
+
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_states
+    }
   }
 
   # create output
@@ -240,6 +254,20 @@ pm_state_parse <- function(.data, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_states
+    }
+  }
+
+  # load dictionary if NULL
+  if (is.null(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_states
+    }
   }
 
   # parse states
@@ -323,6 +351,13 @@ pm_state_std <- function(.data, var, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_states
+    }
   }
 
   # standardize state names

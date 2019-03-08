@@ -47,20 +47,24 @@ only the rebuilt address will be added to the source data (default).}
 will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 they will be removed (default).}
 
-\item{houseSuf_dict}{Optional; name of house suffix dictionary object}
+\item{houseSuf_dict}{Optional; name of house suffix dictionary object.  Standardizationl
+and parsing are skipped if none is specified.}
 
-\item{dir_dict}{Optional; name of directional dictionary object}
+\item{dir_dict}{Optional; name of directional dictionary object. If none is specified,
+the full default directional dictionary will be used.}
 
-\item{street_dict}{Optional; name of street dictionary object}
+\item{street_dict}{Optional; name of street dictionary object. Standardizationl is skipped
+if none is specified.}
 
 \item{suffix_dict}{Optional; name of street suffix dictionary object. If none is specified,
 the full default street suffix dictionary will be used.}
 
-\item{unit_dict}{Optional; name of unit dictionary object}
+\item{unit_dict}{Optional; name of unit dictionary object - NOT CURRENTLY ENABLED}
 
-\item{city_dict}{Required for \code{"full"} addresses; name of city dictionary object}
+\item{city_dict}{Required for \code{"full"} addresses; name of city dictionary object.}
 
-\item{state_dict}{Optional; name of state dictionary object}
+\item{state_dict}{Optional; name of state dictionary object. If none is specified,
+the full default state dictionary will be used.}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}

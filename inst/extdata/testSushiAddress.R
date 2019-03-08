@@ -211,3 +211,11 @@ postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(input = "short",
            address = address)
+
+postmastr::sushi1 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  pm_parse(input = "full",
+           address = address,
+           output = "short",
+           city_dict = cities)
+
