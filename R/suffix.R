@@ -141,7 +141,7 @@ pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_suffix
+      dictionary <- pm_dictionary(type = "suffix")
     }
   }
 
@@ -198,7 +198,7 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_suffix
+      dictionary <- pm_dictionary(type = "suffix")
     }
   }
 
@@ -266,14 +266,14 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_suffix
+      dictionary <- pm_dictionary(type = "suffix")
     }
   }
 
   # load dictionary if NULL
   if (is.null(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_suffix
+      dictionary <- pm_dictionary(type = "suffix")
     }
   }
 
@@ -321,7 +321,7 @@ pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 
   # clean address data
   .data %>%
-    dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -2), pm.address)) %>% # -> .data # %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -2), pm.address)) %>%
     pm_streetSuf_std(var = pm.streetSuf, dictionary = dictionary) -> .data
 
 
@@ -393,7 +393,7 @@ pm_streetSuf_std <- function(.data, var, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_suffix
+      dictionary <- pm_dictionary(type = "suffix")
     }
   }
 

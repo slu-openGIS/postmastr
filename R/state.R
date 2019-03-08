@@ -129,7 +129,7 @@ pm_state_detect <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_states
+      dictionary <- pm_dictionary(type = "state")
     }
   }
 
@@ -189,7 +189,7 @@ pm_state_none <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_states
+      dictionary <- pm_dictionary(type = "state")
     }
   }
 
@@ -259,14 +259,14 @@ pm_state_parse <- function(.data, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_states
+      dictionary <- pm_dictionary(type = "state")
     }
   }
 
   # load dictionary if NULL
   if (is.null(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_states
+      dictionary <- pm_dictionary(type = "state")
     }
   }
 
@@ -356,7 +356,7 @@ pm_state_std <- function(.data, var, dictionary, locale = "us"){
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- postmastr::dic_us_states
+      dictionary <- pm_dictionary(type = "state")
     }
   }
 
