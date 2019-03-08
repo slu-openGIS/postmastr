@@ -18,6 +18,8 @@ matrix:
   allow_failures:
     - r: devel
       os: osx
+    - r: devel
+      os: linux
 
 before_install:
     - chmod +x ./.travis/install.sh
