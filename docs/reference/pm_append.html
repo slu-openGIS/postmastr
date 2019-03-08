@@ -155,7 +155,8 @@ the data. This should be the same length as <code>output</code>.</p></td>
       <td><p>A character scalar or vector containing desired output for each input.
 This should be the same length as <code>input</code>. You may use <code>NA</code> values
 in the <code>output</code> vector for inputs that already are in the preferred,
-standardized form.</p></td>
+standardized form. This argument is optional when <code>type</code> is equal to
+<code>"city"</code>.</p></td>
     </tr>
     <tr>
       <th>locale</th>
@@ -169,7 +170,9 @@ current option is <code>"us"</code> but this is included to facilitate future ex
     <p>A <code>postmastr</code> dictionary object, which will always include an input column
     of possible terms for the given grammatical address element. All dictionary objects
     except for city dictionaries will also contain an output column with the
-    preferred output for each input. For American addresses, these outputs should follow
+    preferred output for each input. For city dictionaries, the <code>output</code> argument
+    is optional.</p>
+<p>For American addresses, these outputs should follow
     United States Postal Service guidelines. These dictionary objects can be used as
     stand-alone dictionaries or fed into a <code>pm_dictionary</code> call as the input
     for the <code>append</code> parameter.</p>

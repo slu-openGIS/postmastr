@@ -409,14 +409,18 @@ pm_convert_case <- function(.data, var, orderVar, case){
 #' @param output A character scalar or vector containing desired output for each input.
 #'     This should be the same length as \code{input}. You may use \code{NA} values
 #'     in the \code{output} vector for inputs that already are in the preferred,
-#'     standardized form.
+#'     standardized form. This argument is optional when \code{type} is equal to
+#'     \code{"city"}.
 #' @param locale A string indicating the country these data represent; the only
 #'     current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A \code{postmastr} dictionary object, which will always include an input column
 #'     of possible terms for the given grammatical address element. All dictionary objects
 #'     except for city dictionaries will also contain an output column with the
-#'     preferred output for each input. For American addresses, these outputs should follow
+#'     preferred output for each input. For city dictionaries, the \code{output} argument
+#'     is optional.
+#'
+#'     For American addresses, these outputs should follow
 #'     United States Postal Service guidelines. These dictionary objects can be used as
 #'     stand-alone dictionaries or fed into a \code{\link{pm_dictionary}} call as the input
 #'     for the \code{append} parameter.
@@ -473,10 +477,20 @@ pm_append <- function(type, input, output, locale = "us"){
 
     } else if (type == "city"){
 
-      out <- data.frame(
-        city.output = c(output),
-        city.input = c(input),
-        stringsAsFactors = FALSE)
+      if (missing(output) == TRUE){
+
+        out <- data.frame(
+          city.input = c(input),
+          stringsAsFactors = FALSE)
+
+      } else if (missing(output) == FALSE){
+
+        out <- data.frame(
+          city.output = c(output),
+          city.input = c(input),
+          stringsAsFactors = FALSE)
+
+      }
 
     } else if (type == "directional"){
 
