@@ -37,4 +37,4 @@ The main [Get started](articles/postmastr.html) article has a full example of th
 The `postmastr` functions all contain a `locale` argument that is only enabled for American (i.e. `locale = "us"`) addresses. Assistance with expanding `postmastr` functionality to other countries would be most welcome. If you work with street address data in another country and would like to contribute to `postmastr` by extending its functionality, please [open a feature request issue](https://github.com/slu-openGIS/postmastr/issues/new/choose) and introduce yourself!
 
 ## Code of Conduct
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.html). By participating in this project you agree to abide by its terms.
