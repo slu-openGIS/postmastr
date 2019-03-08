@@ -14,11 +14,11 @@ pm_house_any <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test and create output
@@ -47,11 +47,11 @@ pm_house_all <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test and create output
@@ -87,11 +87,11 @@ pm_house_detect <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # detect pattern
@@ -127,11 +127,11 @@ pm_house_none <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # create output
@@ -173,11 +173,11 @@ pm_house_parse <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   if ("pm.hasHouse" %in% names(.data) == FALSE){
@@ -301,11 +301,11 @@ pm_houseFrac_any <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test and create output
@@ -338,11 +338,11 @@ pm_houseFrac_all <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # test and create output
@@ -382,11 +382,11 @@ pm_houseFrac_detect <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # detect pattern
@@ -422,11 +422,11 @@ pm_houseFrac_none <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error 2.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error 3.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # create output
@@ -468,11 +468,11 @@ pm_houseFrac_parse <- function(.data, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("Error.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
