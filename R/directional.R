@@ -412,7 +412,7 @@ pm_streetDir_std <- function(.data, var, dictionary, locale = "us"){
   # dictionary if none specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- dic_us_dir
+      dictionary <- postmastr::dic_us_dir
     }
   }
 

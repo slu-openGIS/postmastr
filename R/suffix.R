@@ -140,7 +140,9 @@ pm_streetSuf_detect <- function(.data, dictionary, locale = "us"){
 
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
-    dictionary <- postmastr::dic_us_suffix
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_suffix
+    }
   }
 
   # minimize dictionary
@@ -195,7 +197,9 @@ pm_streetSuf_none <- function(.data, dictionary, locale = "us"){
 
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
-    dictionary <- postmastr::dic_us_suffix
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_suffix
+    }
   }
 
   # create output
@@ -261,12 +265,16 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
 
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
-    dictionary <- postmastr::dic_us_suffix
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_suffix
+    }
   }
 
   # load dictionary if NULL
   if (is.null(dictionary) == TRUE){
-    dictionary <- postmastr::dic_us_suffix
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_suffix
+    }
   }
 
   # parse street suffixes
@@ -384,7 +392,9 @@ pm_streetSuf_std <- function(.data, var, dictionary, locale = "us"){
 
   # load dictionary if not specified
   if (missing(dictionary) == TRUE){
-    dictionary <- postmastr::dic_us_suffix
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_suffix
+    }
   }
 
   # standardize street suffix names
