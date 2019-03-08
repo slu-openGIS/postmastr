@@ -31,13 +31,11 @@ pm_street_parse <- function(.data, dictionary, ordinal = TRUE, drop = TRUE, loca
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
-    stop("The variable 'pm.uid' is missing from the given object.
-         Create a postmastr object with pm_identify and pm_prep before proceeding.")
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
   if (pm_has_address(.data) == FALSE){
-    stop("The variable 'pm.address' is missing from the given object.
-         Create a postmastr object with pm_prep before proceeding.")
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # locale issues

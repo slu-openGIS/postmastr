@@ -52,9 +52,7 @@ pm_identify <- function(.data, var){
 
   # error if variables are already present
   if ("pm.id" %in% names(.data) == TRUE | "pm.uid" %in% names(.data) == TRUE){
-    stop("Identification numbers using the reserved variable names 'pm.id' and/or 'pm.uid'
-         already exist in your data frame. Please remove them using dplyr::select() before
-         proceeding.")
+    stop("Identification numbers using the reserved variable names 'pm.id' and/or 'pm.uid' already exist in your data frame. Please remove them using dplyr::select() before proceeding.")
   }
 
   # error if var does not exist
@@ -131,8 +129,7 @@ pm_prep <- function(.data, var){
 
   # error if variables are not already present
   if ("pm.id" %in% names(.data) == FALSE | "pm.uid" %in% names(.data) == FALSE){
-    stop("Identification numbers variables 'pm.id' and/or 'pm.uid' do not exist in your data.
-         Please add them with postmastr::pm_identify() before proceeding.")
+    stop("Identification numbers variables 'pm.id' and/or 'pm.uid' do not exist in your data. Please add them with postmastr::pm_identify() before proceeding.")
   }
 
   # error if var does not exist

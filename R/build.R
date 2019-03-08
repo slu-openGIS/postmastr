@@ -37,10 +37,6 @@ pm_rebuild <- function(.data, start, end, include_commas = FALSE, locale = "us")
     stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
   }
 
-  if (pm_has_address(.data) == FALSE){
-    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
-  }
-
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
@@ -175,10 +171,6 @@ pm_replace <- function(.data, source, newVar, keep_parsed, keep_ids = FALSE){
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
     stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
-  }
-
-  if (pm_has_address(.data) == FALSE){
-    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
   # save parameters to list
