@@ -12,10 +12,10 @@ Status](https://ci.appveyor.com/api/projects/status/github/slu-openGIS/postmastr
 status](https://codecov.io/gh/slu-openGIS/postmastr/branch/master/graph/badge.svg)](https://codecov.io/github/slu-openGIS/postmastr?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/postmastr)](https://cran.r-project.org/package=postmastr)
 
-The goal of postmastr is to provide consistent, tidy parsing of street
-address data. The package is primarily oriented towards American-style
-street addresses, e.g. “123 East Main Street”. It contains functions for
-both standardizing address elements (e.g. converting street names like
+The goal of `postmastr` is to provide consistent, tidy parsing of street
+address data. The package is currently oriented towards American street
+addresses, e.g. “123 East Main Street”. It contains functions for both
+standardizing address elements (e.g. converting street names like
 “Second” to “2nd” or converting “AV” to “Ave”) and for parsing out
 intput strings into separate variables for each input element.
 
@@ -46,7 +46,7 @@ install the development version of `postmastr` from Github with
 
 ``` r
 # install.packages("remotes")
-remotes
+remotes::install_github("slu-openGIS/postmastr")
 ```
 
 ## Usage
@@ -102,12 +102,12 @@ used to fully prep, parse, and reconstruct address strings:
 > postmastr::sushi1 %>%
 +   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
 +   pm_parse(input = "full",
-+            var = address,
++            address = address,
 +            output = "short",
-+            dirDict = dirs,
-+            suffixDict = sufs,
-+            cityDict = cities,
-+            stateDict = mo)
++            dir_dict = dirs,
++            suffix_dict = sufs,
++            city_dict = cities,
++            state_dict = mo)
 # A tibble: 27 x 4
    name                            address                                        visit    pm.address               
    <chr>                           <chr>                                          <chr>    <chr>                    
