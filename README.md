@@ -17,7 +17,21 @@ address data. The package is currently oriented towards American street
 addresses, e.g. “123 East Main Street”. It contains functions for both
 standardizing address elements (e.g. converting street names like
 “Second” to “2nd” or converting “AV” to “Ave”) and for parsing out
-intput strings into separate variables for each input element.
+input strings into separate variables for each input element.
+
+## Seeking Beta Testers
+
+We’ve at a point where all major functionality except for the ability to
+work with unit types and numbers is ready for testing. If you work with
+American street addresses regularly and have the time to take the
+package for a spin, we’d love feedback before we submit to CRAN. We want
+to make sure the workflow works, and can handle whatever addresses we
+throw at it. Also, `postmastr` is only set-up for American street
+addresses right now but the functions have been built for expansion. If
+you work with international street addresses and want to contribute,
+please [open a feature request
+issue](https://github.com/slu-openGIS/postmastr/issues/new/choose) and
+introduce yourself\!
 
 ## Motivation
 
@@ -52,7 +66,7 @@ remotes::install_github("slu-openGIS/postmastr")
 ## Usage
 
 To illustrate the core components of the `postmastr` workflow, we’ll use
-some data included in the package on sushi resturants in the St. Louis,
+some data included in the package on sushi restaurants in the St. Louis,
 Missouri region. These are “long” data - some resturants appear multiple
 times. Here is a quick preview of the data:
 
