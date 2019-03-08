@@ -31,7 +31,8 @@ Imports:
     tidyr,
     toOrdinal
 Suggests: 
-    testthat,
+    covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
