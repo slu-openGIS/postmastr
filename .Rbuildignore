@@ -7,3 +7,6 @@
 ^README-.*\.png$
 ^index\.Rmd$
 ^LICENSE$
+^\.travis\.yml$
+^appveyor\.yml$
+^codecov\.yml$
