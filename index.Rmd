@@ -1,0 +1,40 @@
+---
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/index-",
+  out.width = "100%"
+)
+```
+
+# postmastr <img src="man/figures/logo.png" align="right" />
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/postmastr)](https://cran.r-project.org/package=postmastr)
+
+The goal of postmastr is to provide consistent, tidy parsing of street address data. The package is primarily oriented towards American-style street addresses, e.g. "123 East Main Street". It contains functions for both standardizing address elements (e.g. converting street names like "Second" to "2nd" or converting "AV" to "Ave") and for parsing out intput strings into separate variables for each input element.
+
+## Motivation
+Street addresses can be notoriously difficult to work with. In the United States, the U.S. Postal Service has [standards for their composition](https://pe.usps.com/text/pub28/welcome.htm). There is so much variety, however, that anticipating all of the possible permutations of addresses is a significant task. When the inaccuracy of human data entry is added, the challenge of parsing addresses becomes monumental. The goal of `postmastr` is to provide a uniform workflow for parsing street address data that allows for sufficient flexibility.
+
+This flexibility is provided in two ways. First, we utilize "dictionaries" for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables `postmastr` to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped.
+
+## Installation
+`postmastr` is not available from CRAN yet. In the meantime, you can install the development version of `postmastr` from Github with `remotes`:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("chris-prener/postmastr")
+```
+
+## Resources
+The main [Get started](articles/postmastr.html) article has a full example of the `postmastr` workflow.
+
+## Expansion
+The `postmastr` functions all contain a `locale` argument that is only enabled for American (i.e. `locale = "us"`) addresses. Assistance with expanding `postmastr` functionality to other countries would be most welcome. If you work with street address data in another country and would like to contribute to `postmastr` by extending its functionality, please [open a feature request issue](https://github.com/slu-openGIS/postmastr/issues/new/choose) and introduce yourself!
+
+## Code of Conduct
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.

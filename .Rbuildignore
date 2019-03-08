@@ -5,4 +5,5 @@
 ^_pkgdown\.yml$
 ^README\.Rmd$
 ^README-.*\.png$
+^index\.Rmd$
 ^LICENSE$

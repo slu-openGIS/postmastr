@@ -24,11 +24,11 @@ Street addresses can be notoriously difficult to work with. In the United States
 This flexibility is provided in two ways. First, we utilize "dictionaries" for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables `postmastr` to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped. 
 
 ## Installation
-`postmastr` is not available from CRAN yet. In the meantime, you can install the development version of `postmastr` from Github with `devtools`:
+`postmastr` is not available from CRAN yet. In the meantime, you can install the development version of `postmastr` from Github with `remotes`:
 
 ```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("chris-prener/postmastr")
+# install.packages("remotes")
+remotes
 ```
 
 ## Usage 

@@ -81,19 +81,34 @@
 
     
     
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 <div id="postmastr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#postmastr" class="anchor"></a>postmastr <img src="reference/figures/logo.png" align="right">
 </h1></div>
 
 <p>The goal of postmastr is to provide consistent, tidy parsing of street address data. The package is primarily oriented towards American-style street addresses, e.g. “123 East Main Street”. It contains functions for both standardizing address elements (e.g. converting street names like “Second” to “2nd” or converting “AV” to “Ave”) and for parsing out intput strings into separate variables for each input element.</p>
+<div id="motivation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#motivation" class="anchor"></a>Motivation</h2>
+<p>Street addresses can be notoriously difficult to work with. In the United States, the U.S. Postal Service has <a href="https://pe.usps.com/text/pub28/welcome.htm">standards for their composition</a>. There is so much variety, however, that anticipating all of the possible permutations of addresses is a significant task. When the inaccuracy of human data entry is added, the challenge of parsing addresses becomes monumental. The goal of <code>postmastr</code> is to provide a uniform workflow for parsing street address data that allows for sufficient flexibility.</p>
+<p>This flexibility is provided in two ways. First, we utilize “dictionaries” for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables <code>postmastr</code> to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped.</p>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p><code>postmastr</code> is not available from CRAN yet. In the meantime, you can install the development version of <code>postmastr</code> from Github with <code>devtools</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"chris-prener/postmastr"</span>)</a></code></pre></div>
+<p><code>postmastr</code> is not available from CRAN yet. In the meantime, you can install the development version of <code>postmastr</code> from Github with <code>remotes</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"chris-prener/postmastr"</span>)</a></code></pre></div>
+</div>
+<div id="resources" class="section level2">
+<h2 class="hasAnchor">
+<a href="#resources" class="anchor"></a>Resources</h2>
+<p>The main <a href="articles/postmastr.html">Get started</a> article has a full example of the <code>postmastr</code> workflow.</p>
+</div>
+<div id="expansion" class="section level2">
+<h2 class="hasAnchor">
+<a href="#expansion" class="anchor"></a>Expansion</h2>
+<p>The <code>postmastr</code> functions all contain a <code>locale</code> argument that is only enabled for American (i.e. <code>locale = "us"</code>) addresses. Assistance with expanding <code>postmastr</code> functionality to other countries would be most welcome. If you work with street address data in another country and would like to contribute to <code>postmastr</code> by extending its functionality, please <a href="https://github.com/slu-openGIS/postmastr/issues/new/choose">open a feature request issue</a> and introduce yourself!</p>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">

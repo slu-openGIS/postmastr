@@ -35,11 +35,11 @@ or cities, for example, those functions can be skipped.
 
 `postmastr` is not available from CRAN yet. In the meantime, you can
 install the development version of `postmastr` from Github with
-`devtools`:
+`remotes`:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("chris-prener/postmastr")
+# install.packages("remotes")
+remotes
 ```
 
 ## Usage
