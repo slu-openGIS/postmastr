@@ -45,7 +45,8 @@ This function allows for the creation of dictionary objects that are
 
     Street dictionaries cannot be created using \code{pm_dictionary}. Users who wish to standardize
     street names in their data should create a dictionary appendix with \code{pm_append} and use
-    that as the primary dictionary for functions that accept street dictionaries.
+    that as the primary dictionary for functions that accept street dictionaries. The same is true
+    for house suffix dictionaries.
 }
 \details{
 The city dictionary functionality is powered by the \link[tidycensus]{get_acs} function

@@ -9,7 +9,8 @@
 #'
 #'     Street dictionaries cannot be created using \code{pm_dictionary}. Users who wish to standardize
 #'     street names in their data should create a dictionary appendix with \code{pm_append} and use
-#'     that as the primary dictionary for functions that accept street dictionaries.
+#'     that as the primary dictionary for functions that accept street dictionaries. The same is true
+#'     for house suffix dictionaries.
 #'
 #' @details The city dictionary functionality is powered by the \link[tidycensus]{get_acs} function
 #'     from the \pkg{tidycensus} package. This requires a Census Bureau API key, which can be
@@ -403,7 +404,7 @@ pm_convert_case <- function(.data, var, orderVar, case){
 #'
 #' @param type A string indicating the grammatical address element the dictionary
 #'     should represent. Current options are \code{"state"}, \code{"city"},
-#'     \code{"street"}, \code{"directional"}, and \code{"suffix"}.
+#'     \code{"street"}, \code{"house suffix"}, \code{"directional"}, and \code{"suffix"}.
 #' @param input A character scalar or vector containing possible terms existing in
 #'     the data. This should be the same length as \code{output}.
 #' @param output A character scalar or vector containing desired output for each input.
@@ -511,6 +512,13 @@ pm_append <- function(type, input, output, locale = "us"){
       out <- data.frame(
         st.output = c(output),
         st.input = c(input),
+        stringsAsFactors = FALSE)
+
+    } else if (type == "house suffix"){
+
+      out <- data.frame(
+        houseSuf.output = c(output),
+        houseSuf.output.input = c(input),
         stringsAsFactors = FALSE)
 
     }
