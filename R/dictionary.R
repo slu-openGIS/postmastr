@@ -66,8 +66,10 @@
 #'     append = ma, case = "title", locale = "us")
 #'
 #' # build Missouri city dictionary
+#' \notrun{
 #' # tidycensus::census_api_key("YOUR API KEY GOES HERE")
 #' pm_dictionary(type = "city", filter = "MO", case = "upper", locale = "us")
+#' }
 #'
 #' # build directional dictionary
 #' pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
