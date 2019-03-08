@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse.R
 \name{pm_parse}
 \alias{pm_parse}
-\title{Parse Street Address}
+\title{Parse Street Addresses}
 \usage{
 pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
     include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
@@ -97,7 +97,4 @@ pm_parse(df, input = "full", address = address, output = "short",
     new_address = clean_address, dir_dict = dirs, suffix_dict = sufs,
     city_dict = cities, state_dict = mo)
 
-}
-\seealso{
-\link{pm_prep}
 }

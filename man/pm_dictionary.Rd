@@ -14,7 +14,11 @@ should represent. Current options are \code{"state"}, \code{"city"},
 \item{append}{An optional dictionary appendix object created with \code{\link{pm_append}}}
 
 \item{filter}{An optional character scalar or vector with output elements that should
-be retained.}
+be retained. Filter inputs are based on the expected output: states should be specified
+with their two-letter abbrevation (i.e. \code{"MO"}), cities should be specified in title
+case (i.e. \code{"St. Louis"}), directionals should use one- or two-letter abbreivations
+(i.e. \code{"N"}), and street suffixes should use the \code{suf.output} for the desired
+suffix (i.e. \code{"Ave"} or \code{"Rd"}).}
 
 \item{case}{An optional character scalar or vector containing one or more of three valid
 options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
@@ -22,14 +26,64 @@ options - \code{"title"} (e.g. "Missouri"), \code{"lower"} (e.g. "missouri), or
 input terms.}
 
 \item{locale}{A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.}
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
 A \code{postmastr} dictionary object, which will always include an input column
-    of possible terms for the given grammatical address element and an output column
-    with the desired output for each input.
+    of possible terms for the given grammatical address element. All dictionary objects
+    except for city dictionaries will also contain an output column with the
+    preferred output for each input. For American addresses, these outputs follow United States
+    Postal Service guidelines.
 }
 \description{
 This function allows for the creation of dictionary objects that are
-    either optional or required elements of other \code{postmastr} functions.
+    either optional or required elements of other \code{postmastr} functions. Once created,
+    dictionary objects should not be modified as te formatting of dictionary elements provides
+    other \code{postmastr} functions with predictable inputs. The \code{"state"},
+    \code{"directional"}, and \code{"suffix"} dictionaries are based on tables that are also
+    exported so that they can be previewed and tested.
+
+    Street dictionaries cannot be created using \code{pm_dictionary}. Users who wish to standardize
+    street names in their data should create a dictionary appendix with \code{pm_append} and use
+    that as the primary dictionary for functions that accept street dictionaries.
+}
+\details{
+The city dictionary functionality is powered by the \link[tidycensus]{get_acs} function
+    from the \pkg{tidycensus} package. This requires a Census Bureau API key, which can be
+    obtained at \url{http://api.census.gov/data/key_signup.html}. Once you have a key, the
+    \link[tidycensus]{census_api_key} function from \pkg{tidycensus} should be used to
+    set-up the key before proceeding with the creation of any dictionary objects for cities.
+}
+\examples{
+# build state dictionary, title case only
+pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us")
+
+# build state dictionary, title and upper case
+pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
+
+# build New England state dictionary, all cases
+pm_dictionary(type = "state", filter = c("CT", "MA", "ME", "NH", "RI", "VT"),
+    case = c("title", "upper", "lower"), locale = "us")
+
+# add custom abbreviation for Massachusetts
+## create dictionary appendix
+ma <- pm_append(type = "state", input = "Mass", output = "MA", locale = "us")
+
+## add dictionary appendix to dictionary
+pm_dictionary(type = "state", filter = c("CT", "MA", "ME", "NH", "RI", "VT"),
+    append = ma, case = "title", locale = "us")
+
+# build Missouri city dictionary
+# tidycensus::census_api_key("YOUR API KEY GOES HERE")
+pm_dictionary(type = "city", filter = "MO", case = "upper", locale = "us")
+
+# build directional dictionary
+pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
+
+# build suffix dictionary
+pm_dictionary(type = "suffix", filter = c("Ave", "Rd"), locale = "us")
+
+}
+\seealso{
+\code{\link{dic_us_dir}}, \code{\link{dic_us_states}}, \code{\link{dic_us_suffix}}
 }

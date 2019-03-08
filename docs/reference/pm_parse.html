@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parse Street Address — pm_parse • postmastr</title>
+<title>Parse Street Addresses — pm_parse • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Parse Street Address — pm_parse" />
+<meta property="og:title" content="Parse Street Addresses — pm_parse" />
 
 <meta property="og:description" content="A wrapper around the parse functions that can be used to shorten all
     of postmastr's core code down to a single function call once dictionaries
@@ -109,7 +109,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parse Street Address</h1>
+    <h1>Parse Street Addresses</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/parse.R'><code>R/parse.R</code></a></small>
     <div class="hidden name"><code>pm_parse.Rd</code></div>
     </div>
@@ -224,10 +224,6 @@ current option is "us" but this is included to facilitate future expansion.</p><
     standardized street addresses for each observation. Options allow for columns containing
     parsed elements to be returned as well.</p>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>pm_prep</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># construct dictionaries</span>
@@ -247,37 +243,37 @@ current option is "us" but this is included to facilitate future expansion.</p><
 
 <span class='co'># parse, full output</span>
 <span class='fu'>pm_parse</span>(<span class='no'>df</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='st'>"full"</span>, <span class='kw'>address</span> <span class='kw'>=</span> <span class='no'>address</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"full"</span>,
-    <span class='kw'>dir_dict</span> <span class='kw'>=</span> <span class='no'>dirs</span>, <span class='kw'>suffix_dict</span> <span class='kw'>=</span> <span class='no'>sufs</span>, <span class='kw'>city_dict</span> <span class='kw'>=</span> <span class='no'>cities</span>, <span class='kw'>state_dict</span> <span class='kw'>=</span> <span class='no'>mo</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 27 x 4</span><span>
+    <span class='kw'>dir_dict</span> <span class='kw'>=</span> <span class='no'>dirs</span>, <span class='kw'>suffix_dict</span> <span class='kw'>=</span> <span class='no'>sufs</span>, <span class='kw'>city_dict</span> <span class='kw'>=</span> <span class='no'>cities</span>, <span class='kw'>state_dict</span> <span class='kw'>=</span> <span class='no'>mo</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 27 x 4</span><span>
 #&gt;    name              address                   visit   pm.address               
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>             </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                    
-#&gt; </span><span style='color: #555555;'> 1</span><span> BaiKu Sushi Loun… 3407 Olive St, St. Louis… 3/20/18 3407 Olive St St. Louis …
-#&gt; </span><span style='color: #555555;'> 2</span><span> Blue Ocean Resta… 6335 Delmar Blvd, St. Lo… 10/26/… 6335 Delmar Blvd St. Lou…
-#&gt; </span><span style='color: #555555;'> 3</span><span> Cafe Mochi        3221 S Grand Boulevard, … 10/10/… 3221 S Grand Blvd St. Lo…
-#&gt; </span><span style='color: #555555;'> 4</span><span> Drunken Fish - C… 1 Maryland Plaza, St. Lo… 12/2/18 1 Maryland Plz St. Louis…
-#&gt; </span><span style='color: #555555;'> 5</span><span> I Love Mr Sushi   9443 Olive Blvd, St. Lou… 1/1/18  9443 Olive Blvd St. Loui…
-#&gt; </span><span style='color: #555555;'> 6</span><span> Kampai Sushi Bar  4949 W Pine Blvd, St. Lo… 2/13/18 4949 W Pine Blvd St. Lou…
-#&gt; </span><span style='color: #555555;'> 7</span><span> Midtown Sushi &amp; … 3674 Forest Park Ave, St… 3/4/18  3674 Forest Park Ave St.…
-#&gt; </span><span style='color: #555555;'> 8</span><span> Mizu Sushi Bar    1013 Washington Avenue, … 9/12/18 1013 Washington Ave St. …
-#&gt; </span><span style='color: #555555;'> 9</span><span> Robata Maplewood  7260 Manchester Road, Ma… 11/1/18 7260 Manchester Rd Maple…
-#&gt; </span><span style='color: #555555;'>10</span><span> SanSai Japanese … 1803 Maplewood Commons D… 2/14/18 1803 Maplewood Commons D…
-#&gt; </span><span style='color: #555555;'># … with 17 more rows</span><span></div><div class='input'>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                    
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> BaiKu Sushi Loun… 3407 Olive St, St. Louis… 3/20/18 3407 Olive St St. Louis …
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Blue Ocean Resta… 6335 Delmar Blvd, St. Lo… 10/26/… 6335 Delmar Blvd St. Lou…
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Cafe Mochi        3221 S Grand Boulevard, … 10/10/… 3221 S Grand Blvd St. Lo…
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Drunken Fish - C… 1 Maryland Plaza, St. Lo… 12/2/18 1 Maryland Plz St. Louis…
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> I Love Mr Sushi   9443 Olive Blvd, St. Lou… 1/1/18  9443 Olive Blvd St. Loui…
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Kampai Sushi Bar  4949 W Pine Blvd, St. Lo… 2/13/18 4949 W Pine Blvd St. Lou…
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Midtown Sushi &amp; … 3674 Forest Park Ave, St… 3/4/18  3674 Forest Park Ave St.…
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Mizu Sushi Bar    1013 Washington Avenue, … 9/12/18 1013 Washington Ave St. …
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Robata Maplewood  7260 Manchester Road, Ma… 11/1/18 7260 Manchester Rd Maple…
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> SanSai Japanese … 1803 Maplewood Commons D… 2/14/18 1803 Maplewood Commons D…
+#&gt; </span><span style='color: #949494;'># … with 17 more rows</span><span></div><div class='input'>
 <span class='co'># parse, short output</span>
 <span class='fu'>pm_parse</span>(<span class='no'>df</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='st'>"full"</span>, <span class='kw'>address</span> <span class='kw'>=</span> <span class='no'>address</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"short"</span>,
     <span class='kw'>new_address</span> <span class='kw'>=</span> <span class='no'>clean_address</span>, <span class='kw'>dir_dict</span> <span class='kw'>=</span> <span class='no'>dirs</span>, <span class='kw'>suffix_dict</span> <span class='kw'>=</span> <span class='no'>sufs</span>,
-    <span class='kw'>city_dict</span> <span class='kw'>=</span> <span class='no'>cities</span>, <span class='kw'>state_dict</span> <span class='kw'>=</span> <span class='no'>mo</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 27 x 4</span><span>
+    <span class='kw'>city_dict</span> <span class='kw'>=</span> <span class='no'>cities</span>, <span class='kw'>state_dict</span> <span class='kw'>=</span> <span class='no'>mo</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 27 x 4</span><span>
 #&gt;    name                 address                       visit  clean_address      
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                         </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              
-#&gt; </span><span style='color: #555555;'> 1</span><span> BaiKu Sushi Lounge   3407 Olive St, St. Louis, Mi… 3/20/… 3407 Olive St      
-#&gt; </span><span style='color: #555555;'> 2</span><span> Blue Ocean Restaura… 6335 Delmar Blvd, St. Louis,… 10/26… 6335 Delmar Blvd   
-#&gt; </span><span style='color: #555555;'> 3</span><span> Cafe Mochi           3221 S Grand Boulevard, St. … 10/10… 3221 S Grand Blvd  
-#&gt; </span><span style='color: #555555;'> 4</span><span> Drunken Fish - Cent… 1 Maryland Plaza, St. Louis,… 12/2/… 1 Maryland Plz     
-#&gt; </span><span style='color: #555555;'> 5</span><span> I Love Mr Sushi      9443 Olive Blvd, St. Louis, … 1/1/18 9443 Olive Blvd    
-#&gt; </span><span style='color: #555555;'> 6</span><span> Kampai Sushi Bar     4949 W Pine Blvd, St. Louis,… 2/13/… 4949 W Pine Blvd   
-#&gt; </span><span style='color: #555555;'> 7</span><span> Midtown Sushi &amp; Ram… 3674 Forest Park Ave, St. Lo… 3/4/18 3674 Forest Park A…
-#&gt; </span><span style='color: #555555;'> 8</span><span> Mizu Sushi Bar       1013 Washington Avenue, St. … 9/12/… 1013 Washington Ave
-#&gt; </span><span style='color: #555555;'> 9</span><span> Robata Maplewood     7260 Manchester Road, Maplew… 11/1/… 7260 Manchester Rd 
-#&gt; </span><span style='color: #555555;'>10</span><span> SanSai Japanese Gri… 1803 Maplewood Commons Dr, S… 2/14/… 1803 Maplewood Com…
-#&gt; </span><span style='color: #555555;'># … with 17 more rows</span><span></div><div class='input'>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> BaiKu Sushi Lounge   3407 Olive St, St. Louis, Mi… 3/20/… 3407 Olive St      
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Blue Ocean Restaura… 6335 Delmar Blvd, St. Louis,… 10/26… 6335 Delmar Blvd   
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Cafe Mochi           3221 S Grand Boulevard, St. … 10/10… 3221 S Grand Blvd  
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Drunken Fish - Cent… 1 Maryland Plaza, St. Louis,… 12/2/… 1 Maryland Plz     
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> I Love Mr Sushi      9443 Olive Blvd, St. Louis, … 1/1/18 9443 Olive Blvd    
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Kampai Sushi Bar     4949 W Pine Blvd, St. Louis,… 2/13/… 4949 W Pine Blvd   
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Midtown Sushi &amp; Ram… 3674 Forest Park Ave, St. Lo… 3/4/18 3674 Forest Park A…
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> Mizu Sushi Bar       1013 Washington Avenue, St. … 9/12/… 1013 Washington Ave
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Robata Maplewood     7260 Manchester Road, Maplew… 11/1/… 7260 Manchester Rd 
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> SanSai Japanese Gri… 1803 Maplewood Commons Dr, S… 2/14/… 1803 Maplewood Com…
+#&gt; </span><span style='color: #949494;'># … with 17 more rows</span><span></div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -286,8 +282,6 @@ current option is "us" but this is included to facilitate future expansion.</p><
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

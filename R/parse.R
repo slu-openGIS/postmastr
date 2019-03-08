@@ -1,4 +1,4 @@
-#' Parse Street Address
+#' Parse Street Addresses
 #'
 #' @description A wrapper around the parse functions that can be used to shorten all
 #'     of \code{postmastr}'s core code down to a single function call once dictionaries
@@ -48,8 +48,6 @@
 #' @return An updated version of the source data with, at a minimum, a new variable containing
 #'     standardized street addresses for each observation. Options allow for columns containing
 #'     parsed elements to be returned as well.
-#'
-#' @seealso \link{pm_prep}
 #'
 #' @examples
 #' # construct dictionaries
