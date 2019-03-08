@@ -13,6 +13,10 @@ knitr::opts_chunk$set(
 
 # postmastr <img src="man/figures/logo.png" align="right" />
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Travis-CI Build Status](https://travis-ci.org/slu-openGIS/postmastr.svg?branch=master)](https://travis-ci.org/slu-openGIS/postmastr)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/slu-openGIS/postmastr?branch=master&svg=true)](https://ci.appveyor.com/project/chris-prener/postmastr)
+[![Coverage status](https://codecov.io/gh/slu-openGIS/postmastr/branch/master/graph/badge.svg)](https://codecov.io/github/slu-openGIS/postmastr?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/postmastr)](https://cran.r-project.org/package=postmastr)
 
 The goal of postmastr is to provide consistent, tidy parsing of street address data. The package is primarily oriented towards American-style street addresses, e.g. "123 East Main Street". It contains functions for both standardizing address elements (e.g. converting street names like "Second" to "2nd" or converting "AV" to "Ave") and for parsing out intput strings into separate variables for each input element.

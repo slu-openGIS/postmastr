@@ -3,6 +3,13 @@
 
 # postmastr <img src="man/figures/logo.png" align="right" />
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Travis-CI Build
+Status](https://travis-ci.org/slu-openGIS/postmastr.svg?branch=master)](https://travis-ci.org/slu-openGIS/postmastr)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/slu-openGIS/postmastr?branch=master&svg=true)](https://ci.appveyor.com/project/chris-prener/postmastr)
+[![Coverage
+status](https://codecov.io/gh/slu-openGIS/postmastr/branch/master/graph/badge.svg)](https://codecov.io/github/slu-openGIS/postmastr?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/postmastr)](https://cran.r-project.org/package=postmastr)
 
 The goal of postmastr is to provide consistent, tidy parsing of street
