@@ -149,11 +149,7 @@ pm_streetDir_detect <- function(.data, dictionary, locale = "us"){
   # dictionary if none specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- dic_us_dir
-    }
-  } else if (missing(dictionary) == FALSE & is.null(dictionary) == TRUE){
-    if (locale == "us"){
-      dictionary <- dic_us_dir
+      dictionary <- postmastr::dic_us_dir
     }
   }
 
@@ -220,6 +216,13 @@ pm_streetDir_none <- function(.data, dictionary, locale = "us"){
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # dictionary if none specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_dir
+    }
   }
 
   # create output
@@ -296,7 +299,14 @@ pm_streetDir_parse <- function(.data, dictionary, locale = "us"){
   # dictionary if none specified
   if (missing(dictionary) == TRUE){
     if (locale == "us"){
-      dictionary <- dic_us_dir
+      dictionary <- postmastr::dic_us_dir
+    }
+  }
+
+  # dictionary if NULL
+  if (is.null(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- postmastr::dic_us_dir
     }
   }
 

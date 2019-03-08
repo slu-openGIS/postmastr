@@ -210,5 +210,4 @@ postmastr::sushi2 %>%
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(input = "short",
-           address = address,
-           dir_dict = dirs)
+           address = address)

@@ -36,14 +36,18 @@
 #' @param keep_ids Logical scalar; if \code{TRUE}, the identification numbers
 #'     will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 #'     they will be removed (default).
-#' @param houseSuf_dict Optional; name of house suffix dictionary object
-#' @param dir_dict Optional; name of directional dictionary object
-#' @param street_dict Optional; name of street dictionary object
+#' @param houseSuf_dict Optional; name of house suffix dictionary object.  Standardizationl
+#'     and parsing are skipped if none is specified.
+#' @param dir_dict Optional; name of directional dictionary object. If none is specified,
+#'     the full default directional dictionary will be used.
+#' @param street_dict Optional; name of street dictionary object. Standardizationl is skipped
+#'     if none is specified.
 #' @param suffix_dict Optional; name of street suffix dictionary object. If none is specified,
 #'     the full default street suffix dictionary will be used.
-#' @param unit_dict Optional; name of unit dictionary object
-#' @param city_dict Required for \code{"full"} addresses; name of city dictionary object
-#' @param state_dict Optional; name of state dictionary object
+#' @param unit_dict Optional; name of unit dictionary object - NOT CURRENTLY ENABLED
+#' @param city_dict Required for \code{"full"} addresses; name of city dictionary object.
+#' @param state_dict Optional; name of state dictionary object. If none is specified,
+#'     the full default state dictionary will be used.
 #' @param locale A string indicating the country these data represent; the only
 #'     current option is "us" but this is included to facilitate future expansion.
 #'
