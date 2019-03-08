@@ -18,11 +18,6 @@ knitr::opts_chunk$set(
 
 `postmastr` is designed to be an *opinionated* toolkit for parsing street addresses using `R`. It was originally created to standardize addresses prior to geocoding the, in an effor to increase the geocoder's ability to correctly match a given address with the appropriate coordinates.
 
-## Motivation
-Street addresses can be notoriously difficult to work with. In the United States, the U.S. Postal Service has [standards for their composition](https://pe.usps.com/text/pub28/welcome.htm). There is so much variety, however, that anticipating all of the possible permutations of addresses is a significant task. When the inaccuracy of human data entry is added, the challenge of parsing addresses becomes monumental. The goal of `postmastr` is to provide a uniform workflow for parsing street address data that allows for sufficient flexibility. 
-
-This flexibility is provided in two ways. First, we utilize "dictionaries" for a number of the key functions that allow users to provide vectors of data to base parsing on. This enables `postmastr` to parse potential misspellings and colloquial terms that are hard (or impossible) to predict. Second, not all aspects of the workflow are mandatory - if street address data do not contain postal codes, states, or cities, for example, those functions can be skipped. 
-
 ## A Grammar of Street Addresses
 ### The Anatomy of an American Street Address
 While street addresses have a significant amount of variation, they also are ordered in a relatively standardized fashion. Take, for example, an address from `sushi1` (one of the example data sets in `postmastr`): `601 Clark Ave Suite 104, St. Louis, MO 63102-1719`. We can break down the address in the following way:
