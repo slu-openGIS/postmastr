@@ -8,5 +8,6 @@
 ^index\.Rmd$
 ^LICENSE$
 ^\.travis\.yml$
+^\.travis
 ^appveyor\.yml$
 ^codecov\.yml$
