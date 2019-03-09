@@ -32,11 +32,6 @@ pm_rebuild <- function(.data, start, end, include_commas = FALSE, locale = "us")
   # save parameters to list
   paramList <- as.list(match.call())
 
-  # check for object and key variables
-  if (pm_has_uid(.data) == FALSE){
-    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
-  }
-
   # locale issues
   if (locale != "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
@@ -77,8 +72,10 @@ pm_rebuild <- function(.data, start, end, include_commas = FALSE, locale = "us")
   }
 
   # re-order variables
-  vars <- pm_reorder_build(.data)
-  .data <- dplyr::select(.data, vars)
+  if (pm_has_uid(.data) == TRUE){
+    vars <- pm_reorder_build(.data)
+    .data <- dplyr::select(.data, vars)
+  }
 
   # rebuild
   .data %>%
@@ -88,8 +85,10 @@ pm_rebuild <- function(.data, start, end, include_commas = FALSE, locale = "us")
     dplyr::mutate(pm.rebuilt = stringr::str_squish(pm.rebuilt)) -> .data
 
   # re-order variables again
-  vars <- pm_reorder(.data)
-  .data <- dplyr::select(.data, vars)
+  if (pm_has_uid(.data) == TRUE){
+    vars <- pm_reorder(.data)
+    .data <- dplyr::select(.data, vars)
+  }
 
   # return output
   return(.data)
