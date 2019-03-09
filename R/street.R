@@ -207,7 +207,7 @@ pm_street_ord_us <- function(.data, var){
 
   # add id and identify ordinal streets
   .data %>%
-    dplyr::mutate(...ordSt = stringr::str_detect(stringr::word(...street, 1), pattern = pattern = stringr::str_c("^\\b(", dict, ")\\b"))) %>%
+    dplyr::mutate(...ordSt = stringr::str_detect(stringr::word(...street, 1), pattern = stringr::str_c("^\\b(", dict, ")\\b"))) %>%
     tibble::rowid_to_column(var = "...oid") -> .data
 
   # subset
