@@ -184,7 +184,7 @@ pm_street_ord <- function(.data, var, locale = "us"){
 pm_street_ord_us <- function(.data, var){
 
   # global bindings
-  ...ordSt = ...oid = ...street = pm.street = pm.uid = NULL
+  ...ordSt = ...oid = ...street = ...result = ...resultVal = ...street1 = ...street2 = pm.street = pm.uid = NULL
 
   # quote input
   varQ <- rlang::enquo(var)
@@ -193,14 +193,14 @@ pm_street_ord_us <- function(.data, var){
   .data <- dplyr::rename(.data, ...street := !!varQ)
 
   # create dictionary of numeric words
-  dict <- c("One", "First", "Two", "Second", "Three", "Third", "Four", "Fourth",
-                "Five", "Fifth", "Six", "Sixth", "Seven", "Seventh", "Eight", "Nine",
-                "Ninth", "Ten", "Tenth", "Eleven", "Eleventh", "Twelve", "Twelfth",
-                "Thirteen", "Thirteenth", "Fourteen", "Fourteenth", "Fifteen", "Fifteenth",
-                "Sixteen", "Sixteenth", "Seventeen", "Seventeenth", "Eighteen", "Eighteenth",
-                "Nineteen", "Nineteenth", "Twenty", "Twentieth", "Thirty", "Thirtieth",
-                "Forty", "Fortieth", "Fifty", "Fiftieth", "Sixty", "Sixtieth",
-                "Seventy", "Seventieth", "Eighty", "Eightieth", "Ninety", "Ninetieth")
+  dict <- c("One", "First", "Two", "Second", "Three", "Third", "Fourth", "Four",
+            "Five", "Fifth", "Sixth", "Six", "Seventh", "Seven", "Eighth", "Eight", "Nine",
+            "Ninth", "Tenth", "Ten", "Eleven", "Eleventh", "Twelve", "Twelfth",
+            "Thirteenth", "Thirteen", "Fourteenth", "Fourteen", "Fifteenth", "Fifteen",
+            "Sixteenth", "Sixteen", "Seventeenth", "Seventeen", "Eighteenth", "Eighteen",
+            "Nineteenth", "Nineteen", "Twenty", "Twentieth", "Thirty", "Thirtieth",
+            "Forty", "Fortieth", "Fifty", "Fiftieth", "Sixty", "Sixtieth",
+            "Seventy", "Seventieth", "Eighty", "Eightieth", "Ninety", "Ninetieth")
 
   # minimize dictionary
   dict <- paste(dict, collapse = "|")
@@ -214,10 +214,22 @@ pm_street_ord_us <- function(.data, var){
   yesOrd <- dplyr::filter(.data, ...ordSt == TRUE)
   noOrd <- dplyr::filter(.data, ...ordSt == FALSE)
 
+  # check for non numeric words
+  yesOrd %>%
+    dplyr::mutate(...result = purrr::map(.x = ...street, .f = pm_splitter)) %>%
+    dplyr::mutate(...resultVal = purrr::map(.x = ...result, .f = pm_counter)) %>%
+    dplyr::mutate(...resultVal = as.integer(...resultVal)) %>%
+    dplyr::mutate(...street1 = stringr::word(...street, start = 1, end = ...resultVal-1)) %>%
+    dplyr::mutate(...street2 = stringr::word(...street, start = ...resultVal, end = -1)) %>%
+    dplyr::mutate(...street = ...street1) %>%
+    dplyr::select(-...result, -...resultVal, -...street1) -> yesOrd
+
   # convert
   yesOrd$...street <- sapply(yesOrd$...street, pm_word2num, USE.NAMES = FALSE)
   yesOrd$...street <- sapply(yesOrd$...street, toOrdinal::toOrdinal, USE.NAMES = FALSE)
-  yesOrd$...street <- as.character(yesOrd$...street)
+
+  # add non numeric words back into string
+  yesOrd <- mutate(yesOrd, ...street = ifelse(is.na(...street2) == FALSE, stringr::str_c(...street, ...street2, sep = " "), ...street))
 
   # bind
   dplyr::bind_rows(noOrd, yesOrd) %>%
@@ -292,3 +304,52 @@ pm_word2num <- function(word){
 }
 
 # https://stackoverflow.com/questions/18332463/convert-written-number-to-number-in-r
+
+# create logical vector with test results of whether each word is an ordinal value
+pm_splitter <- function(x){
+
+  # create dictionary of numeric words
+  dict <- c("One", "First", "Two", "Second", "Three", "Third", "Fourth", "Four",
+            "Five", "Fifth", "Sixth", "Six", "Seventh", "Seven", "Eighth", "Eight", "Nine",
+            "Ninth", "Tenth", "Ten", "Eleven", "Eleventh", "Twelve", "Twelfth",
+            "Thirteenth", "Thirteen", "Fourteenth", "Fourteen", "Fifteenth", "Fifteen",
+            "Sixteenth", "Sixteen", "Seventeenth", "Seventeen", "Eighteenth", "Eighteen",
+            "Nineteenth", "Nineteen", "Twenty", "Twentieth", "Thirty", "Thirtieth",
+            "Forty", "Fortieth", "Fifty", "Fiftieth", "Sixty", "Sixtieth",
+            "Seventy", "Seventieth", "Eighty", "Eightieth", "Ninety", "Ninetieth")
+
+  # minimize dictionary
+  dict <- paste(dict, collapse = "|")
+
+  # create list that is TRUE for each numeric word and FALSE otherwise
+  x %>%
+    strsplit(x, split = " ") %>%
+    purrr::map(~ stringr::str_detect(.x, pattern = stringr::str_c("\\b(", dict, ")\\b"))) -> list
+
+  # convert list to vector
+  vector <- unlist(list)
+
+  # add a FALSE to the end of each vector so that one word streets that are numeric have a FALSE for pm_counter to hit
+  vector <- c(vector, FALSE)
+
+  # create output
+  out <- list(vector)
+
+  # return output
+  return(out)
+
+}
+
+# count first FALSE value in test vector
+pm_counter <- function(x){
+
+  # convert list to vector
+  x1 <- unlist(x)
+
+  # get position of first FALSE
+  out <- min(which(x1 == FALSE))
+
+  # return output
+  return(out)
+
+}

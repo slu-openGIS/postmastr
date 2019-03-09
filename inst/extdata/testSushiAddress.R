@@ -212,6 +212,12 @@ postmastr::sushi2 %>%
   pm_parse(input = "short",
            address = address)
 
+postmastr::sushi2 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407 FORTY NINTH ST PEDESTRIAN MALL", address)) %>%
+  pm_parse(input = "short",
+           address = address)
+
 postmastr::sushi1 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
   pm_parse(input = "full",
