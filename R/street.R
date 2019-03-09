@@ -229,7 +229,9 @@ pm_street_ord_us <- function(.data, var){
   yesOrd$...street <- sapply(yesOrd$...street, toOrdinal::toOrdinal, USE.NAMES = FALSE)
 
   # add non numeric words back into string
-  yesOrd <- mutate(yesOrd, ...street = ifelse(is.na(...street2) == FALSE, stringr::str_c(...street, ...street2, sep = " "), ...street))
+  yesOrd %>%
+    dplyr::mutate(...street = ifelse(is.na(...street2) == FALSE, stringr::str_c(...street, ...street2, sep = " "), ...street)) %>%
+    dplyr::select(-...street2) -> yesOrd
 
   # bind
   dplyr::bind_rows(noOrd, yesOrd) %>%
