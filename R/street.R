@@ -184,7 +184,7 @@ pm_street_ord <- function(.data, var, locale = "us"){
 pm_street_ord_us <- function(.data, var){
 
   # global bindings
-  ...ordSt = pm.street = pm.uid = NULL
+  ...ordSt = ...oid = ...street = pm.street = pm.uid = NULL
 
   # quote input
   varQ <- rlang::enquo(var)
@@ -205,8 +205,10 @@ pm_street_ord_us <- function(.data, var){
   # minimize dictionary
   dict <- paste(dict, collapse = "|")
 
-  # identify ordinal streets
-  .data <- dplyr::mutate(.data, ...ordSt = stringr::str_detect(stringr::word(...street, 1), pattern = dict))
+  # add id and identify ordinal streets
+  .data %>%
+    dplyr::mutate(...ordSt = stringr::str_detect(stringr::word(...street, 1), pattern = dict)) %>%
+    tibble::rowid_to_column(var = "...oid") -> .data
 
   # subset
   yesOrd <- dplyr::filter(.data, ...ordSt == TRUE)
@@ -219,8 +221,8 @@ pm_street_ord_us <- function(.data, var){
 
   # bind
   dplyr::bind_rows(noOrd, yesOrd) %>%
-    dplyr::arrange(pm.uid) %>%
-    dplyr::select(-...ordSt) %>%
+    dplyr::arrange(...oid) %>%
+    dplyr::select(-...ordSt, -...oid) %>%
     dplyr::rename(!!varQ := ...street) -> .data
 
 }
