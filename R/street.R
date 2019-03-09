@@ -133,7 +133,7 @@ pm_street_std <- function(.data, var, dictionary, ordinal = TRUE, locale = "us")
   # i.e. Second to 2nd
   if (ordinal == TRUE){
 
-    .data <- pm_street_ord(.data, locale = locale)
+    .data <- pm_street_ord(.data, var = !!varQ, locale = locale)
 
   }
 
@@ -163,11 +163,15 @@ pm_street_std <- function(.data, var, dictionary, ordinal = TRUE, locale = "us")
 
 # Convert Ordinal Street Names
 #
-pm_street_ord <- function(.data, locale = "us"){
+pm_street_ord <- function(.data, var, locale = "us"){
 
+  # quote input
+  varQ <- rlang::enquo(var)
+
+  # parse ordinals
   if (locale == "us"){
 
-    .data <- pm_street_ord_us(.data)
+    .data <- pm_street_ord_us(.data, var = !!varQ)
 
   }
 
@@ -177,10 +181,16 @@ pm_street_ord <- function(.data, locale = "us"){
 }
 
 # U.S. ordinal street names
-pm_street_ord_us <- function(.data){
+pm_street_ord_us <- function(.data, var){
 
   # global bindings
   ...ordSt = pm.street = pm.uid = NULL
+
+  # quote input
+  varQ <- rlang::enquo(var)
+
+  # rename input
+  .data <- dplyr::rename(.data, ...street := !!varQ)
 
   # create dictionary of numeric words
   dict <- c("One", "First", "Two", "Second", "Three", "Third", "Four", "Fourth",
@@ -196,21 +206,22 @@ pm_street_ord_us <- function(.data){
   dict <- paste(dict, collapse = "|")
 
   # identify ordinal streets
-  .data <- dplyr::mutate(.data, ...ordSt = stringr::str_detect(stringr::word(pm.street, 1), pattern = dict))
+  .data <- dplyr::mutate(.data, ...ordSt = stringr::str_detect(stringr::word(...street, 1), pattern = dict))
 
   # subset
   yesOrd <- dplyr::filter(.data, ...ordSt == TRUE)
   noOrd <- dplyr::filter(.data, ...ordSt == FALSE)
 
   # convert
-  yesOrd$pm.street <- sapply(yesOrd$pm.street, pm_word2num, USE.NAMES = FALSE)
-  yesOrd$pm.street <- sapply(yesOrd$pm.street, toOrdinal::toOrdinal, USE.NAMES = FALSE)
-  yesOrd$pm.street <- as.character(yesOrd$pm.street)
+  yesOrd$...street <- sapply(yesOrd$...street, pm_word2num, USE.NAMES = FALSE)
+  yesOrd$...street <- sapply(yesOrd$...street, toOrdinal::toOrdinal, USE.NAMES = FALSE)
+  yesOrd$...street <- as.character(yesOrd$...street)
 
   # bind
   dplyr::bind_rows(noOrd, yesOrd) %>%
     dplyr::arrange(pm.uid) %>%
-    dplyr::select(-...ordSt) -> .data
+    dplyr::select(-...ordSt) %>%
+    dplyr::rename(!!varQ := ...street) -> .data
 
 }
 
