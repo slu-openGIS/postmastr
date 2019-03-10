@@ -234,7 +234,14 @@ pm_street_ord_us <- function(.data, var){
     dplyr::select(-...street2) -> yesOrd
 
   # bind
-  dplyr::bind_rows(noOrd, yesOrd) %>%
+  if ("sf" %in% class(yesOrd) == TRUE){
+    .data <- rbind(noOrd, yesOrd)
+  } else if ("sf" %in% class(yesOrd) == FALSE){
+    .data <- dplyr::bind_rows(noOrd, yesOrd)
+  }
+
+  # clean-up
+  .data %>%
     dplyr::arrange(...oid) %>%
     dplyr::select(-...ordSt, -...oid) %>%
     dplyr::rename(!!varQ := ...street) -> .data
