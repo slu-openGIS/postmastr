@@ -60,7 +60,7 @@ rm(sushi2, sushi2_frac, sushi2_min, sushi2_suf)
 
 postmastr::sushi2 %>%
   mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-11 SECOND AVE", address)) %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "7-11R SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "7-11R 1/2 SECOND AVE", address)) %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) %>%
   pm_prep(var = "address") %>%
@@ -93,12 +93,33 @@ yesRange %>%
   dplyr::select(-pm.hasAlpha.a) %>%
   dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = parse_range)) -> yesRange_num
 
+# put data pack together
 yesRange %>%
   dplyr::filter(pm.hasAlpha.a == TRUE) %>%
   dplyr::select(-pm.hasAlpha.a) %>%
   dplyr::bind_rows(yesRange_num, ., noRange) %>%
   dplyr::arrange(pm.uid) -> out
 
+# identify fractional addresses
+out <- pm_houseFrac_parse(out)
+
+# identify non-fractional address ranges and fractional single addresses
+noRangeFrac <- dplyr::filter(out, (is.na(pm.houseRange) == TRUE & is.na(pm.houseFrac) == TRUE) |
+                               (is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == TRUE))
+
+# subset fractional address ranges, add to list-col vector, replace
+out %>%
+  dplyr::filter(is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == FALSE) %>%
+  dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = add_fraction)) %>%
+  dplyr::bind_rows(noRangeFrac, .) %>%
+  dplyr::arrange(pm.uid) -> out2
+
+# contine parsing
+# NEED TO ADD pm.houseRange to variable ordering functions
+out2 %>%
+  pm_streetDir_parse() %>%
+  pm_streetSuf_parse() %>%
+  pm_street_parse()
 
 parse_range <- function(x){
 
@@ -116,13 +137,17 @@ parse_range <- function(x){
 
 }
 
+add_fraction <- function(x){
 
+  frac <- stringr::str_c(x[length(x)], " ", "1/2")
 
-# %>%
-  pm_houseAlpha_detect(position = "any") %>%
-  pm_houseAlpha_detect(position = "front") %>%
-  pm_houseAlpha_detect(position = "end") %>%
-  pm_houseAlpha_detect(position = "middle")
+  # add frac to end of vector
+  vector <- c(x, frac)
+
+  # create output
+  # out <- list(vector)
+
+}
 
 # =============================
 
