@@ -59,12 +59,66 @@ rm(sushi2, sushi2_frac, sushi2_min, sushi2_suf)
 # =============================
 
 postmastr::sushi2 %>%
-  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-9 SECOND AVE", address)) %>%
-  mutate(address = ifelse(name == "SUSHI KOI", "4A SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-11 SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "7-11R SECOND AVE", address)) %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) %>%
   pm_prep(var = "address") %>%
-  pm_house_parse() %>%
+  pm_house_parse() -> add
+
+# construct list-col
+# if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
+# so that tidyr::unnest() works down the road
+add %>%
+  dplyr::mutate(
+    pm.houseRange = str_split(string = str_c(as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
+  ) -> add
+
+# everything past this point is only necessary if we want to expand the address range vector to cover
+# intermediary addresses (i.e. the range 1-11 covers 3, 5, 7, and 9 as well)
+# subset data without a range
+add %>%
+  dplyr::filter(is.na(pm.houseLow) == TRUE) %>%
+  dplyr::select(-pm.houseLow, -pm.houseHigh) -> noRange
+
+# subset data with a range, identify ranges with alphanumeric values
+add %>%
+  dplyr::filter(is.na(pm.houseLow) == FALSE) %>%
+  dplyr::select(-pm.houseLow, -pm.houseHigh) %>%
+  pm_houseAlpha_detect() -> yesRange
+
+# subset ranges without alphanumeric values, expand
+yesRange %>%
+  dplyr::filter(pm.hasAlpha.a == FALSE) %>%
+  dplyr::select(-pm.hasAlpha.a) %>%
+  dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = parse_range)) -> yesRange_num
+
+yesRange %>%
+  dplyr::filter(pm.hasAlpha.a == TRUE) %>%
+  dplyr::select(-pm.hasAlpha.a) %>%
+  dplyr::bind_rows(yesRange_num, ., noRange) %>%
+  dplyr::arrange(pm.uid) -> out
+
+
+parse_range <- function(x){
+
+  # convert item to numeric
+  vector <- as.numeric(x)
+
+  # expand vector to include every other integer between low and high values
+  out <- seq.int(from = vector[1], to = vector[2], by = 2)
+
+  # convert to string
+  out <- as.character(out)
+
+  # return output
+  return(out)
+
+}
+
+
+
+# %>%
   pm_houseAlpha_detect(position = "any") %>%
   pm_houseAlpha_detect(position = "front") %>%
   pm_houseAlpha_detect(position = "end") %>%
