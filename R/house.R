@@ -196,16 +196,11 @@ pm_house_parse <- function(.data, locale = "us"){
   # address ranges
   if (pm_any_houseRange(out) == TRUE){
 
-    # set indicator
-    range <- TRUE
-
     # parse
     out %>%
       pm_has_houseRange() %>%
       pm_parse_houseRange() -> out
 
-  } else if (pm_any_houseRange(out) == FALSE){
-    range <- FALSE
   }
 
   # reorder variables
@@ -270,11 +265,7 @@ pm_parse_houseRange <- function(.data){
                                         pm.houseHigh)) %>%
     dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
     dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
-    dplyr::select(-pm.house2, -pm.houseShort) -> out
-
-  out %>%
-    dplyr::select(-pm.hasHouseRange, -pm.houseRange) %>%
-    dplyr::select(pm.uid, pm.address, pm.house, pm.houseLow, pm.houseHigh, dplyr::everything()) -> out
+    dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> out
 
   # return output
   return(out)
