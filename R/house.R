@@ -147,26 +147,42 @@ pm_house_none <- function(.data){
 
 #' Parse House Numbers
 #'
-#' @description Create a new column containing house number data.
+#' @description Parse house number data out from \code{pm.address}.
 #'
 #' @usage pm_house_parse(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
+#' @param expand_range A logical scalar; if \code{TRUE} (default), house numbers that
+#'    contain a numerical range (i.e. \code{11-15 Main St}) will be expanded to specify
+#'    all integer values within the range. Ranges that contain an alphanumeric value
+#'    cannot be expanded and will be skipped.
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new column \code{pm.house} that contains the house number.
 #'     If a house number is not detected in the string, a value of \code{NA} will be
-#'     returned.
+#'     returned. If the house number has a range (i.e. \code{11-15 Main St}), a
+#'     list-column will also be returned. The list-column will contain the low and
+#'     high values for ranges, and can optionally be expanded to include all integer
+#'     values within a range if \code{expand_range} is equal to \code{TRUE}.
 #'
 #' @importFrom dplyr %>%
+#' @importFrom dplyr bind_rows
 #' @importFrom dplyr everything
+#' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
+#' @importFrom purrr map
+#' @importFrom stringr str_c
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_length
+#' @importFrom stringr str_split
+#' @importFrom stringr str_sub
+#' @importFrom stringr str_replace
 #' @importFrom stringr word
 #'
 #' @export
-pm_house_parse <- function(.data, locale = "us"){
+pm_house_parse <- function(.data, expand_range = TRUE, locale = "us"){
 
   # global bindings
   pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouseRange = pm.hasHouse = NULL
@@ -199,7 +215,7 @@ pm_house_parse <- function(.data, locale = "us"){
     # parse
     out %>%
       pm_has_houseRange() %>%
-      pm_parse_houseRange() -> out
+      pm_parse_houseRange(expand_range = expand_range) -> out
 
   }
 
@@ -241,10 +257,11 @@ pm_has_houseRange <- function(.data){
 }
 
 # parse house range
-pm_parse_houseRange <- function(.data){
+pm_parse_houseRange <- function(.data, expand_range = TRUE){
 
   # global bindings
-  pm.address = pm.uid = pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.houseShort = pm.house2 = NULL
+  . = pm.address = pm.uid = pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow =
+    pm.houseHigh = pm.houseShort = pm.house2 = NULL
 
   # parse into two columns
   .data %>%
@@ -272,11 +289,62 @@ pm_parse_houseRange <- function(.data){
   # so that tidyr::unnest() works down the road
   .data %>%
     dplyr::mutate(
-      pm.houseRange = str_split(string = str_c(as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
+      pm.houseRange = stringr::str_split(string = stringr::str_c(
+        as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
     ) -> .data
+
+  # expand numeric ranges
+  if (expand_range == TRUE){
+
+    # subset data without a range
+    .data %>%
+      dplyr::filter(is.na(pm.houseLow) == TRUE) %>%
+      dplyr::select(-pm.houseLow, -pm.houseHigh) -> noRange
+
+    # subset data with a range, identify ranges with alphanumeric values
+    .data %>%
+      dplyr::filter(is.na(pm.houseLow) == FALSE) %>%
+      dplyr::select(-pm.houseLow, -pm.houseHigh) %>%
+      pm_houseAlpha_detect() -> yesRange
+
+    # subset ranges without alphanumeric values, expand
+    yesRange %>%
+      dplyr::filter(pm.hasAlpha.a == FALSE) %>%
+      dplyr::select(-pm.hasAlpha.a) %>%
+      dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = pm_parse_range)) -> yesRange_num
+
+    # put data pack together
+    yesRange %>%
+      dplyr::filter(pm.hasAlpha.a == TRUE) %>%
+      dplyr::select(-pm.hasAlpha.a) %>%
+      dplyr::bind_rows(yesRange_num, ., noRange) %>%
+      dplyr::arrange(pm.uid) -> .data
+
+  } else if (expand_range == FALSE){
+
+    .data <- dplyr::select(.data, -pm.houseLow, -pm.houseHigh)
+
+  }
 
   # return output
   return(.data)
+
+}
+
+# Parse and Expand House Range
+pm_parse_range <- function(x){
+
+  # convert item to numeric
+  vector <- as.numeric(x)
+
+  # expand vector to include every other integer between low and high values
+  out <- seq.int(from = vector[1], to = vector[2], by = 2)
+
+  # convert to string
+  out <- as.character(out)
+
+  # return output
+  return(out)
 
 }
 

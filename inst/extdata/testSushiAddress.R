@@ -66,39 +66,6 @@ postmastr::sushi2 %>%
   pm_prep(var = "address") %>%
   pm_house_parse() -> add
 
-# construct list-col
-# if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
-# so that tidyr::unnest() works down the road
-add %>%
-  dplyr::mutate(
-    pm.houseRange = str_split(string = str_c(as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
-  ) -> add
-
-# everything past this point is only necessary if we want to expand the address range vector to cover
-# intermediary addresses (i.e. the range 1-11 covers 3, 5, 7, and 9 as well)
-# subset data without a range
-add %>%
-  dplyr::filter(is.na(pm.houseLow) == TRUE) %>%
-  dplyr::select(-pm.houseLow, -pm.houseHigh) -> noRange
-
-# subset data with a range, identify ranges with alphanumeric values
-add %>%
-  dplyr::filter(is.na(pm.houseLow) == FALSE) %>%
-  dplyr::select(-pm.houseLow, -pm.houseHigh) %>%
-  pm_houseAlpha_detect() -> yesRange
-
-# subset ranges without alphanumeric values, expand
-yesRange %>%
-  dplyr::filter(pm.hasAlpha.a == FALSE) %>%
-  dplyr::select(-pm.hasAlpha.a) %>%
-  dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = parse_range)) -> yesRange_num
-
-# put data pack together
-yesRange %>%
-  dplyr::filter(pm.hasAlpha.a == TRUE) %>%
-  dplyr::select(-pm.hasAlpha.a) %>%
-  dplyr::bind_rows(yesRange_num, ., noRange) %>%
-  dplyr::arrange(pm.uid) -> out
 
 # identify fractional addresses
 out <- pm_houseFrac_parse(out)
