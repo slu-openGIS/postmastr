@@ -4,14 +4,51 @@
 \alias{pm_mutate}
 \title{Modify Improperly Parsed Addresses}
 \usage{
-pm_mutate(.data, pm.uid, pm.house, pm.houseRange, pm.houseFrac,
-  pm.houseSuf, pm.preDir, pm.street, pm.streetSuf, pm.sufDir, pm.unitType,
-  pm.unitNum, pm.city, pm.state, pm.zip, pm.zip4)
+pm_mutate(.data, uid, address, house, houseRange, houseFrac, houseSuf,
+    preDir, street, streetSuf, sufDir, unitType, unitNum,
+    city, state, zip, zip4, locale = "us")
+}
+\arguments{
+\item{.data}{A postmastr object created with \link{pm_prep}}
+
+\item{uid}{A \code{pm.uid} value to edit.}
+
+\item{address}{Optional; the new value for the \code{pm.address} variable.}
+
+\item{house}{Optional; the new value for the \code{pm.house} variable.}
+
+\item{houseRange}{Optional; the new value (or vector) for the \code{pm.houseRange}
+variable.}
+
+\item{houseFrac}{Optional; the new value for the \code{pm.houseFrac} variable.}
+
+\item{houseSuf}{Optional; the new value for the \code{pm.houseSuf} variable.}
+
+\item{preDir}{Optional; the new value for the \code{pm.preDir} variable.}
+
+\item{street}{Optional; the new value for the \code{pm.street} variable.}
+
+\item{streetSuf}{Optional; the new value for the \code{pm.streetSuf} variable.}
+
+\item{sufDir}{Optional; the new value for the \code{pm.sufDir} variable.}
+
+\item{unitType}{Optional; the new value for the \code{pm.unitType} variable.}
+
+\item{unitNum}{Optional; the new value (or vector) for the \code{pm.unitNum}
+variable.}
+
+\item{city}{Optional; the new value for the \code{pm.city} variable.}
+
+\item{state}{Optional; the new value for the \code{pm.state} variable.}
+
+\item{postal}{Optional; the new value for the \code{pm.postal} variable.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.}
 }
 \description{
 Difficult to parse addresses, particularly those that have
    alphanumeric house ranges as well as units associated with them,
-   may be mis-parsed by \code{postmastr}. Once all parsing has been
-   completed, but before the data are rebuilt, this function can be used
+   may be mis-parsed by \code{postmastr}. This function can be used
    to manually fix mis-parsed address data.
 }
