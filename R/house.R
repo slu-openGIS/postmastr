@@ -251,10 +251,10 @@ pm_parse_houseRange <- function(.data){
     dplyr::mutate(pm.houseRange = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
     dplyr::mutate(pm.houseRange = stringr::str_replace(pm.houseRange, pattern = "-", replacement = " ")) %>%
     dplyr::mutate(pm.houseLow = stringr::word(pm.houseRange, 1)) %>%
-    dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> out
+    dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> .data
 
   # look for shortened house numbers
-  out %>%
+  .data %>%
     dplyr::mutate(pm.houseShort = ifelse(stringr::str_length(pm.houseLow) > stringr::str_length(pm.houseHigh), TRUE, FALSE)) %>%
     dplyr::mutate(pm.houseHigh = ifelse(pm.houseShort == TRUE,
                                         stringr::str_c(stringr::str_sub(pm.houseLow,
@@ -265,10 +265,18 @@ pm_parse_houseRange <- function(.data){
                                         pm.houseHigh)) %>%
     dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
     dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
-    dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> out
+    dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> .data
+
+  # construct list-col
+  # if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
+  # so that tidyr::unnest() works down the road
+  .data %>%
+    dplyr::mutate(
+      pm.houseRange = str_split(string = str_c(as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
+    ) -> .data
 
   # return output
-  return(out)
+  return(.data)
 
 }
 
