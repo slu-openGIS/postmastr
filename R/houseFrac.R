@@ -1,16 +1,20 @@
-#' Do Any Addresses Have House Numbers
+#' Do Any Addresses Have Fractional House Numbers
 #'
-#' @description Determine whether the house number test returns any matches.
+#' @description Determine whether the fractional house number test returns any matches.
 #'
-#' @usage pm_house_any(.data)
+#' @details A fractional house number is used in some parts of the United States.
+#'    Fractional house numbers typically look like \code{123 1/2 Main St}.
+#'    The U.S.P.S allows any fraction, though \code{1/2} appears commonly.
+#'
+#' @usage pm_houseFrac_any(.data)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #'
 #' @return A logical scalar is returned that is \code{TRUE} if the data contains at least
-#'     one house number and \code{FALSE} if they do not.
+#'     one fractional house number and \code{FALSE} if they do not.
 #'
 #' @export
-pm_house_any <- function(.data){
+pm_houseFrac_any <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -22,8 +26,8 @@ pm_house_any <- function(.data){
   }
 
   # test and create output
-  .data <- pm_house_detect(.data)
-  out <- any(.data$pm.hasHouse)
+  .data <- pm_houseFrac_detect(.data)
+  out <- any(.data$pm.hasHouseFrac)
 
   # return output
   return(out)
@@ -32,18 +36,22 @@ pm_house_any <- function(.data){
 
 #' Do All Addresses Have House Numbers
 #'
-#' @description Determine whether the house number test returns matches for every
+#' @description Determine whether the fractional house number test returns matches for every
 #'     observation.
 #'
-#' @usage pm_house_all(.data)
+#' @details A fractional house number is used in some parts of the United States.
+#'    Fractional house numbers typically look like \code{123 1/2 Main St}.
+#'    The U.S.P.S allows any fraction, though \code{1/2} appears commonly.
+#'
+#' @usage pm_houseFrac_all(.data)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #'
 #' @return A logical scalar is returned that is \code{TRUE} if all observations contain
-#'     house numbers and \code{FALSE} otherwise.
+#'     fractional house numbers and \code{FALSE} otherwise.
 #'
 #' @export
-pm_house_all <- function(.data){
+pm_houseFrac_all <- function(.data){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -55,19 +63,23 @@ pm_house_all <- function(.data){
   }
 
   # test and create output
-  .data <- pm_house_detect(.data)
-  out <- all(.data$pm.hasHouse)
+  .data <- pm_houseFrac_detect(.data)
+  out <- all(.data$pm.hasHouseFrac)
 
   # return output
   return(out)
 
 }
 
-#' Detect Presence of House Numbers
+#' Detect Presence of Fractional House Numbers
 #'
-#' @description Determine the presence of house numbersin a string.
+#' @description Determine the presence of fractional house numbers in a string.
 #'
-#' @usage pm_house_detect(.data)
+#' @details A fractional house number is used in some parts of the United States.
+#'    Fractional house numbers typically look like \code{123 1/2 Main St}.
+#'    The U.S.P.S allows any fraction, though \code{1/2} appears commonly.
+#'
+#' @usage pm_houseFrac_detect(.data)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #'
@@ -80,7 +92,7 @@ pm_house_all <- function(.data){
 #' @importFrom stringr word
 #'
 #' @export
-pm_house_detect <- function(.data){
+pm_houseFrac_detect <- function(.data){
 
   # global bindings
   pm.address = NULL
@@ -95,35 +107,35 @@ pm_house_detect <- function(.data){
   }
 
   # detect pattern
-  .data <- dplyr::mutate(.data, pm.hasHouse = stringr::str_detect(stringr::word(pm.address, 1), pattern = "[0-9]"))
+  .data <- dplyr::mutate(.data, pm.hasHouseFrac = stringr::str_detect(stringr::word(pm.address, 1), pattern = "[1-9]/"))
 
   # return output
   return(.data)
 
 }
 
-#' Return Only Unmatched Observations From pm_house_detect
+#' Return Only Unmatched Observations From pm_houseFrac_detect
 #'
-#' @description Automatically subset the results of \link{pm_house_detect} to
-#'    return only observations that were not found to include a house number
+#' @description Automatically subset the results of \link{pm_houseFrac_detect} to
+#'    return only observations that were not found to include a fractional house number.
 #'
-#' @usage pm_house_none(.data)
+#' @usage pm_houseFrac_none(.data)
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #'
 #' @return A tibble containing only observations that were not found matched
-#'     using the house number test. The variable created by \link{pm_house_detect},
-#'     \code{pm.hasHouse}, is removed.
+#'     using the fractional house number test. The variable created by
+#'     \link{pm_houseFrac_detect}, \code{pm.hasHouseFrac}, is removed.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
 #'
 #' @export
-pm_house_none <- function(.data){
+pm_houseFrac_none <- function(.data){
 
   # global bindings
-  pm.hasHouse = NULL
+  pm.hasHouseFrac = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -136,49 +148,40 @@ pm_house_none <- function(.data){
 
   # create output
   .data %>%
-    pm_house_detect() %>%
-    dplyr::filter(pm.hasHouse == FALSE) %>%
-    dplyr::select(-pm.hasHouse) -> out
+    pm_houseFrac_detect() %>%
+    dplyr::filter(pm.hasHouseFrac == FALSE) %>%
+    dplyr::select(-pm.hasHouseFrac) -> out
 
   # return output
   return(out)
 
 }
 
-#' Parse House Numbers
+#' Parse Fractional House Numbers
 #'
-#' @description Parse house number data out from \code{pm.address}.
+#' @description Create a new column containing fractional house number data.
 #'
-#' @usage pm_house_parse(.data, locale = "us")
+#' @usage pm_houseFrac_parse(.data, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param locale A string indicating the country these data represent; the only
 #'    current option is "us" but this is included to facilitate future expansion.
 #'
-#' @return A tibble with a new column \code{pm.house} that contains the house number.
+#' @return A tibble with a new column \code{pm.houseFrac} that contains the fractional house number.
 #'     If a house number is not detected in the string, a value of \code{NA} will be
 #'     returned.
 #'
 #' @importFrom dplyr %>%
-#' @importFrom dplyr bind_rows
 #' @importFrom dplyr everything
-#' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
-#' @importFrom purrr map
-#' @importFrom stringr str_c
-#' @importFrom stringr str_detect
-#' @importFrom stringr str_length
-#' @importFrom stringr str_split
-#' @importFrom stringr str_sub
-#' @importFrom stringr str_replace
 #' @importFrom stringr word
 #'
 #' @export
-pm_house_parse <- function(.data, locale = "us"){
+pm_houseFrac_parse <- function(.data, locale = "us"){
 
-  # global bindings
-  pm.uid = pm.address = pm.house = pm.houseRange = pm.houseLow = pm.houseHigh = pm.hasHouse = NULL
+  # global binding
+  pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac = pm.hasHouseFrac = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -189,20 +192,19 @@ pm_house_parse <- function(.data, locale = "us"){
     stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
-  if ("pm.hasHouse" %in% names(.data) == FALSE){
-    .data <- pm_house_detect(.data)
+  if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
+    .data <- pm_houseFrac_detect(.data)
   }
 
   # parse
   .data %>%
-    dplyr::mutate(pm.house = ifelse(pm.hasHouse == TRUE, stringr::word(pm.address, 1), NA)) %>%
-    dplyr::mutate(pm.address = ifelse(pm.hasHouse == TRUE,
+    dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%
+    dplyr::mutate(pm.address = ifelse(pm.hasHouseFrac == TRUE,
                                       stringr::word(pm.address, start = 2, end = -1),
                                       pm.address)) %>%
-    dplyr::select(-pm.hasHouse) %>%
-    dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> out
+    dplyr::select(-pm.hasHouseFrac) -> out
 
-  # reorder variables
+  # re-order variables
   if (locale == "us"){
     vars <- pm_reorder(.data)
     .data <- dplyr::select(.data, vars)
