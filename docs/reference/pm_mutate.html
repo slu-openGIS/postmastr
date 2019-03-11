@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Do Any Addresses Have Fractional House Numbers — pm_houseFrac_any • postmastr</title>
+<title>Modify Improperly Parsed Addresses — pm_mutate • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="Do Any Addresses Have Fractional House Numbers — pm_houseFrac_any" />
+<meta property="og:title" content="Modify Improperly Parsed Addresses — pm_mutate" />
 
-<meta property="og:description" content="Determine whether the fractional house number test returns any matches." />
+<meta property="og:description" content="Difficult to parse addresses, particularly those that have
+   alphanumeric house ranges as well as units associated with them,
+   may be mis-parsed by postmastr. This function can be used
+   to manually fix mis-parsed address data." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -107,18 +110,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Do Any Addresses Have Fractional House Numbers</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/house.R'><code>R/house.R</code></a></small>
-    <div class="hidden name"><code>pm_houseFrac_any.Rd</code></div>
+    <h1>Modify Improperly Parsed Addresses</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/mutate.R'><code>R/mutate.R</code></a></small>
+    <div class="hidden name"><code>pm_mutate.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Determine whether the fractional house number test returns any matches.</p>
+    <p>Difficult to parse addresses, particularly those that have
+   alphanumeric house ranges as well as units associated with them,
+   may be mis-parsed by <code>postmastr</code>. This function can be used
+   to manually fix mis-parsed address data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_houseFrac_any</span>(<span class='no'>.data</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_mutate</span>(<span class='no'>.data</span>, <span class='no'>uid</span>, <span class='no'>address</span>, <span class='no'>house</span>, <span class='no'>house_range</span>, <span class='no'>house_frac</span>, <span class='no'>house_suf</span>,
+    <span class='no'>pre_dir</span>, <span class='no'>street</span>, <span class='no'>street_suf</span>, <span class='no'>suf_dir</span>, <span class='no'>unit_type</span>, <span class='no'>unit_num</span>,
+    <span class='no'>city</span>, <span class='no'>state</span>, <span class='no'>postal</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -127,18 +135,74 @@
       <th>.data</th>
       <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
+    <tr>
+      <th>uid</th>
+      <td><p>A <code>pm.uid</code> value to edit.</p></td>
+    </tr>
+    <tr>
+      <th>address</th>
+      <td><p>Optional; the new value for the <code>pm.address</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>house</th>
+      <td><p>Optional; the new value for the <code>pm.house</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>house_range</th>
+      <td><p>Optional; the new value (or vector) for the <code>pm.houseRange</code>
+variable.</p></td>
+    </tr>
+    <tr>
+      <th>house_frac</th>
+      <td><p>Optional; the new value for the <code>pm.houseFrac</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>house_suf</th>
+      <td><p>Optional; the new value for the <code>pm.houseSuf</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>pre_dir</th>
+      <td><p>Optional; the new value for the <code>pm.preDir</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>street</th>
+      <td><p>Optional; the new value for the <code>pm.street</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>street_suf</th>
+      <td><p>Optional; the new value for the <code>pm.streetSuf</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>suf_dir</th>
+      <td><p>Optional; the new value for the <code>pm.sufDir</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>unit_type</th>
+      <td><p>Optional; the new value for the <code>pm.unitType</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>unit_num</th>
+      <td><p>Optional; the new value (or vector) for the <code>pm.unitNum</code>
+variable.</p></td>
+    </tr>
+    <tr>
+      <th>city</th>
+      <td><p>Optional; the new value for the <code>pm.city</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>state</th>
+      <td><p>Optional; the new value for the <code>pm.state</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>postal</th>
+      <td><p>Optional; the new value for the <code>pm.postal</code> variable.</p></td>
+    </tr>
+    <tr>
+      <th>locale</th>
+      <td><p>A string indicating the country these data represent; the only
+current option is "us" but this is included to facilitate future expansion.</p></td>
+    </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A logical scalar is returned that is <code>TRUE</code> if the data contains at least
-    one fractional house number and <code>FALSE</code> if they do not.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>A fractional house number is used in some parts of the United States.
-   Fractional house numbers typically look like <code>123 1/2 Main St</code>.
-   The U.S.P.S allows any fraction, though <code>1/2</code> appears commonly.</p>
     
 
   </div>
@@ -146,11 +210,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

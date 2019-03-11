@@ -105,6 +105,7 @@ reference:
   - title: "Reconstruct Data"
     desc: "Add Parsed Data Back into Source"
     contents:
+    - pm_mutate
     - pm_rebuild
     - pm_replace
 

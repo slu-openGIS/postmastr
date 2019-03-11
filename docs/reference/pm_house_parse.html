@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Parse House Numbers — pm_house_parse" />
 
-<meta property="og:description" content="Create a new column containing house number data." />
+<meta property="og:description" content="Parse house number data out from pm.address." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -114,18 +114,25 @@
 
     <div class="ref-description">
     
-    <p>Create a new column containing house number data.</p>
+    <p>Parse house number data out from <code>pm.address</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_house_parse</span>(<span class='no'>.data</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_house_parse</span>(<span class='no'>.data</span>, <span class='kw'>expand_range</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object created with pm_prep</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
+    </tr>
+    <tr>
+      <th>expand_range</th>
+      <td><p>A logical scalar; if <code>TRUE</code> (default), house numbers that
+contain a numerical range (i.e. <code>11-15 Main St</code>) will be expanded to specify
+all integer values within the range. Ranges that contain an alphanumeric value
+cannot be expanded and will be skipped.</p></td>
     </tr>
     <tr>
       <th>locale</th>
@@ -138,7 +145,10 @@ current option is "us" but this is included to facilitate future expansion.</p><
 
     <p>A tibble with a new column <code>pm.house</code> that contains the house number.
     If a house number is not detected in the string, a value of <code>NA</code> will be
-    returned.</p>
+    returned. If the house number has a range (i.e. <code>11-15 Main St</code>), a
+    list-column will also be returned. The list-column will contain the low and
+    high values for ranges, and can optionally be expanded to include all integer
+    values within a range if <code>expand_range</code> is equal to <code>TRUE</code>.</p>
     
 
   </div>
