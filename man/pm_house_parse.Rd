@@ -4,7 +4,7 @@
 \alias{pm_house_parse}
 \title{Parse House Numbers}
 \usage{
-pm_house_parse(.data, locale = "us")
+pm_house_parse(.data, expand_range = TRUE, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}

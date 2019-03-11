@@ -149,7 +149,7 @@ pm_house_none <- function(.data){
 #'
 #' @description Parse house number data out from \code{pm.address}.
 #'
-#' @usage pm_house_parse(.data, locale = "us")
+#' @usage pm_house_parse(.data, expand_range = TRUE, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param expand_range A logical scalar; if \code{TRUE} (default), house numbers that
@@ -261,7 +261,7 @@ pm_parse_houseRange <- function(.data, expand_range = TRUE){
 
   # global bindings
   . = pm.address = pm.uid = pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow =
-    pm.houseHigh = pm.houseShort = pm.house2 = NULL
+    pm.houseHigh = pm.houseShort = pm.house2 = pm.hasAlpha.a = NULL
 
   # parse into two columns
   .data %>%

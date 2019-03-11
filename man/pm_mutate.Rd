@@ -4,9 +4,9 @@
 \alias{pm_mutate}
 \title{Modify Improperly Parsed Addresses}
 \usage{
-pm_mutate(.data, uid, address, house, houseRange, houseFrac, houseSuf,
-    preDir, street, streetSuf, sufDir, unitType, unitNum,
-    city, state, zip, zip4, locale = "us")
+pm_mutate(.data, uid, address, house, house_range, house_frac, house_suf,
+    pre_dir, street, street_suf, suf_dir, unit_type, unit_num,
+    city, state, postal, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
@@ -17,24 +17,24 @@ pm_mutate(.data, uid, address, house, houseRange, houseFrac, houseSuf,
 
 \item{house}{Optional; the new value for the \code{pm.house} variable.}
 
-\item{houseRange}{Optional; the new value (or vector) for the \code{pm.houseRange}
+\item{house_range}{Optional; the new value (or vector) for the \code{pm.houseRange}
 variable.}
 
-\item{houseFrac}{Optional; the new value for the \code{pm.houseFrac} variable.}
+\item{house_frac}{Optional; the new value for the \code{pm.houseFrac} variable.}
 
-\item{houseSuf}{Optional; the new value for the \code{pm.houseSuf} variable.}
+\item{house_suf}{Optional; the new value for the \code{pm.houseSuf} variable.}
 
-\item{preDir}{Optional; the new value for the \code{pm.preDir} variable.}
+\item{pre_dir}{Optional; the new value for the \code{pm.preDir} variable.}
 
 \item{street}{Optional; the new value for the \code{pm.street} variable.}
 
-\item{streetSuf}{Optional; the new value for the \code{pm.streetSuf} variable.}
+\item{street_suf}{Optional; the new value for the \code{pm.streetSuf} variable.}
 
-\item{sufDir}{Optional; the new value for the \code{pm.sufDir} variable.}
+\item{suf_dir}{Optional; the new value for the \code{pm.sufDir} variable.}
 
-\item{unitType}{Optional; the new value for the \code{pm.unitType} variable.}
+\item{unit_type}{Optional; the new value for the \code{pm.unitType} variable.}
 
-\item{unitNum}{Optional; the new value (or vector) for the \code{pm.unitNum}
+\item{unit_num}{Optional; the new value (or vector) for the \code{pm.unitNum}
 variable.}
 
 \item{city}{Optional; the new value for the \code{pm.city} variable.}
