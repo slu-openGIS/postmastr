@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Street Suffix Dictionary, United States of America — dic_us_suffix • postmastr</title>
+<title>Return Only Unmatched Observations From pm_houseRange_detect — pm_houseRange_none • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Street Suffix Dictionary, United States of America — dic_us_suffix" />
+<meta property="og:title" content="Return Only Unmatched Observations From pm_houseRange_detect — pm_houseRange_none" />
 
-<meta property="og:description" content="A list of abbreviations for full names for street suffix types for the
-    United States." />
+<meta property="og:description" content="Automatically subset the results of pm_houseRange_detect to
+   return only observations that were not found to include a house range." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -108,55 +108,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Street Suffix Dictionary, United States of America</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/dictionary.R'><code>R/dictionary.R</code></a></small>
-    <div class="hidden name"><code>dic_us_suffix.Rd</code></div>
+    <h1>Return Only Unmatched Observations From pm_houseRange_detect</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/houseRange.R'><code>R/houseRange.R</code></a></small>
+    <div class="hidden name"><code>pm_houseRange_none.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A list of abbreviations for full names for street suffix types for the
-    United States.</p>
+    <p>Automatically subset the results of pm_houseRange_detect to
+   return only observations that were not found to include a house range.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>dic_us_suffix</span>)</pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A tibble with 502 rows and 3 variables:</p><dl class='dl-horizontal'>
-  <dt>suf.type</dt><dd><p>suffix type</p></dd>
-  <dt>suf.output</dt><dd><p>standard suffix abbreviation</p></dd>
-  <dt>suf.input</dt><dd><p>standard full names and suffix abbreviations</p></dd>
-</dl>
+    <pre class="usage"><span class='fu'>pm_houseRange_none</span>(<span class='no'>.data</span>)</pre>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.data</th>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <div class='dont-index'><p><a href='https://pe.usps.com/text/pub28/28apc_002.htm'>U.S. Postal Service, Publication 28, Appendix C1</a></p></div>
+    <p>A tibble containing only observations that were not matched
+    using the house range test. The variable created by
+    pm_houseRange_detect, <code>pm.hasHouseRange</code>, is removed.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>A house range is used in some parts of the United States.
+   House ranges typically look like <code>121-123 Main St</code>.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>dic_us_suffix</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 3</span><span>
-#&gt;   suf.type suf.input suf.output
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> Alley    Allee     Aly       
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> Alley    Alley     Aly       
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> Alley    Ally      Aly       
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> Alley    Aly       Aly       
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span> Anex     Anex      Anx       
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span> Anex     Annex     Anx       </div><div class='input'>
-</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
+      <li><a href="#value">Value</a></li>
 
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

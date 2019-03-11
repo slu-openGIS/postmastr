@@ -62,7 +62,7 @@ reference:
     - pm_has_unit
 
   - title: "House Numbers"
-    desc: "Work with House Numbers"
+    desc: "Work with House Numbers, Including Alphanumeric House Numbers (e.x. 123A Main St)"
     contents:
     - pm_house_any
     - pm_house_all
@@ -72,11 +72,29 @@ reference:
     - pm_houseAlpha_any
     - pm_houseAlpha_all
     - pm_houseAlpha_detect
+
+  - title: "House Number Ranges"
+    desc: "Work with House Number Ranges (e.x. '123-5 Main St')"
+    contents:
+    - pm_houseRange_any
+    - pm_houseRange_all
+    - pm_houseRange_detect
+    - pm_houseRange_none
+    - pm_houseRange_match
+    - pm_houseRange_parse
+
+  - title: "Fractional House Numbers"
+    desc: "Work with Fractional House Numbers (e.x. '123 1/2 Main St')"
+    contents:
     - pm_houseFrac_any
     - pm_houseFrac_all
     - pm_houseFrac_detect
     - pm_houseFrac_none
     - pm_houseFrac_parse
+
+  - title: "House Suffix Values"
+    desc: "Work with House Suffix Values (e.x. '123 Rear Main St')"
+    contents:
     - pm_houseSuf_any
     - pm_houseSuf_all
     - pm_houseSuf_detect
