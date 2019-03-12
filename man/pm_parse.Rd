@@ -5,9 +5,10 @@
 \title{Parse Street Addresses}
 \usage{
 pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
-    include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
-    keep_ids = FALSE, houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict,
-    city_dict, state_dict, locale = "us")
+    unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
+    keep_parsed, side = "right", left_vars, keep_ids = FALSE,
+    houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
+    state_dict, locale = "us")
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -31,6 +32,11 @@ short address as well as a, at the most, a city, state, and postal code.}
 default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 "168th St" as opposed to "One Hundred Sixty Eigth St").}
 
+\item{unnest}{A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
+has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+from a single observation to four observations, one for each house number). If \code{FALSE} (default),
+the single observation will remain.}
+
 \item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
 
@@ -42,6 +48,13 @@ will not be included.}
 added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 only the rebuilt address will be added to the source data (default).}
+
+\item{side}{One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
+or right of the original data? Placing data to the left may be useful in particularly wide
+data sets.}
+
+\item{left_vars}{A character scalar or vector of variables to place on the left-hand side of
+the output when \code{side} is equal to \code{"middle"}.}
 
 \item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
 will be kept in the source data after replacement. Otherwise, if \code{FALSE},

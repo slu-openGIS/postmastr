@@ -66,28 +66,37 @@ postmastr::sushi2 %>%
   pm_prep(var = "address") %>%
   pm_house_parse() %>%
   pm_houseRange_parse() %>%
-
-
-# identify fractional addresses
-out <- pm_houseFrac_parse(out)
-
-# identify non-fractional address ranges and fractional single addresses
-noRangeFrac <- dplyr::filter(out, (is.na(pm.houseRange) == TRUE & is.na(pm.houseFrac) == TRUE) |
-                               (is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == TRUE))
-
-# subset fractional address ranges, add to list-col vector, replace
-out %>%
-  dplyr::filter(is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == FALSE) %>%
-  dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = add_fraction)) %>%
-  dplyr::bind_rows(noRangeFrac, .) %>%
-  dplyr::arrange(pm.uid) -> out2
-
-# contine parsing
-# NEED TO ADD pm.houseRange to variable ordering functions
-out2 %>%
+  pm_houseFrac_parse() %>%
   pm_streetDir_parse() %>%
   pm_streetSuf_parse() %>%
   pm_street_parse()
+
+
+postmastr::sushi2 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-11 SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "7-11R 1/2 SECOND AVE", address)) %>%
+  pm_identify(var = address) -> sushi_unnest
+
+sushi_unnest %>%
+  pm_prep(var = "address") %>%
+  pm_house_detect() %>%
+  pm_house_parse() %>%
+  pm_houseRange_detect() %>%
+  pm_houseRange_parse() %>%
+  pm_houseFrac_detect() %>%
+  pm_houseFrac_parse() %>%
+  pm_streetDir_detect() %>%
+  pm_streetDir_parse() %>%
+  pm_streetSuf_detect() %>%
+  pm_streetSuf_parse() %>%
+  pm_street_parse() %>%
+  pm_replace2(source = sushi_unnest) %>%
+  pm_rebuild2(start = pm.house, end = pm.streetSuf, new_var = clean_address, keep_parsed = "no",
+              side = "middle", left_vars = c("name", "address"), keep_ids = FALSE)
+
+
+
 
 parse_range <- function(x){
 

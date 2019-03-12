@@ -2,33 +2,30 @@
 % Please edit documentation in R/build.R
 \name{pm_replace}
 \alias{pm_replace}
-\title{Add Address to Source Data}
+\title{Add Parsed Street Address Data to Source Data Set}
 \usage{
-pm_replace(.data, source, newVar, keep_parsed, keep_ids = FALSE)
+pm_replace(.data, source, side = "right", unnest = FALSE)
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep} that has been readied
-for replacement by (a) fully parsing the data and (b) rebuilding a sinle
-address field.}
+for replacement by fully parsing the data.}
 
 \item{source}{Original source data to merge clean addresses with.}
 
-\item{newVar}{Name of new variable to store rebuilt address in.}
+\item{side}{One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
+or right of the original data? Placing data to the left may be useful in particularly wide
+data sets.}
 
-\item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
-added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
-\code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
-only the rebuilt address will be added to the source data (default).}
-
-\item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
-will be kept in the source data after replacement. Otherwise, if \code{FALSE},
-they will be removed (default).}
+\item{unnest}{A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
+has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+from a single observation to four observations, one for each house number). If \code{FALSE} (default),
+the single observation will remain.}
 }
 \value{
-The source data with a standardized address variable and, optionally, parsed
-    address elements.
+The source data with a parsed address elements added to the left side of the source data.
 }
 \description{
-Adds standardized address and, optionally, parsed elements back into
-    original source data frame.
+Adds standardized address and, optionally, unnest house ranges. All logical variables
+   that were created during the data cleaning process (i.e. \code{pm.hasHouse}, \code{pm.hasDir}, etc.)
+   are removed at this stage.
 }

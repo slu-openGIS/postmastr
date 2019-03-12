@@ -5,9 +5,10 @@
 #'     have been created and tested against the data.
 #'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
-#'     include_commas = FALSE, include_unit = TRUE, keep_parsed = "no",
-#'     keep_ids = FALSE, houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict,
-#'     city_dict, state_dict, locale = "us")
+#'     unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
+#'     keep_parsed, side = "right", left_vars, keep_ids = FALSE,
+#'     houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
+#'     state_dict, locale = "us")
 #'
 #' @param .data A source data set to be parsed
 #' @param input Describes the format of the source address. One of either \code{"full"} or \code{"short"}.
@@ -24,6 +25,10 @@
 #'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 #'     "168th St" as opposed to "One Hundred Sixty Eigth St").
+#' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
+#'    has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+#'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
+#'    the single observation will remain.
 #' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 #'     name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
 #' @param include_unit A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
@@ -33,6 +38,11 @@
 #'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 #'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
 #'     only the rebuilt address will be added to the source data (default).
+#' @param side One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
+#'     or right of the original data? Placing data to the left may be useful in particularly wide
+#'     data sets.
+#' @param left_vars A character scalar or vector of variables to place on the left-hand side of
+#'     the output when \code{side} is equal to \code{"middle"}.
 #' @param keep_ids Logical scalar; if \code{TRUE}, the identification numbers
 #'     will be kept in the source data after replacement. Otherwise, if \code{FALSE},
 #'     they will be removed (default).
@@ -87,9 +97,11 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE, include_commas = FALSE,
-                     include_unit = TRUE, keep_parsed = "no", keep_ids = FALSE, houseSuf_dict, dir_dict,
-                     street_dict, suffix_dict, unit_dict, city_dict, state_dict, locale = "us"){
+pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
+                     unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
+                     keep_parsed, side = "right", left_vars, keep_ids = FALSE,
+                     houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
+                     state_dict, locale = "us"){
 
   # global bindings
   address = pm.house = pm.streetSuf = NULL
@@ -192,8 +204,10 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = "end", include_commas = include_commas, locale = locale) %>%
-      pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
+      pm_replace(source = source, unnest = unnest) %>%
+      pm_rebuild(start = pm.house, end = "end", new_address = !!newVarQ,
+                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 locale = locale) -> out
 
   } else if (input == "full" & output == "short") {
 
@@ -209,8 +223,10 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = !!endVarQ, locale = locale) %>%
-      pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
+      pm_replace(source = source, unnest = unnest) %>%
+      pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
+                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 locale = locale) -> out
 
   } else if (input == "short" & output == "short"){
 
@@ -223,8 +239,10 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_rebuild(start = pm.house, end = !!endVarQ, locale = locale) %>%
-      pm_replace(source = source, newVar = !!newVarQ, keep_parsed = keep_parsed, keep_ids = keep_ids) -> out
+      pm_replace(source = source, unnest = unnest) %>%
+      pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
+                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 locale = locale) -> out
 
   }
 

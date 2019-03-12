@@ -2,28 +2,43 @@
 % Please edit documentation in R/build.R
 \name{pm_rebuild}
 \alias{pm_rebuild}
-\title{Rebuild Street Address}
+\title{Re-construct Street Addressed from Parsed Elements}
 \usage{
-pm_rebuild(.data, start, end, include_commas = FALSE, locale = "us")
+pm_rebuild(.data, start, end, new_var, include_commas = FALSE,
+    keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
 }
 \arguments{
-\item{.data}{A postmastr object created with \link{pm_prep}}
+\item{.data}{An object with raw and parsed data created by \code{\link{pm_rebuild}}}
 
 \item{start}{Variable name to begin rebuilding process with, typically the house number}
 
 \item{end}{Variable name to end rebuilding process with, typically the street suffix or postal code}
 
+\item{new_address}{Optiona; name of new variable to store rebuilt address in. If not specified,
+the re-build addressed will be stored in \code{pm.address}.}
+
 \item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
+
+\item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
+added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
+\code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
+only the rebuilt address will be added to the source data (default).}
+
+\item{side}{One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
+or right of the original data? Placing data to the left may be useful in particularly wide
+data sets.}
+
+\item{left_vars}{A character scalar or vector of variables to place on the left-hand side of
+the output when \code{side} is equal to \code{"middle"}.}
+
+\item{keep_ids}{Logical scalar; if \code{TRUE}, the identification numbers
+will be kept in the source data after replacement. Otherwise, if \code{FALSE},
+they will be removed (default).}
 
 \item{locale}{A string indicating the country these data represent; the only
 current option is "us" but this is included to facilitate future expansion.}
 }
-\value{
-A copy of the pomstmastr object with a standardized address variable.
-}
 \description{
-Create a single address from parsed components. Data are automatically re-ordered
-    as part of this process, so there is no need to subset columns prior to executing
-    this function.
+Create a single address from parsed components.
 }
