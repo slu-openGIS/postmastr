@@ -17,7 +17,7 @@ or right of the original data? Placing data to the left may be useful in particu
 data sets.}
 
 \item{unnest}{A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
-has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 from a single observation to four observations, one for each house number). If \code{FALSE} (default),
 the single observation will remain.}
 }

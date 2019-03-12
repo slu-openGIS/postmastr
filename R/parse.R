@@ -26,7 +26,7 @@
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 #'     "168th St" as opposed to "One Hundred Sixty Eigth St").
 #' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
-#'    has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+#'    has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 #'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
 #'    the single observation will remain.
 #' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
@@ -82,11 +82,11 @@
 #' df <- dplyr::filter(df, name != "Drunken Fish - Ballpark Village")
 #'
 #' # parse, full output
-#' pm_parse(df, input = "full", address = address, output = "full",
+#' pm_parse(df, input = "full", address = address, output = "full", keep_parsed = "no",
 #'     dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo)
 #'
 #' # parse, short output
-#' pm_parse(df, input = "full", address = address, output = "short",
+#' pm_parse(df, input = "full", address = address, output = "short", keep_parsed = "no",
 #'     new_address = clean_address, dir_dict = dirs, suffix_dict = sufs,
 #'     city_dict = cities, state_dict = mo)
 #'

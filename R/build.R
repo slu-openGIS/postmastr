@@ -13,7 +13,7 @@
 #'    or right of the original data? Placing data to the left may be useful in particularly wide
 #'    data sets.
 #' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
-#'    has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+#'    has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 #'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
 #'    the single observation will remain.
 #'
@@ -29,6 +29,9 @@
 #'
 #' @export
 pm_replace <- function(.data, source, side = "right", unnest = FALSE){
+
+  # global bindings
+  pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -95,7 +98,7 @@ pm_replace <- function(.data, source, side = "right", unnest = FALSE){
 #'
 #' @description Create a single address from parsed components.
 #'
-#' @usage pm_rebuild(.data, start, end, new_var, include_commas = FALSE,
+#' @usage pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
 #'     keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
 #'
 #' @param .data An object with raw and parsed data created by \code{\link{pm_rebuild}}
@@ -123,6 +126,9 @@ pm_replace <- function(.data, source, side = "right", unnest = FALSE){
 #' @export
 pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
                        keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us"){
+
+  # global bindings
+  pm.id = pm.uid = pm.houseRange = pm.city = ...temp_address = ...pm.id = ...pm.uid = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -172,7 +178,7 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
 
   # optionally add commas
   if (include_commas == TRUE & "pm.city" %in% names(.data) == TRUE){
-    .data <- dplyr::mutate(.data, pm.city = stingr::str_c(", ", pm.city, ","))
+    .data <- dplyr::mutate(.data, pm.city = stringr::str_c(", ", pm.city, ","))
   }
 
   # rebuild

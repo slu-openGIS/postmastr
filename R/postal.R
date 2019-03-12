@@ -221,6 +221,9 @@ pm_postal_none <- function(.data, locale = "us"){
 #' @export
 pm_postal_parse <- function(.data, locale = "us"){
 
+  # global bindings
+  pm.hasZip = NULL
+
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
     stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")

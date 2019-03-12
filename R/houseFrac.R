@@ -183,7 +183,8 @@ pm_houseFrac_none <- function(.data){
 pm_houseFrac_parse <- function(.data, locale = "us"){
 
   # global binding
-  pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac = pm.hasHouseFrac = NULL
+  . = pm.address = pm.uid = pm.house = pm.houseLow = pm.houseHigh = pm.houseFrac =
+    pm.hasHouseFrac = pm.houseRange = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){

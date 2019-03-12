@@ -234,7 +234,7 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
 
   # global bindings
   . = pm.address = pm.uid = pm.hasHouseRange = pm.house = pm.houseRange = pm.houseLow =
-    pm.houseHigh = pm.houseShort = pm.house2 = pm.hasAlpha.a = NULL
+    pm.houseHigh = pm.houseShort = pm.house2 = pm.hasAlpha.a = pm.houseVal = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){

@@ -4,7 +4,7 @@
 \alias{pm_rebuild}
 \title{Re-construct Street Addressed from Parsed Elements}
 \usage{
-pm_rebuild(.data, start, end, new_var, include_commas = FALSE,
+pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
     keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
 }
 \arguments{
