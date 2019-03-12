@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rebuild Street Address — pm_rebuild • postmastr</title>
+<title>Re-construct Street Addressed from Parsed Elements — pm_rebuild • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Rebuild Street Address — pm_rebuild" />
+<meta property="og:title" content="Re-construct Street Addressed from Parsed Elements — pm_rebuild" />
 
-<meta property="og:description" content="Create a single address from parsed components. Data are automatically re-ordered
-    as part of this process, so there is no need to subset columns prior to executing
-    this function." />
+<meta property="og:description" content="Create a single address from parsed components." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -109,27 +107,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rebuild Street Address</h1>
+    <h1>Re-construct Street Addressed from Parsed Elements</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/build.R'><code>R/build.R</code></a></small>
     <div class="hidden name"><code>pm_rebuild.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a single address from parsed components. Data are automatically re-ordered
-    as part of this process, so there is no need to subset columns prior to executing
-    this function.</p>
+    <p>Create a single address from parsed components.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_rebuild</span>(<span class='no'>.data</span>, <span class='no'>start</span>, <span class='no'>end</span>, <span class='kw'>include_commas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_rebuild</span>(<span class='no'>.data</span>, <span class='no'>start</span>, <span class='no'>end</span>, <span class='no'>new_address</span>, <span class='kw'>include_commas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <span class='no'>keep_parsed</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"right"</span>, <span class='no'>left_vars</span>, <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
+      <td><p>An object with raw and parsed data created by <code>pm_rebuild</code></p></td>
     </tr>
     <tr>
       <th>start</th>
@@ -140,9 +137,38 @@
       <td><p>Variable name to end rebuilding process with, typically the street suffix or postal code</p></td>
     </tr>
     <tr>
+      <th>new_address</th>
+      <td><p>Optiona; name of new variable to store rebuilt address in. If not specified,
+the re-build addressed will be stored in <code>pm.address</code>.</p></td>
+    </tr>
+    <tr>
       <th>include_commas</th>
       <td><p>A logical scalar; if <code>TRUE</code>, a comma is added both before and after the city
 name in rebuild addresses. If <code>FALSE</code> (default), no punctuation is added.</p></td>
+    </tr>
+    <tr>
+      <th>keep_parsed</th>
+      <td><p>Character string; if <code>"yes"</code>, all parsed elements will be
+added to the source data after replacement. If <code>"limited"</code>, only the <code>pm.city</code>,
+<code>pm.state</code>, and postal code variables will be retained. Otherwise, if <code>"no"</code>,
+only the rebuilt address will be added to the source data (default).</p></td>
+    </tr>
+    <tr>
+      <th>side</th>
+      <td><p>One of either <code>"left"</code> or <code>"right"</code> - should parsed data be placed to the left
+or right of the original data? Placing data to the left may be useful in particularly wide
+data sets.</p></td>
+    </tr>
+    <tr>
+      <th>left_vars</th>
+      <td><p>A character scalar or vector of variables to place on the left-hand side of
+the output when <code>side</code> is equal to <code>"middle"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>keep_ids</th>
+      <td><p>Logical scalar; if <code>TRUE</code>, the identification numbers
+will be kept in the source data after replacement. Otherwise, if <code>FALSE</code>,
+they will be removed (default).</p></td>
     </tr>
     <tr>
       <th>locale</th>
@@ -151,19 +177,13 @@ current option is "us" but this is included to facilitate future expansion.</p><
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A copy of the pomstmastr object with a standardized address variable.</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

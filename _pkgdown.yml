@@ -124,8 +124,8 @@ reference:
     desc: "Add Parsed Data Back into Source"
     contents:
     - pm_mutate
-    - pm_rebuild
     - pm_replace
+    - pm_rebuild
 
   - title: "Sample Data"
     desc: "Sushi Resturants in St. Louis and its Enviorns"

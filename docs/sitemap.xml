@@ -70,6 +70,24 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseFrac_parse.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_match.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseRange_parse.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_houseSuf_all.html</loc>
   </url>
   <url>

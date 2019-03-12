@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Address to Source Data — pm_replace • postmastr</title>
+<title>Add Parsed Street Address Data to Source Data Set — pm_replace • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Add Address to Source Data — pm_replace" />
+<meta property="og:title" content="Add Parsed Street Address Data to Source Data Set — pm_replace" />
 
-<meta property="og:description" content="Adds standardized address and, optionally, parsed elements back into
-    original source data frame." />
+<meta property="og:description" content="Adds standardized address and, optionally, unnest house ranges. All logical variables
+   that were created during the data cleaning process (i.e. pm.hasHouse, pm.hasDir, etc.)
+   are removed at this stage." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -108,19 +109,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add Address to Source Data</h1>
+    <h1>Add Parsed Street Address Data to Source Data Set</h1>
     <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/build.R'><code>R/build.R</code></a></small>
     <div class="hidden name"><code>pm_replace.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Adds standardized address and, optionally, parsed elements back into
-    original source data frame.</p>
+    <p>Adds standardized address and, optionally, unnest house ranges. All logical variables
+   that were created during the data cleaning process (i.e. <code>pm.hasHouse</code>, <code>pm.hasDir</code>, etc.)
+   are removed at this stage.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_replace</span>(<span class='no'>.data</span>, <span class='no'>source</span>, <span class='no'>newVar</span>, <span class='no'>keep_parsed</span>, <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_replace</span>(<span class='no'>.data</span>, <span class='no'>source</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"right"</span>, <span class='kw'>unnest</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,36 +130,30 @@
     <tr>
       <th>.data</th>
       <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a> that has been readied
-for replacement by (a) fully parsing the data and (b) rebuilding a sinle
-address field.</p></td>
+for replacement by fully parsing the data.</p></td>
     </tr>
     <tr>
       <th>source</th>
       <td><p>Original source data to merge clean addresses with.</p></td>
     </tr>
     <tr>
-      <th>newVar</th>
-      <td><p>Name of new variable to store rebuilt address in.</p></td>
+      <th>side</th>
+      <td><p>One of either <code>"left"</code> or <code>"right"</code> - should parsed data be placed to the left
+or right of the original data? Placing data to the left may be useful in particularly wide
+data sets.</p></td>
     </tr>
     <tr>
-      <th>keep_parsed</th>
-      <td><p>Character string; if <code>"yes"</code>, all parsed elements will be
-added to the source data after replacement. If <code>"limited"</code>, only the <code>pm.city</code>,
-<code>pm.state</code>, and postal code variables will be retained. Otherwise, if <code>"no"</code>,
-only the rebuilt address will be added to the source data (default).</p></td>
-    </tr>
-    <tr>
-      <th>keep_ids</th>
-      <td><p>Logical scalar; if <code>TRUE</code>, the identification numbers
-will be kept in the source data after replacement. Otherwise, if <code>FALSE</code>,
-they will be removed (default).</p></td>
+      <th>unnest</th>
+      <td><p>A logical scalar; if <code>TRUE</code>, house ranges will be unnested (i.e. a house range that
+has been expanded to cover four addresses with <code><a href='pm_houseRange_parse.html'>pm_houseRange_parse</a></code> will be converted
+from a single observation to four observations, one for each house number). If <code>FALSE</code> (default),
+the single observation will remain.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The source data with a standardized address variable and, optionally, parsed
-    address elements.</p>
+    <p>The source data with a parsed address elements added to the left side of the source data.</p>
     
 
   </div>
