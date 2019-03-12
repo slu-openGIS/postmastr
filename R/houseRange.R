@@ -245,77 +245,83 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
     stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
-  if ("pm.hasHouse" %in% names(.data) == FALSE){
-    .data <- pm_houseRange_detect(.data)
-  }
+  # only parse house ranges if there are house ranges present in the data
+  if (pm_houseRange_any(.data) == TRUE){
 
-  # parse into two columns
-  .data %>%
-    dplyr::mutate(pm.houseRange = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
-    dplyr::mutate(pm.houseRange = stringr::str_replace(pm.houseRange, pattern = "-", replacement = " ")) %>%
-    dplyr::mutate(pm.houseLow = stringr::word(pm.houseRange, 1)) %>%
-    dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> .data
+    # detect individual addresses with ranges
+    if ("pm.hasHouse" %in% names(.data) == FALSE){
+      .data <- pm_houseRange_detect(.data)
+    }
 
-  # look for shortened house numbers
-  .data %>%
-    dplyr::mutate(pm.houseShort = ifelse(stringr::str_length(pm.houseLow) > stringr::str_length(pm.houseHigh), TRUE, FALSE)) %>%
-    dplyr::mutate(pm.houseHigh = ifelse(pm.houseShort == TRUE,
-                                        stringr::str_c(stringr::str_sub(pm.houseLow,
-                                                                        start = 1,
-                                                                        end = stringr::str_length(pm.houseLow)-
-                                                                          stringr::str_length(pm.houseHigh)),
-                                                       pm.houseHigh),
-                                        pm.houseHigh)) %>%
-    dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
-    dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
-    dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> .data
-
-  # construct list-col
-  # if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
-  # so that tidyr::unnest() works down the road
-  .data %>%
-    dplyr::mutate(
-      pm.houseRange = stringr::str_split(string = stringr::str_c(
-        as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
-    ) -> .data
-
-  # expand numeric ranges
-  if (expand_range == TRUE){
-
-    # subset data without a range
+    # parse into two columns
     .data %>%
-      dplyr::filter(is.na(pm.houseLow) == TRUE) %>%
-      dplyr::select(-pm.houseLow, -pm.houseHigh) -> noRange
+      dplyr::mutate(pm.houseRange = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
+      dplyr::mutate(pm.houseRange = stringr::str_replace(pm.houseRange, pattern = "-", replacement = " ")) %>%
+      dplyr::mutate(pm.houseLow = stringr::word(pm.houseRange, 1)) %>%
+      dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> .data
 
-    # subset data with a range, identify ranges with alphanumeric values
+    # look for shortened house numbers
     .data %>%
-      dplyr::filter(is.na(pm.houseLow) == FALSE) %>%
-      dplyr::select(-pm.houseLow, -pm.houseHigh) %>%
-      pm_houseAlpha_detect() -> yesRange
+      dplyr::mutate(pm.houseShort = ifelse(stringr::str_length(pm.houseLow) > stringr::str_length(pm.houseHigh), TRUE, FALSE)) %>%
+      dplyr::mutate(pm.houseHigh = ifelse(pm.houseShort == TRUE,
+                                          stringr::str_c(stringr::str_sub(pm.houseLow,
+                                                                          start = 1,
+                                                                          end = stringr::str_length(pm.houseLow)-
+                                                                            stringr::str_length(pm.houseHigh)),
+                                                         pm.houseHigh),
+                                          pm.houseHigh)) %>%
+      dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
+      dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
+      dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> .data
 
-    # subset ranges without alphanumeric values, expand
-    yesRange %>%
-      dplyr::filter(pm.hasAlpha.a == FALSE) %>%
-      dplyr::select(-pm.hasAlpha.a) %>%
-      dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = pm_parse_range)) -> yesRange_num
+    # construct list-col
+    # if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
+    # so that tidyr::unnest() works down the road
+    .data %>%
+      dplyr::mutate(
+        pm.houseRange = stringr::str_split(string = stringr::str_c(
+          as.character(pm.houseLow), "-", as.character(pm.houseHigh)), pattern = "-")
+      ) -> .data
 
-    # put data pack together
-    yesRange %>%
-      dplyr::filter(pm.hasAlpha.a == TRUE) %>%
-      dplyr::select(-pm.hasAlpha.a) %>%
-      dplyr::bind_rows(yesRange_num, ., noRange) %>%
-      dplyr::arrange(pm.uid) -> .data
+    # expand numeric ranges
+    if (expand_range == TRUE){
 
-  } else if (expand_range == FALSE){
+      # subset data without a range
+      .data %>%
+        dplyr::filter(is.na(pm.houseLow) == TRUE) %>%
+        dplyr::select(-pm.houseLow, -pm.houseHigh) -> noRange
 
-    .data <- dplyr::select(.data, -pm.houseLow, -pm.houseHigh)
+      # subset data with a range, identify ranges with alphanumeric values
+      .data %>%
+        dplyr::filter(is.na(pm.houseLow) == FALSE) %>%
+        dplyr::select(-pm.houseLow, -pm.houseHigh) %>%
+        pm_houseAlpha_detect() -> yesRange
 
-  }
+      # subset ranges without alphanumeric values, expand
+      yesRange %>%
+        dplyr::filter(pm.hasAlpha.a == FALSE) %>%
+        dplyr::select(-pm.hasAlpha.a) %>%
+        dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = pm_parse_range)) -> yesRange_num
 
-  # reorder variables
-  if (locale == "us"){
-    vars <- pm_reorder(.data)
-    .data <- dplyr::select(.data, vars)
+      # put data pack together
+      yesRange %>%
+        dplyr::filter(pm.hasAlpha.a == TRUE) %>%
+        dplyr::select(-pm.hasAlpha.a) %>%
+        dplyr::bind_rows(yesRange_num, ., noRange) %>%
+        dplyr::arrange(pm.uid) -> .data
+
+    } else if (expand_range == FALSE){
+
+      .data <- dplyr::select(.data, -pm.houseLow, -pm.houseHigh)
+
+    }
+
+    # reorder variables
+    if (locale == "us"){
+      vars <- pm_reorder(.data)
+      .data <- dplyr::select(.data, vars)
+    }
+
   }
 
   # return output

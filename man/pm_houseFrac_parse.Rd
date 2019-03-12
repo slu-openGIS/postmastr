@@ -15,7 +15,9 @@ current option is "us" but this is included to facilitate future expansion.}
 \value{
 A tibble with a new column \code{pm.houseFrac} that contains the fractional house number.
     If a house number is not detected in the string, a value of \code{NA} will be
-    returned.
+    returned. If a fractional is detected in an address that has a house range associated with
+    it, a new element will be added to the vector stored in \code{pm.houseRange} for the
+    fractional.
 }
 \description{
 Create a new column containing fractional house number data.

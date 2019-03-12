@@ -169,7 +169,9 @@ pm_houseFrac_none <- function(.data){
 #'
 #' @return A tibble with a new column \code{pm.houseFrac} that contains the fractional house number.
 #'     If a house number is not detected in the string, a value of \code{NA} will be
-#'     returned.
+#'     returned. If a fractional is detected in an address that has a house range associated with
+#'     it, a new element will be added to the vector stored in \code{pm.houseRange} for the
+#'     fractional.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr everything
@@ -192,25 +194,57 @@ pm_houseFrac_parse <- function(.data, locale = "us"){
     stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
-  if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
-    .data <- pm_houseFrac_detect(.data)
-  }
+  # only parse house ranges if there are house ranges present in the data
+  if (pm_houseRange_any(.data) == TRUE){
 
-  # parse
-  .data %>%
-    dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%
-    dplyr::mutate(pm.address = ifelse(pm.hasHouseFrac == TRUE,
-                                      stringr::word(pm.address, start = 2, end = -1),
-                                      pm.address)) %>%
-    dplyr::select(-pm.hasHouseFrac) -> out
+    # detect individual fractional addresses
+    if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
+      .data <- pm_houseFrac_detect(.data)
+    }
 
-  # re-order variables
-  if (locale == "us"){
-    vars <- pm_reorder(.data)
-    .data <- dplyr::select(.data, vars)
+    # parse
+    .data %>%
+      dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%
+      dplyr::mutate(pm.address = ifelse(pm.hasHouseFrac == TRUE,
+                                        stringr::word(pm.address, start = 2, end = -1),
+                                        pm.address)) %>%
+      dplyr::select(-pm.hasHouseFrac) -> .data
+
+    # add fractionals to house ranges
+    if ("pm.houseRange" %in% names(.data) == TRUE){
+
+      # identify non-fractional address ranges and fractional single addresses
+      noRangeFrac <- dplyr::filter(.data, (is.na(pm.houseRange) == TRUE & is.na(pm.houseFrac) == TRUE) |
+                                     (is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == TRUE))
+
+      # subset fractional address ranges, add to list-col vector, replace
+      .data %>%
+        dplyr::filter(is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == FALSE) %>%
+        dplyr::mutate(pm.houseRange = purrr::map(.x = pm.houseRange, .f = pm_add_fraction)) %>%
+        dplyr::bind_rows(noRangeFrac, .) %>%
+        dplyr::arrange(pm.uid) -> .data
+
+    }
+
+    # re-order variables
+    if (locale == "us"){
+      vars <- pm_reorder(.data)
+      .data <- dplyr::select(.data, vars)
+    }
+
   }
 
   # return output
-  return(out)
+  return(.data)
+
+}
+
+
+pm_add_fraction <- function(x){
+
+  frac <- stringr::str_c(x[length(x)], " ", "1/2")
+
+  # add frac to end of vector
+  vector <- c(x, frac)
 
 }
