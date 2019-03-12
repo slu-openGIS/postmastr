@@ -190,7 +190,10 @@ pm_house_parse <- function(.data, locale = "us"){
   }
 
   if ("pm.hasHouse" %in% names(.data) == FALSE){
+    houseDetect <- FALSE
     .data <- pm_house_detect(.data)
+  } else if ("pm.hasHouse" %in% names(.data) == TRUE){
+    houseDetect <- TRUE
   }
 
   # parse
@@ -199,8 +202,12 @@ pm_house_parse <- function(.data, locale = "us"){
     dplyr::mutate(pm.address = ifelse(pm.hasHouse == TRUE,
                                       stringr::word(pm.address, start = 2, end = -1),
                                       pm.address)) %>%
-    dplyr::select(-pm.hasHouse) %>%
-    dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> out
+    dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> .data
+
+  # remove pm.houseDetect if not present initially
+  if (houseDetect == FALSE){
+    .data <- dplyr::select(.data, -pm.hasHouse)
+  }
 
   # reorder variables
   if (locale == "us"){
@@ -209,6 +216,6 @@ pm_house_parse <- function(.data, locale = "us"){
   }
 
   # return output
-  return(out)
+  return(.data)
 
 }
