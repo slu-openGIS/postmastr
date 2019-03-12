@@ -189,6 +189,7 @@ pm_house_parse <- function(.data, locale = "us"){
     stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
   }
 
+  # detect individual addresses
   if ("pm.hasHouse" %in% names(.data) == FALSE){
     houseDetect <- FALSE
     .data <- pm_house_detect(.data)
@@ -204,7 +205,7 @@ pm_house_parse <- function(.data, locale = "us"){
                                       pm.address)) %>%
     dplyr::select(pm.uid, pm.address, pm.house, dplyr::everything()) -> .data
 
-  # remove pm.houseDetect if not present initially
+  # remove pm.hasHouse if not present initially
   if (houseDetect == FALSE){
     .data <- dplyr::select(.data, -pm.hasHouse)
   }

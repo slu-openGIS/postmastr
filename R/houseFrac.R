@@ -199,7 +199,10 @@ pm_houseFrac_parse <- function(.data, locale = "us"){
 
     # detect individual fractional addresses
     if ("pm.hasHouseFrac" %in% names(.data) == FALSE){
+      fracDetect <- FALSE
       .data <- pm_houseFrac_detect(.data)
+    } else if ("pm.hasHouseFrac" %in% names(.data) == TRUE){
+      fracDetect <- TRUE
     }
 
     # parse
@@ -207,8 +210,12 @@ pm_houseFrac_parse <- function(.data, locale = "us"){
       dplyr::mutate(pm.houseFrac = ifelse(pm.hasHouseFrac == TRUE, stringr::word(pm.address, 1), NA)) %>%
       dplyr::mutate(pm.address = ifelse(pm.hasHouseFrac == TRUE,
                                         stringr::word(pm.address, start = 2, end = -1),
-                                        pm.address)) %>%
-      dplyr::select(-pm.hasHouseFrac) -> .data
+                                        pm.address)) -> .data
+
+    # remove pm.hasHouseFrac if not present initially
+    if (fracDetect == FALSE){
+      .data <- dplyr::select(.data, -pm.hasHouseFrac)
+    }
 
     # add fractionals to house ranges
     if ("pm.houseRange" %in% names(.data) == TRUE){
