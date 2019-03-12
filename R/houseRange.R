@@ -249,16 +249,19 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
   if (pm_houseRange_any(.data) == TRUE){
 
     # detect individual addresses with ranges
-    if ("pm.hasHouse" %in% names(.data) == FALSE){
+    if ("pm.hasHouseRange" %in% names(.data) == FALSE){
+      rangeDetect <- FALSE
       .data <- pm_houseRange_detect(.data)
+    } else if ("pm.hasHouseRange" %in% names(.data) == TRUE){
+      rangeDetect <- TRUE
     }
 
     # parse into two columns
     .data %>%
-      dplyr::mutate(pm.houseRange = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
-      dplyr::mutate(pm.houseRange = stringr::str_replace(pm.houseRange, pattern = "-", replacement = " ")) %>%
-      dplyr::mutate(pm.houseLow = stringr::word(pm.houseRange, 1)) %>%
-      dplyr::mutate(pm.houseHigh = stringr::word(pm.houseRange, 2)) -> .data
+      dplyr::mutate(pm.houseVal = ifelse(pm.hasHouseRange == TRUE, pm.house, NA)) %>%
+      dplyr::mutate(pm.houseVal = stringr::str_replace(pm.houseVal, pattern = "-", replacement = " ")) %>%
+      dplyr::mutate(pm.houseLow = stringr::word(pm.houseVal, 1)) %>%
+      dplyr::mutate(pm.houseHigh = stringr::word(pm.houseVal, 2)) -> .data
 
     # look for shortened house numbers
     .data %>%
@@ -272,7 +275,12 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
                                           pm.houseHigh)) %>%
       dplyr::mutate(pm.house2 = ifelse(pm.houseShort == TRUE, stringr::str_c(pm.houseLow, "-", pm.houseHigh), pm.house)) %>%
       dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
-      dplyr::select(-pm.house2, -pm.houseShort, -pm.hasHouseRange, -pm.houseRange) -> .data
+      dplyr::select(-pm.house2, -pm.houseShort, -pm.houseVal) -> .data
+
+    # remove pm.houseDetect if not present initially
+    if (rangeDetect == FALSE){
+      .data <- dplyr::select(.data, -pm.hasHouseRange)
+    }
 
     # construct list-col
     # if there is no range, a list of <chr [1]> with a value of NA is created, this is needed
