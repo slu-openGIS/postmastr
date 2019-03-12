@@ -92,8 +92,6 @@ For the `sushi1` data, the required dictionaries
 are:
 
 ``` r
-> dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
-> sufs <- pm_dictionary(type = "suffix", locale = "us")
 > mo <- pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
 > cities <- pm_append(type = "city",
 +                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", 
@@ -115,12 +113,11 @@ used to fully prep, parse, and reconstruct address strings:
 ``` r
 > postmastr::sushi1 %>%
 +   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
-+   pm_parse(input = "full",
-+            address = address,
-+            output = "short",
-+            dir_dict = dirs,
-+            suffix_dict = sufs,
-+            city_dict = cities,
++   pm_parse(input = "full", 
++            address = address, 
++            output = "short", 
++            keep_parsed = "no", 
++            city_dict = cities, 
 +            state_dict = mo)
 # A tibble: 27 x 4
    name                            address                                        visit    pm.address               
