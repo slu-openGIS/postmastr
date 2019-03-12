@@ -31,29 +31,30 @@ test_that("correctly specified functions execute without error", {
 # test inputs ------------------------------------------------
 
 test_that("correctly specified functions execute without error", {
-  expect_error(pm_parse(sushi1, input = "full", address = "address", output = "full",
+  expect_error(pm_parse(sushi1, input = "full", address = "address", output = "full", keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
-  expect_error(pm_parse(sushi1, input = "full", address = address, output = "full",
+  expect_error(pm_parse(sushi1, input = "full", address = address, output = "full", keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
   expect_error(pm_parse(sushi1, input = "full", address = address, output = "short", new_address = "clean_address",
+                        keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
   expect_error(pm_parse(sushi1, input = "full", address = address, output = "short", new_address = clean_address,
+                        keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
   expect_error(pm_parse(sushi1, input = "full", address = address, output = "short", keep_parsed = "limited",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
 })
 
 test_that("correctly specified functions execute without error", {
-  expect_error(pm_parse(sushi2, input = "short", address = "address",
+  expect_error(pm_parse(sushi2, input = "short", address = "address", keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
   expect_error(pm_parse(sushi2, input = "short", address = "address", keep_parsed = TRUE,
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
-  expect_error(pm_parse(sushi2, input = "short", address = "address",
+  expect_error(pm_parse(sushi2, input = "short", address = "address", keep_parsed = "no",
                         dir_dict = dirs, suffix_dict = sufs, city_dict = cities, state_dict = mo), NA)
 })
 
 test_that("correctly specified functions execute without error", {
-  expect_error(pm_parse(sushi1, input = "short", address = "address", city_dict = cities), NA)
-  expect_error(pm_parse(sushi2, input = "short", address = "address"), NA)
+  expect_error(pm_parse(sushi2, input = "short", address = "address", keep_parsed = "no"), NA)
 })
 
