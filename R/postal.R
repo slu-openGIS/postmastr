@@ -235,9 +235,14 @@ pm_postal_parse <- function(.data, locale = "us"){
     stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
-  # check for zips
-  if (locale == "us" & "pm.hasZip" %in% names(.data) == FALSE){
-    .data <- pm_postal_detect(.data)
+  # detect individual zips
+  if (locale == "us"){
+    if ("pm.hasZip" %in% names(.data) == FALSE){
+      postalDetect <- FALSE
+      .data <- pm_postal_detect(.data)
+    } else if ("pm.hasZip" %in% names(.data) == TRUE){
+      postalDetect <- TRUE
+    }
   }
 
   # parse
@@ -245,6 +250,11 @@ pm_postal_parse <- function(.data, locale = "us"){
     .data <- pm_parse_zip_us(.data)
     vars <- pm_reorder(.data)
     .data <- dplyr::select(.data, vars)
+  }
+
+  # remove pm.hasZip if not present initially
+  if (postalDetect == FALSE & locale == "us"){
+    .data <- dplyr::select(.data, -pm.hasZip)
   }
 
   # return output
@@ -267,8 +277,7 @@ pm_parse_zip_us <- function(.data){
     dplyr::mutate(pm.address =
                     ifelse(pm.hasZip == TRUE,
                            stringr::word(pm.address, start = 1, end = -2),
-                           pm.address)) %>%
-    dplyr::select(-pm.hasZip) -> .data
+                           pm.address)) -> .data
 
   # look for presence of zip+4
   .data <- pm_has_zip4_us(.data)
