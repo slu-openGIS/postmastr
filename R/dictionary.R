@@ -456,7 +456,7 @@ pm_convert_case <- function(.data, var, orderVar, case){
 #'     output = c("Dr. Martin Luther King, Jr.", "Dr. Martin Luther King, Jr."),
 #'     locale = "us")
 #'
-#' @importFrom dplyr as_tibble
+#' @importFrom dplyr tibble
 #'
 #' @export
 pm_append <- function(type, input, output, locale = "us"){
@@ -468,67 +468,76 @@ pm_append <- function(type, input, output, locale = "us"){
 
     if (type == "state"){
 
-      out <- data.frame(
+      out <- dplyr::tibble(
         state.output = c(output),
-        state.input = c(input),
-        stringsAsFactors = FALSE
-      )
+        state.input = c(input))
 
       out <- dplyr::mutate(out,
                            state.output = stringr::str_to_upper(state.output),
                            state.input = stringr::str_to_title(state.input))
 
+      # re-order observations
+      out <- out[order(out$state.input),]
+
     } else if (type == "city"){
 
       if (missing(output) == TRUE){
 
-        out <- data.frame(
-          city.input = c(input),
-          stringsAsFactors = FALSE)
+        out <- dplyr::tibble(
+          city.input = c(input))
 
       } else if (missing(output) == FALSE){
 
-        out <- data.frame(
+        out <- dplyr::tibble(
           city.output = c(output),
-          city.input = c(input),
-          stringsAsFactors = FALSE)
+          city.input = c(input))
 
       }
 
+      # re-order observations
+      out <- out[order(out$city.input),]
+
     } else if (type == "directional"){
 
-      out <- data.frame(
+      out <- dplyr::tibble(
         dir.output = c(output),
-        dir.input = c(input),
-        stringsAsFactors = FALSE)
+        dir.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$dir.input),]
 
     } else if (type == "suffix"){
 
-      out <- data.frame(
+      out <- dplyr::tibble(
         suf.output = c(output),
-        suf.input = c(input),
-        stringsAsFactors = FALSE)
+        suf.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$suf.input),]
 
     } else if (type == "street"){
 
-      out <- data.frame(
+      out <- dplyr::tibble(
         st.output = c(output),
-        st.input = c(input),
-        stringsAsFactors = FALSE)
+        st.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$st.input),]
 
     } else if (type == "house suffix"){
 
-      out <- data.frame(
+      out <- dplyr::tibble(
         houseSuf.output = c(output),
-        houseSuf.input = c(input),
-        stringsAsFactors = FALSE)
+        houseSuf.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$houseSuf.input),]
 
     }
 
   }
 
-  # create and return output
-  out <- dplyr::as_tibble(out)
+  # return output
   return(out)
 
 }

@@ -142,13 +142,17 @@ pm_reorder_build <- function(.data, locale = "us"){
 #' @description Adds standardized address and, optionally, parsed elements back into
 #'     original source data frame.
 #'
-#' @usage pm_replace(.data, source, newVar, keep_parsed, keep_ids = FALSE)
+#' @usage pm_replace(.data, source, newVar, unnest = FALSE, keep_parsed, keep_ids = FALSE)
 #'
 #' @param .data A postmastr object created with \link{pm_prep} that has been readied
 #'     for replacement by (a) fully parsing the data and (b) rebuilding a sinle
 #'     address field.
 #' @param source Original source data to merge clean addresses with.
 #' @param newVar Name of new variable to store rebuilt address in.
+#' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
+#'    has been expanded to cover four addresses with \code{\link{pm_houseRage_parse}} will be converted
+#'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
+#'    the single observation will remain.
 #' @param keep_parsed Character string; if \code{"yes"}, all parsed elements will be
 #'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 #'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
@@ -164,9 +168,10 @@ pm_reorder_build <- function(.data, locale = "us"){
 #' @importFrom dplyr select
 #' @importFrom dplyr select_if
 #' @importFrom stats na.omit
+#' @importFrom tidyr unnest
 #'
 #' @export
-pm_replace <- function(.data, source, newVar, keep_parsed, keep_ids = FALSE){
+pm_replace <- function(.data, source, newVar, unnest = FALSE, keep_parsed, keep_ids = FALSE){
 
   # global bindings
   pm.id = pm.uid = pm.rebuilt = pm.city = pm.state = pm.zip = pm.zip4 = NULL
@@ -186,37 +191,55 @@ pm_replace <- function(.data, source, newVar, keep_parsed, keep_ids = FALSE){
     varQ <- rlang::quo(!! rlang::sym(newVar))
   }
 
-  # optionally retain parsed elements
-  if (keep_parsed == "no"){
+  if (unnest == FALSE){
 
-    .data <- dplyr::select(.data, pm.uid, pm.rebuilt)
+    # optionally retain parsed elements
+    if (keep_parsed == "no"){
 
-  } else if (keep_parsed == "limited") {
+      .data <- dplyr::select(.data, pm.uid, pm.rebuilt)
 
-    if ("pm.zip4" %in% names(.data) == TRUE){
-      .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip, pm.zip4)
-    } else if ("pm.zip4" %in% names(.data) == FALSE){
-      .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip)
+    } else if (keep_parsed == "limited") {
+
+      if ("pm.zip4" %in% names(.data) == TRUE){
+        .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip, pm.zip4)
+      } else if ("pm.zip4" %in% names(.data) == FALSE){
+        .data <- dplyr::select(.data, pm.uid, pm.rebuilt, pm.city, pm.state, pm.zip)
+      }
+
+    } else if (keep_parsed == "yes"){
+
+      vars <- pm_reorder_replace(.data)
+      .data %>%
+        dplyr::select(vars) %>%
+        dplyr::select_if(function(x) !(all(is.na(x)))) -> .data
+
     }
 
-  } else if (keep_parsed == "yes"){
+    # optionally rename output variable
+    if (missing(newVar) == FALSE){
 
-    vars <- pm_reorder_replace(.data)
-    .data %>%
-      dplyr::select(vars) %>%
-      dplyr::select_if(function(x) !(all(is.na(x)))) -> .data
+      .data <- rename(.data, !!varQ := pm.rebuilt)
+
+    }
+
+    # join parsed and source data
+    out <- dplyr::left_join(source, .data, by = "pm.uid")
+
+  } else if (unnest == TRUE){
+
+    # remove fractionals associated wiht address ranges
+    .data <- dplyr::mutate(.data, pm.houseFrac =
+                             ifelse(is.na(pm.houseRange) == FALSE & is.na(pm.houseFrac) == FALSE,
+                           NA, pm.houseFrac))
+
+    # join parsed and source data, and then unnest and clean
+    dplyr::left_join(source, .data, by = "pm.uid") %>%
+      tidyr::unnest() %>%
+      dplyr::mutate(pm.house = ifelse(is.na(pm.houseRange) == FALSE, pm.houseRange, pm.house)) %>%
+      dplyr::select(-pm.houseRange) -> out
+
 
   }
-
-  # optionally rename output variable
-  if (missing(newVar) == FALSE){
-
-    .data <- rename(.data, !!varQ := pm.rebuilt)
-
-  }
-
-  # join parsed and source data
-  out <- dplyr::left_join(source, .data, by = "pm.uid")
 
   # optionally retain id variables
   if (keep_ids == FALSE){

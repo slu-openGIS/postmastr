@@ -8,7 +8,7 @@ pm_reorder <- function(.data, locale = "us"){
 
     # master list of variables for pm objects
     master <- data.frame(
-      master.vars = c("pm.uid", "pm.address", "pm.rebuilt", "pm.hasHouse", "pm.house", "pm.houseRange",
+      master.vars = c("pm.uid", "pm.address", "pm.rebuilt", "pm.hasHouse", "pm.house", "pm.hasHouseRange", "pm.houseRange",
                       "pm.hasHouseFrac", "pm.houseFrac", "pm.hasAlpha", "pm.hasHouseSuf", "pm.houseSuf",
                       "pm.hasDir", "pm.preDir", "pm.street", "pm.hasStreetSuf", "pm.streetSuf", "pm.sufDir",
                       "pm.hasUnit", "pm.unitType", "pm.unitNum", "pm.hasCity", "pm.city",
