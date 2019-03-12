@@ -307,24 +307,26 @@ If you do not have a strong sense of the problem-space you are confronted with, 
 4. city
 5. unit
 6. house number
-7. fractional house number
-8. house suffix
-9. street directionals
-10. street suffix
-11. street name
-12. reconstruct
+7. ranged house number
+8. fractional house number
+9. house suffix
+10. street directionals
+11. street suffix
+12. street name
+13. reconstruct
 
 If no street address in the given data set contains one of the grammatical elements (for example, if none of the addresses contain units), the associated functions in the workflow can be skipped. For "short" addresses that do not include cities, states, or postal codes, the order of operations should be:
 
 1. prep
 2. unit
 3. house number
-4. fractional house number
-5. house suffix
-6. street directionals
-7. street suffix
-8. street name
-9. reconstruct
+4. ranged house number
+5. fractional house number
+6. house suffix
+7. street directionals
+8. street suffix
+9. street name
+10. reconstruct
 
 ### Prep
 There are two initial preparatory steps that *must* be taken with these data. First, we want to ensure that they have a unique identification number for each row (to preserve the original sort order; `pm.id`) as well as a unique identification number for each *unique* street address string (`pm.uid`). These can both be applied using `pm.identify()`:
@@ -597,7 +599,7 @@ Our next task in the order of operations is to parse out house numbers. We do th
 11     11 N EUCLID AVE      4   
 ```
 
-There is no dictionary for this step - the first word of any address will be parsed out so long as it contains at least some numbers.
+There is no dictionary for this step - the first word of any address will be parsed out so long as it contains at least some numbers. If you house number contains a range (`123-125 Main St`) or fractional value (`123 1/2 Main St`), there are a separate set of functions for both `pm_houseRange_` and `pm_houseFrac_` for dealing with these special cases.
 
 ### Street Prefix and Suffix Data
 Our addresses have two types of prefix and suffix data. There are directionals, like the "south" in `S Grand Boulevard`, and the suffix value, which is "Boulevard". The United States Postal Services prefers abbreviations for both directionals and suffix values, and so `postmastr` returns the preferred abbreviations whenever full names are found. We can parse out the directionals first with `pm_streetDir_parse()`:
@@ -674,35 +676,42 @@ Our final parsing task is to convert whatever remains in `pm.address` to the str
 The `pm_street_` family of functions does not have the logical test functions at this time since street names are assumed to be whatever is leftover from the parsing process to this point.
 
 ### Putting It All Back Together
-Once we have parsed data, we can rebuild our street address strings with `pm_rebuild()`:
+Once we have parsed data, we add our parsed data back into the source data frame with `pm_replae()`:
 
 ```r
-> sushi2_min <- pm_rebuild(sushi2_min, start = pm.house, end = pm.streetSuf)
-> sushi2_min
-# A tibble: 11 x 6
-   pm.uid pm.rebuilt           pm.house pm.preDir pm.street   pm.streetSuf
-    <int> <chr>                <chr>    <chr>     <chr>       <chr>       
- 1      1 3407 Olive St        3407     NA        Olive       St          
- 2      2 3221 S Grand Blvd    3221     S         Grand       Blvd        
- 3      3 1 Maryland Plz       1        NA        Maryland    Plz         
- 4      4 4949 W Pine Blvd     4949     W         Pine        Blvd        
- 5      5 3674 Forest Park Ave 3674     NA        Forest Park Ave         
- 6      6 1013 Washington Ave  1013     NA        Washington  Ave         
- 7      7 3043 Olive St        3043     NA        Olive       St          
- 8      8 308 N Euclid Ave     308      N         Euclid      Ave         
- 9      9 910 Olive St         910      NA        Olive       St          
-10     10 910 Olive St         910      NA        Olive       St          
-11     11 4 N Euclid Ave       4        N         Euclid      Ave    
+> sushi2_parsed <- pm_replace(sushi2_min, source = sushi2)
+> 
+> sushi2_parsed
+# A tibble: 15 x 9
+   pm.id pm.uid name                            address                visit    pm.house pm.preDir pm.street   pm.streetSuf
+   <int>  <int> <chr>                           <chr>                  <chr>    <chr>    <chr>     <chr>       <chr>       
+ 1     1      1 BaiKu Sushi Lounge              3407 Olive St          3/20/18  3407     NA        Olive       St          
+ 2     2      2 Cafe Mochi                      3221 S Grand Boulevard 10/10/18 3221     S         Grand       Blvd        
+ 3     3      3 Drunken Fish - Central West End 1 Maryland Plaza       12/2/18  1        NA        Maryland    Plz         
+ 4     4      4 Kampai Sushi Bar                4949 W Pine Blvd       2/13/18  4949     W         Pine        Blvd        
+ 5     5      5 Midtown Sushi & Ramen           3674 Forest Park Ave   3/4/18   3674     NA        Forest Park Ave         
+ 6     6      6 Mizu Sushi Bar                  1013 Washington Avenue 9/12/18  1013     NA        Washington  Ave         
+ 7     7      7 Sapporo 2                       3043 Olive St          3/1/18   3043     NA        Olive       St          
+ 8     8      7 Sapporo 2                       3043 Olive St          7/3/18   3043     NA        Olive       St          
+ 9     9      8 Sub Zero Vodka Bar              308 N Euclid Ave       12/7/18  308      N         Euclid      Ave         
+10    10      9 Sushi Ai                        910 Olive St           3/29/18  910      NA        Olive       St          
+11    11      9 Sushi Ai                        910 Olive St           5/20/18  910      NA        Olive       St          
+12    12     10 Sushi Ai                        910 Olive Street       6/17/18  910      NA        Olive       St          
+13    13     10 Sushi Ai                        910 Olive Street       8/25/18  910      NA        Olive       St          
+14    14     10 Sushi Ai                        910 Olive Street       10/30/18 910      NA        Olive       St          
+15    15     11 SUSHI KOI                       4 N EUCLID AVE         1/17/18  4        N         Euclid      Ave   
 ```
 
-This function adds a variable named `pm.rebuilt` to the beginning of our `postmastr` object after `pm.uid`. The `start` and `end` arguments are useful for rebuilding only part of a parsed street address (such as to exclude city, state, and postal code data). For longer addresses, there are options to include commas before and after the city name.
+The replacement process includes an `unnest` argument, which will convert the house range list-columns into individual observations.
 
-With our addresses rebuilt, we can add the parsed data back into our original data set with `pm.replace()`:
+With our addresses replaced, we can then rebuild address strings them with `pm.rebuild()`:
 
 ```r
-> pm_replace(sushi2_min, source = sushi2, keep_parsed = "no", keep_ids = FALSE)
+> sushi2_parsed <- pm_rebuild(sushi2_parsed, start = pm.house, end = pm.streetSuf, keep_parsed = "no")
+>
+> sushi2_parsed
 # A tibble: 15 x 4
-   name                            address                visit    pm.rebuilt          
+   name                            address                visit    pm.address          
    <chr>                           <chr>                  <chr>    <chr>               
  1 BaiKu Sushi Lounge              3407 Olive St          3/20/18  3407 Olive St       
  2 Cafe Mochi                      3221 S Grand Boulevard 10/10/18 3221 S Grand Blvd   
@@ -718,10 +727,10 @@ With our addresses rebuilt, we can add the parsed data back into our original da
 12 Sushi Ai                        910 Olive Street       6/17/18  910 Olive St        
 13 Sushi Ai                        910 Olive Street       8/25/18  910 Olive St        
 14 Sushi Ai                        910 Olive Street       10/30/18 910 Olive St        
-15 SUSHI KOI                       4 N EUCLID AVE         1/17/18  4 N Euclid Ave  
+15 SUSHI KOI                       4 N EUCLID AVE         1/17/18  4 N Euclid Ave 
 ```
 
-The `keep_parsed` argument has options to retain some data, including city, state, and postal code, when a full address was present in the source data (use `keep_parsed = "limited"`) or to keep all parsed data (with `keep_parsed = "yes"`). The `keep_ids` argument will retain the `pm.id` and `pm.uid` variables. Finally, there is a `newVar` argument to specify the name of the new variable with the rebuild address. If not specified, `pm.rebuilt` is used as the default variable name.
+The `keep_parsed` argument has options to retain some data, including city, state, and postal code, when a full address was present in the source data (use `keep_parsed = "limited"`) or to keep all parsed data (with `keep_parsed = "yes"`). The `keep_ids` argument will retain the `pm.id` and `pm.uid` variables. Finally, there is a `new_address` argument to specify the name of the new variable with the rebuild address. If not specified, `pm.address` is used as the default variable name.
 
 ## Getting Help
 * If you are new to `R` itself, welcome! Hadley Wickham's [*R for Data Science*](http://r4ds.had.co.nz) is an excellent way to get started with data manipulation in the tidyverse, which `stlcsb` is designed to integrate seamlessly with.
