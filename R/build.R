@@ -169,6 +169,11 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
     }
   }
 
+  # convert left_vars to expression
+  if (missing(left_vars) == FALSE){
+    left_varsE <- rlang::enexpr(left_vars)
+  }
+
   # move pm.houseRange
   if (keep_parsed == "yes" & "pm.houseRange" %in% names(.data) == TRUE){
     .data <- dplyr::select(.data, pm.id, pm.uid, pm.houseRange, dplyr::everything())
@@ -209,7 +214,7 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
         dplyr::select(...pm.id, ...pm.uid, ...temp_address, dplyr::everything()) -> .data
 
       if (side == "middle"){
-        .data <- dplyr::select(.data, ...pm.id, ...pm.uid, left_vars, dplyr::everything())
+        .data <- dplyr::select(.data, ...pm.id, ...pm.uid, !!left_varsE, dplyr::everything())
       }
 
     }

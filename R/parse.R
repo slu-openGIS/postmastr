@@ -151,11 +151,15 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
   # unquote variable
   add <- paramList$address
 
-  if (!is.character(paramList$address)) {
+  if (!is.character(paramList$add)) {
     varQ <- rlang::enquo(add)
   } else if (is.character(paramList$add)) {
     varQ <- rlang::quo(!! rlang::sym(add))
   }
+
+  # varQ <- rlang::enexpr(address)
+
+  varQN <- rlang::quo_name(rlang::enquo(address))
 
   # unquote new variable
   if (missing(new_address) == FALSE){
@@ -169,6 +173,13 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
 
   } else if (missing(new_address) == TRUE){
     newVarQ <- rlang::quo(!! rlang::sym("pm.address"))
+  }
+
+  # convert left_vars to expression
+  if (missing(left_vars) == FALSE){
+    left_varsE <- rlang::enexpr(left_vars)
+  } else if (missing(left_vars) == TRUE){
+    left_varsE <- rlang::quo(!! rlang::sym("...skip"))
   }
 
   # include units?
@@ -206,7 +217,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
       pm_replace(source = source, unnest = unnest) %>%
       pm_rebuild(start = pm.house, end = "end", new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
                  locale = locale) -> out
 
   } else if (input == "full" & output == "short") {
@@ -225,7 +236,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
       pm_replace(source = source, unnest = unnest) %>%
       pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
                  locale = locale) -> out
 
   } else if (input == "short" & output == "short"){
@@ -241,7 +252,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
       pm_replace(source = source, unnest = unnest) %>%
       pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = left_vars, keep_ids = keep_ids,
+                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
                  locale = locale) -> out
 
   }

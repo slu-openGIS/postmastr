@@ -91,9 +91,9 @@ sushi_unnest %>%
   pm_streetSuf_detect() %>%
   pm_streetSuf_parse() %>%
   pm_street_parse() %>%
-  pm_replace2(source = sushi_unnest) %>%
-  pm_rebuild2(start = pm.house, end = pm.streetSuf, new_var = clean_address, keep_parsed = "no",
-              side = "middle", left_vars = c("name", "address"), keep_ids = FALSE)
+  pm_replace(source = sushi_unnest) %>%
+  pm_rebuild(start = pm.house, end = pm.streetSuf, new_address = clean_address, keep_parsed = "no",
+              side = "middle", left_vars = name:address, keep_ids = FALSE)
 
 
 
