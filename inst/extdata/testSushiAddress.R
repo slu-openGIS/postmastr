@@ -60,6 +60,17 @@ rm(sushi2, sushi2_frac, sushi2_min, sushi2_suf)
 
 postmastr::sushi2 %>%
   filter(name != "Drunken Fish - Ballpark Village") %>%
+  mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407 1/2 SECOND AVE", address)) %>%
+  mutate(address = ifelse(name == "SUSHI KOI", "7 1/2 SECOND AVE", address)) %>%
+  pm_identify(var = address) %>%
+  pm_prep(var = "address") %>%
+  pm_house_parse() %>%
+  pm_houseFrac_parse()
+
+# =============================
+
+postmastr::sushi2 %>%
+  filter(name != "Drunken Fish - Ballpark Village") %>%
   mutate(address = ifelse(name == "BaiKu Sushi Lounge", "3407-11 SECOND AVE", address)) %>%
   mutate(address = ifelse(name == "SUSHI KOI", "7-11R 1/2 SECOND AVE", address)) %>%
   pm_identify(var = address) %>%
