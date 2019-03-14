@@ -333,25 +333,24 @@ pm_parse_dir_us <- function(.data, dictionary){
     mutate(pm.sufDir = ifelse(stringr::str_detect(pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b$")) == TRUE,
                               stringr::str_extract(pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b$")), NA)) -> .data
 
-  # clean address data
-  .data %>%
-    dplyr::mutate(pm.address = ifelse(is.na(pm.preDir) == FALSE,
-                                      stringr::word(pm.address, start = 2, end = -1), pm.address)) %>%
-    dplyr::mutate(pm.address = ifelse(is.na(pm.sufDir) == FALSE,
-                                      stringr::word(pm.address, start = 1, end = -2), pm.address)) -> .data
-
-  # standardize prefix direction (or drop)
+  # standardize prefix direction (or drop), and clean address data if necessary
   if (all(is.na(.data$pm.preDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.preDir)
   } else if (all(is.na(.data$pm.preDir)) == FALSE){
     .data <- pm_streetDir_std(.data, var = pm.preDir, dictionary = dictionary)
+
+    .data <- dplyr::mutate(.data, pm.address = ifelse(is.na(pm.preDir) == FALSE,
+                                                      stringr::word(pm.address, start = 2, end = -1), pm.address))
   }
 
-  # standardize suffix direction (or drop)
+  # standardize suffix direction (or drop), and clean address data if necessary
   if (all(is.na(.data$pm.sufDir)) == TRUE){
     .data <- dplyr::select(.data, -pm.sufDir)
   } else if (all(is.na(.data$pm.sufDir)) == FALSE){
     .data <- pm_streetDir_std(.data, var = pm.sufDir, dictionary = dictionary)
+
+    .data <- dplyr::mutate(.data, pm.address = ifelse(is.na(pm.sufDir) == FALSE,
+                                              stringr::word(pm.address, start = 1, end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address))
   }
 
   # return output
