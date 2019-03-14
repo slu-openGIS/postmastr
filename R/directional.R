@@ -350,7 +350,7 @@ pm_parse_dir_us <- function(.data, dictionary){
     .data <- pm_streetDir_std(.data, var = pm.sufDir, dictionary = dictionary)
 
     .data <- dplyr::mutate(.data, pm.address = ifelse(is.na(pm.sufDir) == FALSE,
-                                              stringr::word(pm.address, start = 1, end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address))
+                                              stringr::word(pm.address, start = 1, end = -1-stringr::str_count(pm.sufDir, pattern = "\\w+")), pm.address))
   }
 
   # return output

@@ -321,7 +321,7 @@ pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 
   # clean address data
   .data %>%
-    dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -1-stringr::str_count(pm.state, pattern = "\\w+")), pm.address)) %>%
+    dplyr::mutate(pm.address = ifelse(is.na(pm.streetSuf) == FALSE, stringr::word(pm.address, start = 1, end = -1-stringr::str_count(pm.streetSuf, pattern = "\\w+")), pm.address)) %>%
     pm_streetSuf_std(var = pm.streetSuf, dictionary = dictionary) -> .data
 
 
