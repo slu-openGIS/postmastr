@@ -104,6 +104,7 @@ pm_identify <- function(.data, var){
 #' @importFrom rlang sym
 #' @importFrom stringr str_replace_all
 #'
+#' @export
 pm_prep <- function(.data, var){
 
   # create bindings for global variables
