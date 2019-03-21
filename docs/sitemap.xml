@@ -4,6 +4,9 @@
     <loc>https://slu-openGIS.github.io/postmastr//index.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/dic_country.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_dir.html</loc>
   </url>
   <url>
@@ -32,6 +35,27 @@
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_city_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_all.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_any.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_detect.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_none.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_parse.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_country_trim.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_dictionary.html</loc>
