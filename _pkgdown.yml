@@ -27,6 +27,17 @@ reference:
     - pm_has_address
     - pm_has_uid
 
+  - title: "Countries"
+    desc: "Work with Country Names and Abbreviations"
+    contents:
+    - pm_country_any
+    - pm_country_all
+    - pm_country_detect
+    - pm_country_none
+    - pm_country_parse
+    - pm_country_trim
+    - pm_country_std
+
   - title: "Postal Codes"
     desc: "Work with Postal (Zip) Codes"
     contents:

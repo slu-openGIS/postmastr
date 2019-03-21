@@ -90,7 +90,8 @@ An updated version of the source data with, at a minimum, a new variable contain
 \description{
 A wrapper around the parse functions that can be used to shorten all
     of \code{postmastr}'s core code down to a single function call once dictionaries
-    have been created and tested against the data.
+    have been created and tested against the data. By default, any country indicators
+    like "US" or "USA" will be removed from output addresses.
 }
 \examples{
 # construct dictionaries

@@ -162,7 +162,9 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
   endQN <- rlang::quo_name(rlang::enquo(end))
 
   if (endQN == "end"){
-    if ("pm.zip4" %in% names(.data) == TRUE){
+    if ("pm.country" %in% names(.data) == TRUE) {
+      endQ <- rlang::quo(!! rlang::sym("pm.country"))
+    } else if ("pm.zip4" %in% names(.data) == TRUE){
       endQ <- rlang::quo(!! rlang::sym("pm.zip4"))
     } else if ("pm.zip4" %in% names(.data) == FALSE){
       endQ <- rlang::quo(!! rlang::sym("pm.zip"))
@@ -239,7 +241,7 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
                         "pm.houseFrac", "pm.houseSuf",
                         "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
                         "pm.unitType", "pm.unitNum",  "pm.city",
-                        "pm.state", "pm.zip", "pm.zip4"),
+                        "pm.state", "pm.zip", "pm.zip4", "pm.country"),
         stringsAsFactors = FALSE
       )
 

@@ -12,7 +12,7 @@ pm_reorder <- function(.data, locale = "us"){
                       "pm.hasHouseFrac", "pm.houseFrac", "pm.hasAlpha", "pm.hasHouseSuf", "pm.houseSuf",
                       "pm.hasDir", "pm.preDir", "pm.street", "pm.hasStreetSuf", "pm.streetSuf", "pm.sufDir",
                       "pm.hasUnit", "pm.unitType", "pm.unitNum", "pm.hasCity", "pm.city",
-                      "pm.hasState", "pm.state", "pm.hasZip", "pm.zip", "pm.zip4"),
+                      "pm.hasState", "pm.state", "pm.hasZip", "pm.zip", "pm.zip4", "pm.hasCountry", "pm.country"),
       stringsAsFactors = FALSE
     )
 

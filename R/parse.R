@@ -2,7 +2,8 @@
 #'
 #' @description A wrapper around the parse functions that can be used to shorten all
 #'     of \code{postmastr}'s core code down to a single function call once dictionaries
-#'     have been created and tested against the data.
+#'     have been created and tested against the data. By default, any country indicators
+#'     like "US" or "USA" will be removed from output addresses.
 #'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
 #'     unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
@@ -205,6 +206,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
 
     source %>%
       pm_prep(var = "address") %>%
+      pm_country_trim() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
@@ -224,6 +226,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
 
     source %>%
       pm_prep(var = "address") %>%
+      pm_country_trim() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
