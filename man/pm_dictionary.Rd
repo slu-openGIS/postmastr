@@ -8,7 +8,7 @@ pm_dictionary(type, append, filter, case = c("title", "lower", "upper"), locale 
 }
 \arguments{
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"}, \code{"city"},
+should represent. Current options are \code{"country"}, \code{"state"}, \code{"city"},
 \code{"directional"}, and \code{"suffix"}.}
 
 \item{append}{An optional dictionary appendix object created with \code{\link{pm_append}}}

@@ -8,7 +8,7 @@ pm_append(type, input, output, locale = "us")
 }
 \arguments{
 \item{type}{A string indicating the grammatical address element the dictionary
-should represent. Current options are \code{"state"}, \code{"city"},
+should represent. Current options are \code{"country"}, \code{"state"}, \code{"city"},
 \code{"street"}, \code{"house suffix"}, \code{"directional"}, and \code{"suffix"}.}
 
 \item{input}{A character scalar or vector containing possible terms existing in
