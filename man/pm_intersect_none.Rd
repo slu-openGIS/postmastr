@@ -4,15 +4,18 @@
 \alias{pm_intersect_none}
 \title{Return Only Unmatched Observations From pm_intersect_detect}
 \usage{
-pm_intersect_none(.data, dictionary)
+pm_intersect_none(.data, var, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
 
+\item{var}{A character variable containing address data to be parsed}
+
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list for intersections.}
 
-\item{var}{A character variable containing address data to be parsed}
+\item{locale}{A string indicating the country these data represent; the only
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
 A tibble containing only observations that were not found in

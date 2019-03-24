@@ -2,12 +2,14 @@
 #'
 #' @description Determine whether the intersection dictionary returns any matches.
 #'
-#' @usage pm_intersect_any(.data, dictionary)
+#' @usage pm_intersect_any(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A raw data set that has been pre-processed with \code{\link{pm_identify}}
 #' @param var A character variable containing address data to be parsed
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for intersection values.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A single logical scalar is returned that is
 #'     \code{TRUE} if the data contains at least intersection from the given
@@ -20,7 +22,7 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_intersect_any <- function(.data, dictionary){
+pm_intersect_any <- function(.data, var, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -38,7 +40,11 @@ pm_intersect_any <- function(.data, dictionary){
   }
 
   # test dictionary
-  .data <- pm_intersect_detect(.data, var = !!varQ, dictionary = dictionary)
+  if (missing(dictionary) == TRUE){
+    .data <- pm_intersect_detect(.data, var = !!varQ, locale = locale)
+  } else if (missing(dictionary) == FALSE){
+    .data <- pm_intersect_detect(.data, var = !!varQ, dictionary = dictionary, locale = locale)
+  }
 
   # create output
   out <- any(.data$pm.hasIntersect)
@@ -52,12 +58,14 @@ pm_intersect_any <- function(.data, dictionary){
 #'
 #' @description Determine whether the intersection dictionary returns any matches.
 #'
-#' @usage pm_intersect_all(.data, dictionary)
+#' @usage pm_intersect_all(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable containing address data to be parsed
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list intersection values.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A single logical scalar is returned that is
 #'     \code{TRUE} if the data contains at least one intersection from the given
@@ -70,7 +78,7 @@ pm_intersect_any <- function(.data, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_intersect_all <- function(.data, var, dictionary){
+pm_intersect_all <- function(.data, var, dictionary, locale = "us"){
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -88,7 +96,11 @@ pm_intersect_all <- function(.data, var, dictionary){
   }
 
   # test dictionary
-  .data <- pm_intersect_detect(.data, var = !!varQ, dictionary = dictionary)
+  if (missing(dictionary) == TRUE){
+    .data <- pm_intersect_detect(.data, var = !!varQ, locale = locale)
+  } else if (missing(dictionary) == FALSE){
+    .data <- pm_intersect_detect(.data, var = !!varQ, dictionary = dictionary, locale = locale)
+  }
 
   # create output
   out <- all(.data$pm.hasIntersect)
@@ -102,12 +114,14 @@ pm_intersect_all <- function(.data, var, dictionary){
 #'
 #' @description Determine the presence of intersection in a string.
 #'
-#' @usage pm_intersect_detect(.data, dictionary)
+#' @usage pm_intersect_detect(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable containing address data to be parsed
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list intersection values.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A tibble with a new logical variable \code{pm.hasIntersect} that is
 #'     \code{TRUE} if an intersection from the given dictionary is found in the
@@ -124,7 +138,7 @@ pm_intersect_all <- function(.data, var, dictionary){
 #' @importFrom stringr str_detect
 #'
 #' @export
-pm_intersect_detect <- function(.data, var, dictionary){
+pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
 
   # create bindings for global variables
   pm.address = pm.hasIntersect = NULL
@@ -132,6 +146,11 @@ pm_intersect_detect <- function(.data, var, dictionary){
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
     stop("The variable 'pm.uid' is missing from the given object. Pre-process yur data with pm_identify before proceeding.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
   }
 
   # save parameters to list
@@ -144,12 +163,23 @@ pm_intersect_detect <- function(.data, var, dictionary){
     varQ <- rlang::quo(!! rlang::sym(var))
   }
 
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- pm_dictionary(type = "intersection")
+    }
+  }
+
   # minimize dictionary
-  dict <- paste(dictionary$intersect.input, collapse = "|")
+  if (locale == "us"){
+    dict <- paste(dictionary$intersect.input, collapse = "|")
+  }
 
   # check observations
-  .data <- dplyr::mutate(.data, pm.hasIntersect = stringr::str_detect(!!varQ,
+  if (locale == "us"){
+    .data <- dplyr::mutate(.data, pm.hasIntersect = stringr::str_detect(!!varQ,
                                                                  pattern = stringr::str_c("\\b(", dict, ")\\b")))
+  }
 
   # return output
   return(.data)
@@ -161,12 +191,14 @@ pm_intersect_detect <- function(.data, var, dictionary){
 #' @description Automatically subset the results of \link{pm_intersect_detect} to
 #'    return only observations that were not found in the dictionary.
 #'
-#' @usage pm_intersect_none(.data, dictionary)
+#' @usage pm_intersect_none(.data, var, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param var A character variable containing address data to be parsed
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
 #'     as a master list for intersections.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
 #'
 #' @return A tibble containing only observations that were not found in
 #'     the dictionary. The variable created by \link{pm_intersect_detect},
@@ -182,7 +214,7 @@ pm_intersect_detect <- function(.data, var, dictionary){
 #' @importFrom rlang sym
 #'
 #' @export
-pm_intersect_none <- function(.data, dictionary){
+pm_intersect_none <- function(.data, var, dictionary, locale = "us"){
 
   # global bindings
   pm.hasIntersect = NULL
@@ -202,9 +234,16 @@ pm_intersect_none <- function(.data, dictionary){
     varQ <- rlang::quo(!! rlang::sym(var))
   }
 
+  # load dictionary if not specified
+  if (missing(dictionary) == TRUE){
+    if (locale == "us"){
+      dictionary <- pm_dictionary(type = "intersection")
+    }
+  }
+
   # create output
   .data %>%
-    pm_intersect_detect(var = !!varQ, dictionary = dictionary) %>%
+    pm_intersect_detect(var = !!varQ, dictionary = dictionary, locale = locale) %>%
     dplyr::filter(pm.hasIntersect == FALSE) %>%
     dplyr::select(-pm.hasIntersect) -> out
 

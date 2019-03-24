@@ -4,15 +4,18 @@
 \alias{pm_intersect_any}
 \title{Does Intersection Dictionary Return Any Matches}
 \usage{
-pm_intersect_any(.data, dictionary)
+pm_intersect_any(.data, var, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A raw data set that has been pre-processed with \code{\link{pm_identify}}}
 
+\item{var}{A character variable containing address data to be parsed}
+
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list for intersection values.}
 
-\item{var}{A character variable containing address data to be parsed}
+\item{locale}{A string indicating the country these data represent; the only
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
 A single logical scalar is returned that is

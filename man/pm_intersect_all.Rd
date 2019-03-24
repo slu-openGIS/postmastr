@@ -4,7 +4,7 @@
 \alias{pm_intersect_all}
 \title{Does Intersection Dictionary Return a Match for All Observations}
 \usage{
-pm_intersect_all(.data, dictionary)
+pm_intersect_all(.data, var, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}
@@ -13,6 +13,9 @@ pm_intersect_all(.data, dictionary)
 
 \item{dictionary}{A tbl created with \code{pm_dictionary} to be used
 as a master list intersection values.}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
 A single logical scalar is returned that is
