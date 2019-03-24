@@ -369,7 +369,7 @@ pm_dictionary_us_intersection <- function(append, filter){
 
   # optionally filter
   if (missing(filter) == FALSE){
-    out <- dplyr::filter(out, intersect.output %in% filter)
+    out <- dplyr::filter(out, intersect.input %in% filter)
   }
 
   # return output
@@ -388,6 +388,8 @@ pm_case <- function(.data, locale, type, case){
       out <- pm_convert_case(.data, var = "dir.input", orderVar = "dir.output", case = case)
     } else if (type == "suffix"){
       out <- pm_convert_case(.data, var = "suf.input", orderVar = "suf.output", case = case)
+    } else if (type == "intersection"){
+      out <- pm_convert_case(.data, var = "intersect.input", orderVar = "intersect.output", case = case)
     }
 
   }
