@@ -139,6 +139,20 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
 
       out <- pm_case(working, locale = locale, type = type, case = case)
 
+    } else if (type == "intersection"){
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_intersection(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_intersection(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_intersection(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_intersection()
+      }
+
+      out <- pm_case(working, locale = locale, type = type, case = case)
+
     }
 
   }
@@ -326,6 +340,36 @@ pm_dictionary_us_suffix <- function(append, filter){
   # optionally filter
   if (missing(filter) == FALSE){
     out <- dplyr::filter(out, suf.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
+# us intersections
+pm_dictionary_us_intersection <- function(append, filter){
+
+  # global bindings
+  intersect.output = NULL
+
+  # load data
+  out <- postmastr::dic_us_intersect
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$intersect.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, intersect.output %in% filter)
   }
 
   # return output
@@ -533,6 +577,15 @@ pm_append <- function(type, input, output, locale = "us"){
       # re-order observations
       out <- out[order(out$houseSuf.input),]
 
+    } else if (type == "intersection"){
+
+      out <- dplyr::tibble(
+        intersect.output = c(output),
+        intersect.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$intersect.input),]
+
     }
 
   }
@@ -610,3 +663,22 @@ pm_append <- function(type, input, output, locale = "us"){
 #' head(dic_us_suffix)
 #'
 "dic_us_suffix"
+
+#' Intersection Dictionary, United States of America
+#'
+#' @description A list of abbreviations used to identify intersections in the United States.
+#'
+#' @docType data
+#'
+#' @usage data(dic_us_intersect)
+#'
+#' @format A tibble with 5 rows and 2 variables:
+#' \describe{
+#'   \item{intersect.output}{standard intersection identifier}
+#'   \item{intersect.input}{possible intersection identifiers}
+#' }
+#'
+#' @examples
+#' head(dic_us_intersect)
+#'
+"dic_us_intersect"
