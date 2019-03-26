@@ -241,8 +241,8 @@ pm_type_unknown <- function(.data){
 #'
 #' @details Creation of the subset data is dependent on whether the data are
 #'    house numbers or intersections. Any addresses identified as \code{"short"},
-#'    \code{"full"}, or \code{"partial"} will be returned when \code{type = "house"}.
-#'    Addresses that are identified as \code{"unknown"} will also be included in \code{"house"},
+#'    \code{"full"}, or \code{"partial"} will be returned when \code{type = "street"}.
+#'    Addresses that are identified as \code{"unknown"} will also be included in \code{"street"},
 #'    but the accuracy of the parser may be limited. Addresses identified as intersections
 #'    will be returned when \code{type = "intersection"}.
 #'
@@ -251,7 +251,7 @@ pm_type_unknown <- function(.data){
 #' @param .data A source tibble that has already had identification
 #'    numbers added using \link{pm_identify}.
 #' @param var A character variable containing address data to be parsed
-#' @param type The type of addresses to be parsed, one of either \code{"house"}
+#' @param type The type of addresses to be parsed, one of either \code{"street"}
 #'     or \code{"intersection"}
 #'
 #' @return A tibble with one observation per unique address in the source data
@@ -305,7 +305,7 @@ pm_prep <- function(.data, var, type){
   }
 
   # filter by type
-  if (type == "house"){
+  if (type == "street"){
     .data <- dplyr::filter(.data, pm.type != "intersection")
   } else if (type == "intersection"){
     .data <- dplyr::filter(.data, pm.type == "intersection")

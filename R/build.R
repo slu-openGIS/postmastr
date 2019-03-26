@@ -4,11 +4,13 @@
 #'    that were created during the data cleaning process (i.e. \code{pm.hasHouse}, \code{pm.hasDir}, etc.)
 #'    are removed at this stage.
 #'
-#' @usage pm_replace(.data, source, side = "right", unnest = FALSE)
+#' @usage pm_replace(source, street, intersect, side = "right", unnest = FALSE)
 #'
-#' @param .data A postmastr object created with \link{pm_prep} that has been readied
-#'     for replacement by fully parsing the data.
 #' @param source Original source data to merge clean addresses with.
+#' @param street A postmastr object created with \link{pm_prep} with street addresses that has been readied
+#'     for replacement by fully parsing the data.
+#' @param intersect A postmastr object created with \link{pm_prep} with intersections that has been readied
+#'     for replacement by fully parsing the data.
 #' @param side One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
 #'    or right of the original data? Placing data to the left may be useful in particularly wide
 #'    data sets.
@@ -28,23 +30,64 @@
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_replace <- function(.data, source, side = "right", unnest = FALSE){
+pm_replace <- function(source, street, intersect, side = "right", unnest = FALSE){
 
   # global bindings
   pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = NULL
 
-  # check for object and key variables
-  if (pm_has_uid(.data) == FALSE){
-    stop("The variable 'pm.uid' is missing from the object supplied for the '.data' argument. Create a postmastr object with pm_identify and pm_prep and fully parse it before proceeding.")
+  # check for objects and key variables
+  if (missing(street) == FALSE){
+
+    if (pm_has_uid(street) == FALSE){
+      stop("The variable 'pm.uid' is missing from the object supplied for the 'street' argument. Create a postmastr object with pm_identify and pm_prep and fully parse it before proceeding.")
+    }
+
+    if ("pm.street" %in% names(street) == FALSE){
+      stop("The object supplied for the 'street' argument is missing the 'pm.street' variable and therefore is not fully parsed. postmastr objects must be fully parsed before replacement.")
+    }
+
+  }
+
+  if (missing(intersect) == FALSE){
+
+    if (pm_has_uid(intersect) == FALSE){
+      stop("The variable 'pm.uid' is missing from the object supplied for the 'intersect' argument. Create a postmastr object with pm_identify and pm_prep and fully parse it before proceeding.")
+    }
+
+    if ("pm.street" %in% names(intersect) == FALSE){
+      stop("The object supplied for the 'intersect' argument is missing the 'pm.street' variable and therefore is not fully parsed. postmastr objects must be fully parsed before replacement.")
+    }
+
   }
 
   if (pm_has_uid(source) == FALSE){
     stop("The variable 'pm.uid' is missing from the source data. Source data should be processed with pm_identify before parsing.")
   }
 
-  if ("pm.street" %in% names(.data) == FALSE){
-    stop("The object supplied for the '.data' argument is missing the 'pm.street' variable and therefore is not fully parsed. postmastr objects must be fully parsed before replacement.")
+  # determine rebuild operations
+  if (missing(street) == TRUE & missing(intersect) == TRUE){
+    stop("At least one parsed data set must be supplied for 'street' or 'intersect'.")
+  } else if (missing(street) == FALSE & missing(intersect) == TRUE){
+    build <- "street"
+  } else if (missing(street) == TRUE & missing(intersect) == FALSE){
+    build <- "intersect"
+  } else if (missing(street) == FALSE & missing(intersect) == FALSE){
+    build <- "combined"
   }
+
+  # rebuild
+  if (build == "street"){
+
+
+  }
+
+  # return output
+  return(out)
+
+}
+
+#
+pm_rebuild_street <- function(.data, source, side, unnest){
 
   # remove logical variables from postmastr object as well as any missing all values
   .data %>%
@@ -83,14 +126,18 @@ pm_replace <- function(.data, source, side = "right", unnest = FALSE){
                                       pm.house)) %>%
       dplyr::mutate(pm.house = ifelse(pm.hasHouseFracRange == TRUE &
                                         stringr::str_count(string = pm.house, pattern = "\\S+") > 2,
-                                        stringr::word(pm.house, start = 1, end = -2),
+                                      stringr::word(pm.house, start = 1, end = -2),
                                       pm.house)) %>%
       dplyr::select(-pm.houseRange, -pm.hasHouseFracRange) -> out
 
   }
 
-  # return output
-  return(out)
+}
+
+#
+pm_rebuild_intersect <- function(.data, source, side){
+
+
 
 }
 
