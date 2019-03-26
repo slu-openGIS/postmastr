@@ -7,6 +7,9 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_dir.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_intersect.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/dic_us_states.html</loc>
   </url>
   <url>
@@ -35,6 +38,9 @@
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_dictionary.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_evaluate.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_has_address.html</loc>
@@ -124,7 +130,13 @@
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_identify.html</loc>
   </url>
   <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_intersect_detect.html</loc>
+  </url>
+  <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_mutate.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_mutate_raw.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_parse.html</loc>
@@ -212,6 +224,12 @@
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/pm_street_std.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_type_partial.html</loc>
+  </url>
+  <url>
+    <loc>https://slu-openGIS.github.io/postmastr//reference/pm_type_unknown.html</loc>
   </url>
   <url>
     <loc>https://slu-openGIS.github.io/postmastr//reference/sushi1.html</loc>

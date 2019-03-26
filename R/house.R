@@ -102,6 +102,26 @@ pm_house_detect <- function(.data){
 
 }
 
+pm_house_detect_prep <- function(.data, var){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  # detect pattern
+  .data <- dplyr::mutate(.data, pm.hasHouse = stringr::str_detect(stringr::word(!!varQ, 1), pattern = "[0-9]"))
+
+  # return output
+  return(.data)
+
+}
+
 #' Return Only Unmatched Observations From pm_house_detect
 #'
 #' @description Automatically subset the results of \link{pm_house_detect} to

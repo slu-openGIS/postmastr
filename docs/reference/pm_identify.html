@@ -36,7 +36,10 @@
     for matching parsed data with the original, raw data once parsing
     is complete. One (pm.id) uniquely identifies each observation,
     while the other uniquely identifies each distinct street address
-    (pm.uid)." />
+    (pm.uid). A variable named pm.type is also created that
+    attempts to identify the type of variable of address contained in a
+    given variable. If pm_identify is re-run, only pm.type
+    will be updated." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -122,11 +125,14 @@
     for matching parsed data with the original, raw data once parsing
     is complete. One (<code>pm.id</code>) uniquely identifies each observation,
     while the other uniquely identifies each distinct street address
-    (<code>pm.uid</code>).</p>
+    (<code>pm.uid</code>). A variable named <code>pm.type</code> is also created that
+    attempts to identify the type of variable of address contained in a
+    given variable. If <code>pm_identify</code> is re-run, only <code>pm.type</code>
+    will be updated.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_identify</span>(<span class='no'>.data</span>, <span class='no'>var</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_identify</span>(<span class='no'>.data</span>, <span class='no'>var</span>, <span class='no'>intersect_dict</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,12 +145,21 @@
       <th>var</th>
       <td><p>A character variable containing address data to be parsed</p></td>
     </tr>
+    <tr>
+      <th>intersect_dict</th>
+      <td><p>A dictionary object with intersection identifiers</p></td>
+    </tr>
+    <tr>
+      <th>locale</th>
+      <td><p>A string indicating the country these data represent; the only
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tibble with both the <code>pm.id</code> and <code>pm.uid</code> variables added
-   in the first two positions of the data set.</p>
+    <p>A tibble with the <code>pm.id</code>, <code>pm.uid</code>, and <code>pm.type</code> variables added
+   in the first three positions of the data set.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

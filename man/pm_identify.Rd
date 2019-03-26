@@ -4,23 +4,31 @@
 \alias{pm_identify}
 \title{Identify Observations}
 \usage{
-pm_identify(.data, var)
+pm_identify(.data, var, intersect_dict, locale = "us")
 }
 \arguments{
 \item{.data}{A tbl or data frame}
 
 \item{var}{A character variable containing address data to be parsed}
+
+\item{intersect_dict}{A dictionary object with intersection identifiers}
+
+\item{locale}{A string indicating the country these data represent; the only
+current option is \code{"us"} but this is included to facilitate future expansion.}
 }
 \value{
-A tibble with both the \code{pm.id} and \code{pm.uid} variables added
-   in the first two positions of the data set.
+A tibble with the \code{pm.id}, \code{pm.uid}, and \code{pm.type} variables added
+   in the first three positions of the data set.
 }
 \description{
 Adds two identification numbers to raw data that will be used
     for matching parsed data with the original, raw data once parsing
     is complete. One (\code{pm.id}) uniquely identifies each observation,
     while the other uniquely identifies each distinct street address
-    (\code{pm.uid}).
+    (\code{pm.uid}). A variable named \code{pm.type} is also created that
+    attempts to identify the type of variable of address contained in a
+    given variable. If \code{pm_identify} is re-run, only \code{pm.type}
+    will be updated.
 }
 \details{
 \code{postmastr} functions are designed to operate

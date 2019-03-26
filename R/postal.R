@@ -152,6 +152,28 @@ pm_has_zip_us <- function(.data){
 
 }
 
+pm_postal_detect_prep <- function(.data, var, locale = "us"){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  # detect pattern
+  if (locale == "us"){
+    .data <- dplyr::mutate(.data, pm.hasZip = stringr::str_detect(stringr::word(!!varQ, -1), "([0-9]{5})"))
+  }
+
+  # return output
+  return(.data)
+
+}
+
 #' Return Only Unmatched Observations From pm_postal_detect
 #'
 #' @description Automatically subset the results of \link{pm_postal_detect} to

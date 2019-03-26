@@ -221,3 +221,40 @@ pm_check_vars_us <- function(.data, params){
   result <- any(is.na(match$given.vars))
 
 }
+
+#' Modify Raw Addresses
+#'
+#' @description Clean raw address data before parsing to improve the parsing process. This
+#'     may be particularly advantageous for addresses identified as \code{"partial"} or
+#'     \code{"unknown"} in \code{pm.type}.
+#'
+#' @param .data A source tibble that has already had identification
+#'    numbers added using \link{pm_identify}.
+#' @param uid A \code{pm.uid} value to edit.
+#' @param var A character variable containing address data to be edited
+#' @param new_val The new value for the for the given address variable.
+#'
+#' @seealso \code{\link{pm_identify}}
+#'
+#' @export
+pm_mutate_raw <- function(.data, uid, var, new_val){
+
+  # save parameters to list
+  paramList <- as.list(match.call())
+
+  # unquote
+  if (!is.character(paramList$var)) {
+    varQ <- rlang::enquo(var)
+  } else if (is.character(paramList$var)) {
+    varQ <- rlang::quo(!! rlang::sym(var))
+  }
+
+  varQN <- rlang::quo_name(rlang::enquo(var))
+
+  # edit value
+  .data <- dplyr::mutate(.data, !!varQ := ifelse(pm.uid == uid, new_val, !!varQ))
+
+  # return output
+  return(.data)
+
+}

@@ -7,10 +7,13 @@
 pm_prep(.data, var)
 }
 \arguments{
-\item{.data}{A source data frame that has already had identification
+\item{.data}{A source tibble that has already had identification
 numbers added using \link{pm_identify}.}
 
 \item{var}{A character variable containing address data to be parsed}
+
+\item{type}{The type of addresses to be parsed, one of either \code{"house"}
+or \code{"intersection"}}
 }
 \value{
 A tibble with one observation per unique address in the source data
@@ -21,4 +24,12 @@ A tibble with one observation per unique address in the source data
 Once identification numbers have been been added, this
    function creates a subset that will be parsed and then re-applied
    to the primary data set.
+}
+\details{
+Creation of the subset data is dependent on whether the data are
+   house numbers or intersections. Any addresses identified as \code{"short"},
+   \code{"full"}, or \code{"partial"} will be returned when \code{type = "house"}.
+   Addresses that are identified as \code{"unknown"} will also be included in \code{"house"},
+   but the accuracy of the parser may be limited. Addresses identified as intersections
+   will be returned when \code{type = "intersection"}.
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create postmastr Object for Parsing — pm_prep • postmastr</title>
+<title>Detect Presence of Intersection in Address — pm_intersect_detect • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Create postmastr Object for Parsing — pm_prep" />
+<meta property="og:title" content="Detect Presence of Intersection in Address — pm_intersect_detect" />
 
-<meta property="og:description" content="Once identification numbers have been been added, this
-   function creates a subset that will be parsed and then re-applied
-   to the primary data set." />
+<meta property="og:description" content="Determine the presence of intersection in a string." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -109,54 +107,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create postmastr Object for Parsing</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/prep.R'><code>R/prep.R</code></a></small>
-    <div class="hidden name"><code>pm_prep.Rd</code></div>
+    <h1>Detect Presence of Intersection in Address</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/intersection.R'><code>R/intersection.R</code></a></small>
+    <div class="hidden name"><code>pm_intersect_detect.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Once identification numbers have been been added, this
-   function creates a subset that will be parsed and then re-applied
-   to the primary data set.</p>
+    <p>Determine the presence of intersection in a string.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_prep</span>(<span class='no'>.data</span>, <span class='no'>var</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_intersect_detect</span>(<span class='no'>.data</span>, <span class='no'>var</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>A source tibble that has already had identification
-numbers added using <a href='pm_identify.html'>pm_identify</a>.</p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
       <th>var</th>
       <td><p>A character variable containing address data to be parsed</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>The type of addresses to be parsed, one of either <code>"house"</code>
-or <code>"intersection"</code></p></td>
+      <th>dictionary</th>
+      <td><p>A tbl created with <code>pm_dictionary</code> to be used
+as a master list intersection values.</p></td>
+    </tr>
+    <tr>
+      <th>locale</th>
+      <td><p>A string indicating the country these data represent; the only
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tibble with one observation per unique address in the source data
-   frame. The tibble will have two variables, <code>pm.uid</code> and <code>pm.address</code>,
-   which is used as the basis for exploratory parsing.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Creation of the subset data is dependent on whether the data are
-   house numbers or intersections. Any addresses identified as <code>"short"</code>,
-   <code>"full"</code>, or <code>"partial"</code> will be returned when <code>type = "house"</code>.
-   Addresses that are identified as <code>"unknown"</code> will also be included in <code>"house"</code>,
-   but the accuracy of the parser may be limited. Addresses identified as intersections
-   will be returned when <code>type = "intersection"</code>.</p>
+    <p>A tibble with a new logical variable <code>pm.hasIntersect</code> that is
+    <code>TRUE</code> if an intersection from the given dictionary is found in the
+    address and <code>FALSE</code> otherwise.</p>
     
 
   </div>
@@ -166,8 +157,6 @@ or <code>"intersection"</code></p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

@@ -23,9 +23,18 @@ reference:
     desc: "Create and Validate `postmastr` Objects"
     contents:
     - pm_identify
+    - pm_evaluate
+    - pm_type_partial
+    - pm_type_unknown
+    - pm_mutate_raw
     - pm_prep
     - pm_has_address
     - pm_has_uid
+
+  - title: "Intersections"
+    desc: "Work with Intersection Data"
+    contents:
+    - pm_intersect_detect
 
   - title: "Postal Codes"
     desc: "Work with Postal (Zip) Codes"
@@ -102,23 +111,31 @@ reference:
     - pm_houseSuf_parse
     - pm_houseSuf_std
 
-  - title: "Streets"
-    desc: "Work with Street Elements"
+  - title: "Street Directionals"
+    desc: "Work with Street Directionals (e.x. N, S, etc.)"
     contents:
-    - pm_street_parse
-    - pm_street_std
     - pm_streetDir_any
     - pm_streetDir_all
     - pm_streetDir_detect
     - pm_streetDir_none
     - pm_streetDir_parse
     - pm_streetDir_std
+
+  - title: "Street Suffixes"
+    desc: "Work with Street Suffix Types (e.x. Ave, St, etc.)"
+    contents:
     - pm_streetSuf_any
     - pm_streetSuf_all
     - pm_streetSuf_detect
     - pm_streetSuf_none
     - pm_streetSuf_parse
     - pm_streetSuf_std
+
+  - title: "Streets"
+    desc: "Work with Street Names"
+    contents:
+    - pm_street_parse
+    - pm_street_std
 
   - title: "Reconstruct Data"
     desc: "Add Parsed Data Back into Source"
