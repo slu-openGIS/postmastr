@@ -88,7 +88,7 @@ pm_identify <- function(.data, var, intersect_dict, locale = "us"){
       tibble::rowid_to_column(var = "pm.uid") -> subset
 
     # identify address type
-    subset <- pm_identify_type(subset, var = !!varQ, locale = locale)
+    subset <- pm_identify_type(subset, var = !!varQ, dict = intersect_dict, locale = locale)
 
     # put data back together
     subset %>%
@@ -109,7 +109,7 @@ pm_identify <- function(.data, var, intersect_dict, locale = "us"){
 }
 
 # Identify Address Type
-pm_identify_type <- function(.data, var, locale){
+pm_identify_type <- function(.data, var, dict, locale){
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -123,7 +123,7 @@ pm_identify_type <- function(.data, var, locale){
 
   # identify address type
   .data %>%
-    pm_intersect_detect(var = !!varQ, dictionary = intersect_dict, locale = locale) %>%
+    pm_intersect_detect(var = !!varQ, dictionary = dict, locale = locale) %>%
     pm_house_detect_prep(var = !!varQ) %>%
     pm_postal_detect_prep(var = !!varQ, locale = locale) %>%
     dplyr::mutate(pm.type = dplyr::case_when(

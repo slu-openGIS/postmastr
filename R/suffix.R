@@ -304,13 +304,24 @@ pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
   # detect directional streets
   if ("pm.preDir" %in% names(.data)){
 
+    if ("pm.hasStreetSuf" %in% names(.data) == FALSE){
+      .data <- pm_streetSuf_detect(.data, dictionary = dictionary, locale = locale)
+      addedDetect <- TRUE
+    } else if ("pm.hasStreetSuf" %in% names(.data) == TRUE){
+      addedDetect <- FALSE
+    }
+
     .data %>%
       dplyr::mutate(...stDir = ifelse(
         is.na(pm.preDir) == FALSE & stringr::str_count(pm.address, "\\w+") == 1,
         TRUE, FALSE)) %>%
-      dplyr::mutate(pm.address = ifelse(...stDir == TRUE,
+      dplyr::mutate(pm.address = ifelse(...stDir == TRUE & pm.hasStreetSuf == TRUE,
         stringr::str_c(pm.preDir, " ", pm.address), pm.address)) %>%
-      dplyr::mutate(pm.preDir = ifelse(...stDir == TRUE, NA, pm.preDir)) -> .data
+      dplyr::mutate(pm.preDir = ifelse(...stDir == TRUE & pm.hasStreetSuf == TRUE, NA, pm.preDir)) -> .data
+
+    if (addedDetect == TRUE){
+      .data <- dplyr::select(.data, -pm.hasStreetSuf)
+    }
 
   }
 

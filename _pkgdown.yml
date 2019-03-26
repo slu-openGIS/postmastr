@@ -35,6 +35,8 @@ reference:
     desc: "Work with Intersection Data"
     contents:
     - pm_intersect_detect
+    - pm_intersect_longer
+    - pm_intersect_wider
 
   - title: "Postal Codes"
     desc: "Work with Postal (Zip) Codes"
