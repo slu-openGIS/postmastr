@@ -106,10 +106,12 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
       }
 
       if (missing(append) == FALSE){
-        out <- pm_dictionary_us_cities(append = append, states = filter)
+        working <- pm_dictionary_us_cities(append = append, states = filter)
       } else if (missing(append) == TRUE){
-        out <- pm_dictionary_us_cities(states = filter)
+        working <- pm_dictionary_us_cities(states = filter)
       }
+
+     out <- pm_case(working, locale = locale, type = type, case = case)
 
     } else if (type == "directional"){
 
@@ -436,6 +438,8 @@ pm_case <- function(.data, locale, type, case){
       out <- pm_convert_case(.data, var = "intersect.input", orderVar = "intersect.output", case = case)
     } else if (type == "country"){
       out <- pm_convert_case(.data, var = "con.input", orderVar = "con.output", case = case)
+    } else if (type == "city"){
+      out <- pm_convert_case(.data, var = "city.input", orderVar = "city.input", case = case)
     }
 
   }
