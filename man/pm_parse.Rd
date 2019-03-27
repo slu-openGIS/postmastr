@@ -95,6 +95,11 @@ A wrapper around the parse functions that can be used to shorten all
     of \code{postmastr}'s core code down to a single function call once dictionaries
     have been created and tested against the data.
 }
+\details{
+This function does not currently return countries. If a country identifier
+    is present in the data to be parsed, it will be trimmed off the address and
+    not returned.
+}
 \examples{
 # construct dictionaries
 dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")

@@ -4,6 +4,10 @@
 #'     of \code{postmastr}'s core code down to a single function call once dictionaries
 #'     have been created and tested against the data.
 #'
+#' @details This function does not currently return countries. If a country identifier
+#'     is present in the data to be parsed, it will be trimmed off the address and
+#'     not returned.
+#'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
 #'     operator = "at", unnest = FALSE, include_commas = FALSE, include_units = TRUE,
 #'     keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, houseSuf_dict,
@@ -274,6 +278,7 @@ pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
   if (input == "full") {
 
     .data %>%
+      pm_country_trim() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
@@ -311,6 +316,7 @@ pm_parse_intersect <- function(.data, input, ordinal, dir_dict, street_dict,
   if (input == "full") {
 
     .data %>%
+      pm_country_trim() %>%
       pm_intersect_longer() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%

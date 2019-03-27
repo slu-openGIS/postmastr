@@ -153,6 +153,20 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
 
       out <- pm_case(working, locale = locale, type = type, case = case)
 
+    } else if (type == "country"){
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_country(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_country(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_country(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_country()
+      }
+
+      out <- pm_case(working, locale = locale, type = type, case = case)
+
     }
 
   }
@@ -377,6 +391,36 @@ pm_dictionary_us_intersection <- function(append, filter){
 
 }
 
+# country names
+pm_dictionary_country <- function(append, filter){
+
+  # global bindings
+  con.output = NULL
+
+  # load data
+  out <- postmastr::dic_country
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$con.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, con.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
 # Dictionary Case
 pm_case <- function(.data, locale, type, case){
 
@@ -588,6 +632,15 @@ pm_append <- function(type, input, output, locale = "us"){
       # re-order observations
       out <- out[order(out$intersect.input),]
 
+    } else if (type == "country"){
+
+      out <- dplyr::tibble(
+        con.output = c(output),
+        con.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$houseSuf.input),]
+
     }
 
   }
@@ -684,3 +737,22 @@ pm_append <- function(type, input, output, locale = "us"){
 #' head(dic_us_intersect)
 #'
 "dic_us_intersect"
+
+#' Country Dictionary
+#'
+#' @description A list of abbreviations for the United States.
+#'
+#' @docType data
+#'
+#' @usage data(dic_country)
+#'
+#' @format A tibble with 502 rows and 3 variables:
+#' \describe{
+#'   \item{con.output}{standard output}
+#'   \item{con.input}{full names abbreviations}
+#' }
+#'
+#' @examples
+#' head(dic_country)
+#'
+"dic_country"
