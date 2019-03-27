@@ -278,7 +278,7 @@ pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
   if (input == "full") {
 
     .data %>%
-      #pm_country_trim() %>%
+      pm_country_trim() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
@@ -316,7 +316,7 @@ pm_parse_intersect <- function(.data, input, ordinal, dir_dict, street_dict,
   if (input == "full") {
 
     .data %>%
-      #pm_country_trim() %>%
+      pm_country_trim() %>%
       pm_intersect_longer() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%

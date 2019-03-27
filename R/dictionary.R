@@ -434,6 +434,8 @@ pm_case <- function(.data, locale, type, case){
       out <- pm_convert_case(.data, var = "suf.input", orderVar = "suf.output", case = case)
     } else if (type == "intersection"){
       out <- pm_convert_case(.data, var = "intersect.input", orderVar = "intersect.output", case = case)
+    } else if (type == "country"){
+      out <- pm_convert_case(.data, var = "con.input", orderVar = "con.output", case = case)
     }
 
   }
