@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Re-construct Street Addressed from Parsed Elements — pm_rebuild • postmastr</title>
+<title>Convert Intersections to Long Form — pm_intersect_longer • postmastr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Re-construct Street Addressed from Parsed Elements — pm_rebuild" />
+<meta property="og:title" content="Convert Intersections to Long Form — pm_intersect_longer" />
 
-<meta property="og:description" content="Create a single address from parsed components." />
+<meta property="og:description" content="Split intersections into x and y streets." />
 
 <meta property="og:image" content="https://slu-openGIS.github.io/postmastr/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -107,84 +107,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Re-construct Street Addressed from Parsed Elements</h1>
-    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/build.R'><code>R/build.R</code></a></small>
-    <div class="hidden name"><code>pm_rebuild.Rd</code></div>
+    <h1>Convert Intersections to Long Form</h1>
+    <small class="dont-index">Source: <a href='https://github.com/slu-openGIS/postmastr/blob/master/R/intersection.R'><code>R/intersection.R</code></a></small>
+    <div class="hidden name"><code>pm_intersect_longer.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a single address from parsed components.</p>
+    <p>Split intersections into x and y streets.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_rebuild</span>(<span class='no'>.data</span>, <span class='no'>output</span>, <span class='no'>new_address</span>, <span class='kw'>include_commas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>include_units</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-   <span class='kw'>keep_parsed</span> <span class='kw'>=</span> <span class='st'>"no"</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"right"</span>, <span class='no'>left_vars</span>, <span class='kw'>keep_ids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_intersect_longer</span>(<span class='no'>.data</span>, <span class='no'>dictionary</span>, <span class='kw'>locale</span> <span class='kw'>=</span> <span class='st'>"us"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>An object with raw and parsed data created by <code>pm_rebuild</code></p></td>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a></p></td>
     </tr>
     <tr>
-      <th>output</th>
-      <td><p>Describes the format of the output address. One of either <code>"full"</code> or <code>"short"</code>.
-A short address contains, at the most, a house number, street directionals, a street name,
-a street suffix, and a unit type and number. A full address contains all of the selements of a
-short address as well as, at the most, a city, state, and postal code.</p></td>
-    </tr>
-    <tr>
-      <th>new_address</th>
-      <td><p>Optional; name of new variable to store rebuilt address in. If not specified,
-the re-build addressed will be stored in <code>pm.address</code>.</p></td>
-    </tr>
-    <tr>
-      <th>include_commas</th>
-      <td><p>A logical scalar; if <code>TRUE</code>, a comma is added both before and after the city
-name in rebuild addresses. If <code>FALSE</code> (default), no punctuation is added.</p></td>
-    </tr>
-    <tr>
-      <th>include_units</th>
-      <td><p>A logical scalar; if <code>TRUE</code> (default), unit data will be included in the
-re-constructed address. If <code>FALSE</code>, units will not be included.</p></td>
-    </tr>
-    <tr>
-      <th>keep_parsed</th>
-      <td><p>Character string; if <code>"yes"</code>, all parsed elements will be
-added to the source data after replacement. If <code>"limited"</code>, only the <code>pm.city</code>,
-<code>pm.state</code>, and postal code variables will be retained. Otherwise, if <code>"no"</code>,
-only the rebuilt address will be added to the source data (default).</p></td>
-    </tr>
-    <tr>
-      <th>side</th>
-      <td><p>One of either <code>"left"</code> or <code>"right"</code> - should parsed data be placed to the left
-or right of the original data? Placing data to the left may be useful in particularly wide
-data sets.</p></td>
-    </tr>
-    <tr>
-      <th>left_vars</th>
-      <td><p>A character scalar or vector of variables to place on the left-hand side of
-the output when <code>side</code> is equal to <code>"middle"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>keep_ids</th>
-      <td><p>Logical scalar; if <code>TRUE</code>, the identification numbers
-will be kept in the source data after replacement. Otherwise, if <code>FALSE</code>,
-they will be removed (default).</p></td>
+      <th>dictionary</th>
+      <td><p>A tbl created with <code>pm_dictionary</code> to be used
+as a master list for intersection operators.</p></td>
     </tr>
     <tr>
       <th>locale</th>
       <td><p>A string indicating the country these data represent; the only
-current option is "us" but this is included to facilitate future expansion.</p></td>
+current option is <code>"us"</code> but this is included to facilitate future expansion.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Re-constructed street addresses will can be either <code>"full"</code> or <code>"short"</code> depending
-    on the <code>output</code> parameter's argument. Intersections will always be re-constructed in full.</p>
     
 
   </div>
@@ -192,9 +145,7 @@ current option is "us" but this is included to facilitate future expansion.</p><
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

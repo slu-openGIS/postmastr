@@ -91,6 +91,20 @@
 <h2 class="hasAnchor">
 <a href="#seeking-beta-testers" class="anchor"></a>Seeking Beta Testers</h2>
 <p>We’ve at a point where all major functionality except for the ability to work with unit types and numbers is ready for testing. If you work with American street addresses regularly and have the time to take the package for a spin, we’d love feedback before we submit to CRAN. We want to make sure the workflow works, and can handle whatever addresses we throw at it. Also, <code>postmastr</code> is only set-up for American street addresses right now but the functions have been built for expansion. If you work with international street addresses and want to contribute, please <a href="https://github.com/slu-openGIS/postmastr/issues/new/choose">open a feature request issue</a> and introduce yourself!</p>
+<div id="recent-breaking-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#recent-breaking-changes" class="anchor"></a>Recent Breaking Changes</h3>
+<p>As of March 27, 2019, There is now a workflow for parsing intersections build into <code>pm_parse</code>. There are two breaking changes to be aware of:</p>
+<ul>
+<li>
+<code><a href="reference/pm_identify.html">pm_identify()</a></code> is no longer part of <code><a href="reference/pm_parse.html">pm_parse()</a></code>, and therefore must be run ahead of time by the end user</li>
+<li>
+<code><a href="reference/pm_prep.html">pm_prep()</a></code> now has a required <code>type</code> parameter that should either be <code>"street"</code> or <code>"intersection"</code>
+</li>
+<li>there have been changes to the arguments for <code><a href="reference/pm_replace.html">pm_replace()</a></code>, <code><a href="reference/pm_rebuild.html">pm_rebuild()</a></code>, and <code><a href="reference/pm_parse.html">pm_parse()</a></code> as well</li>
+</ul>
+<p>The intersection workflow is very similar to the street address workflow except that intersections must be prepared with <code><a href="reference/pm_intersect_longer.html">pm_intersect_longer()</a></code>, than parsed, then put back together with <code><a href="reference/pm_intersect_wider.html">pm_intersect_wider()</a></code> before replacing and rebuilding. The intersection workflow supports both short (i.e. <code>Main St at First Ave</code>) and long (i.e. <code>Main St at First Ave, St. Louis MO 63110</code>) forms.</p>
+</div>
 </div>
 <div id="motivation" class="section level2">
 <h2 class="hasAnchor">

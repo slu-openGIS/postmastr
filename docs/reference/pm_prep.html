@@ -122,7 +122,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_prep</span>(<span class='no'>.data</span>, <span class='no'>var</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_prep</span>(<span class='no'>.data</span>, <span class='no'>var</span>, <span class='no'>type</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,7 +138,7 @@ numbers added using <a href='pm_identify.html'>pm_identify</a>.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>The type of addresses to be parsed, one of either <code>"house"</code>
+      <td><p>The type of addresses to be parsed, one of either <code>"street"</code>
 or <code>"intersection"</code></p></td>
     </tr>
     </table>
@@ -153,8 +153,8 @@ or <code>"intersection"</code></p></td>
 
     <p>Creation of the subset data is dependent on whether the data are
    house numbers or intersections. Any addresses identified as <code>"short"</code>,
-   <code>"full"</code>, or <code>"partial"</code> will be returned when <code>type = "house"</code>.
-   Addresses that are identified as <code>"unknown"</code> will also be included in <code>"house"</code>,
+   <code>"full"</code>, or <code>"partial"</code> will be returned when <code>type = "street"</code>.
+   Addresses that are identified as <code>"unknown"</code> will also be included in <code>"street"</code>,
    but the accuracy of the parser may be limited. Addresses identified as intersections
    will be returned when <code>type = "intersection"</code>.</p>
     

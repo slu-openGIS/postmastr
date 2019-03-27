@@ -33,6 +33,25 @@ please [open a feature request
 issue](https://github.com/slu-openGIS/postmastr/issues/new/choose) and
 introduce yourself\!
 
+### Recent Breaking Changes
+
+As of March 27, 2019, There is now a workflow for parsing intersections
+build into `pm_parse`. There are two breaking changes to be aware of:
+
+  - `pm_identify()` is no longer part of `pm_parse()`, and therefore
+    must be run ahead of time by the end user
+  - `pm_prep()` now has a required `type` parameter that should either
+    be `"street"` or `"intersection"`
+  - there have been changes to the arguments for `pm_replace()`,
+    `pm_rebuild()`, and `pm_parse()` as well
+
+The intersection workflow is very similar to the street address workflow
+except that intersections must be prepared with `pm_intersect_longer()`,
+than parsed, then put back together with `pm_intersect_wider()` before
+replacing and rebuilding. The intersection workflow supports both short
+(i.e. `Main St at First Ave`) and long (i.e. `Main St at First Ave, St.
+Louis MO 63110`) forms.
+
 ## Motivation
 
 Street addresses can be notoriously difficult to work with. In the

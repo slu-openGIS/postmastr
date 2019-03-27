@@ -122,25 +122,29 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pm_replace</span>(<span class='no'>.data</span>, <span class='no'>source</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"right"</span>, <span class='kw'>unnest</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>pm_replace</span>(<span class='no'>source</span>, <span class='no'>street</span>, <span class='no'>intersect</span>, <span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"at"</span>, <span class='kw'>unnest</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.data</th>
-      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a> that has been readied
-for replacement by fully parsing the data.</p></td>
-    </tr>
-    <tr>
       <th>source</th>
       <td><p>Original source data to merge clean addresses with.</p></td>
     </tr>
     <tr>
-      <th>side</th>
-      <td><p>One of either <code>"left"</code> or <code>"right"</code> - should parsed data be placed to the left
-or right of the original data? Placing data to the left may be useful in particularly wide
-data sets.</p></td>
+      <th>street</th>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a> with street addresses that has been readied
+for replacement by fully parsing the data.</p></td>
+    </tr>
+    <tr>
+      <th>intersect</th>
+      <td><p>A postmastr object created with <a href='pm_prep.html'>pm_prep</a> with intersections that has been readied
+for replacement by fully parsing the data.</p></td>
+    </tr>
+    <tr>
+      <th>operator</th>
+      <td><p>A character scalar to be used as the intersection operator (between the 'x' and 'y' sides
+of the intersection).</p></td>
     </tr>
     <tr>
       <th>unnest</th>
