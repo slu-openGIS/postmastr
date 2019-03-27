@@ -11,9 +11,6 @@
 #'     for replacement by fully parsing the data.
 #' @param intersect A postmastr object created with \link{pm_prep} with intersections that has been readied
 #'     for replacement by fully parsing the data.
-#' @param side One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
-#'    or right of the original data? Placing data to the left may be useful in particularly wide
-#'    data sets.
 #' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
 #'    has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 #'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
@@ -30,7 +27,7 @@
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_replace <- function(source, street, intersect, side = "right", unnest = FALSE){
+pm_replace <- function(source, street, intersect, unnest = FALSE){
 
   # global bindings
   pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = NULL
@@ -66,20 +63,43 @@ pm_replace <- function(source, street, intersect, side = "right", unnest = FALSE
 
   # determine rebuild operations
   if (missing(street) == TRUE & missing(intersect) == TRUE){
+
     stop("At least one parsed data set must be supplied for 'street' or 'intersect'.")
+
   } else if (missing(street) == FALSE & missing(intersect) == TRUE){
-    build <- "street"
+
+    out <- pm_replace_street(street, source = source, side = side, unnest = unnest)
+
   } else if (missing(street) == TRUE & missing(intersect) == FALSE){
-    build <- "intersect"
+
+    out <- pm_replace_intersect(intersect, source = source, side = side)
+
   } else if (missing(street) == FALSE & missing(intersect) == FALSE){
-    build <- "combined"
+
+    source %>%
+      dplyr::filter(pm.type != "intersection") %>%
+      pm_replace_street(street, source = ., side = side, unnest = unnest) -> street_sub
+
+    source %>%
+      dplyr::filter(pm.type == "intersection") %>%
+      pm_replace_intersect(intersect, source = ., side = side) -> intersect_sub
+
+    dplyr::bind_rows(street_sub, intersect_sub) %>%
+      dplyr::arrange(pm.id) -> out
+
   }
 
-  # rebuild
-  if (build == "street"){
+  # rename ids
+  out <- dplyr::rename(out, ...pm.id = pm.id, ...pm.uid = pm.uid, ...pm.type = pm.type)
 
+  # re-order variables
+  vars <- pm_reorder_replaced(out)
 
-  }
+  # re-order data
+  out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, vars$pm.vars, vars$source.vars)
+
+  # rename
+  out <- dplyr::rename(out, pm.id = ...pm.id, pm.uid = ...pm.uid, pm.type = ...pm.type)
 
   # return output
   return(out)
@@ -87,7 +107,7 @@ pm_replace <- function(source, street, intersect, side = "right", unnest = FALSE
 }
 
 #
-pm_rebuild_street <- function(.data, source, side, unnest){
+pm_replace_street <- function(.data, source, side, unnest){
 
   # remove logical variables from postmastr object as well as any missing all values
   .data %>%
@@ -96,16 +116,6 @@ pm_rebuild_street <- function(.data, source, side, unnest){
 
   # combine data
   out <- dplyr::left_join(source, .data, by = "pm.uid")
-
-  # optionally re-order
-  if (side == "left"){
-
-    # store remaining variable names
-    parsedNames <- names(.data)
-
-    # re-order variables
-    out <- dplyr::select(out, pm.id, parsedNames, dplyr::everything())
-  }
 
   # optionally unnest and clean-up unnested data
   if (unnest == TRUE){
@@ -132,12 +142,25 @@ pm_rebuild_street <- function(.data, source, side, unnest){
 
   }
 
+
+  # return output
+  return(out)
+
 }
 
 #
-pm_rebuild_intersect <- function(.data, source, side){
+pm_replace_intersect <- function(.data, source, side){
 
+  # remove logical variables from postmastr object as well as any missing all values
+  .data %>%
+    dplyr::select(-dplyr::starts_with("pm.has")) %>%
+    dplyr::select_if(function(x) !(all(is.na(x)))) -> .data
 
+  # combine data
+  out <- dplyr::left_join(source, .data, by = "pm.uid")
+
+  # return output
+  return(out)
 
 }
 
@@ -371,3 +394,47 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
 
 }
 
+# re-order variables
+pm_reorder_replaced <- function(.data){
+
+  # create vector of current pm variables in data
+  .data %>%
+    dplyr::select(dplyr::starts_with("pm.")) %>%
+    names() -> pmVarsCurrent
+
+  # create vector of original source data variables
+  .data %>%
+    dplyr::select(-dplyr::starts_with("pm."), -...pm.id, -...pm.uid, -...pm.type) %>%
+    names() -> sourceVars
+
+  # master list of variables for pm objects
+  master <- data.frame(
+    master.vars = c("pm.house", "pm.houseRage","pm.houseFrac", "pm.houseSuf",
+                    "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
+                    "pm.unitType", "pm.unitNum",  "pm.city",
+                    "pm.state", "pm.zip", "pm.zip4",
+                    "pm.preDir.y", "pm.street.y", "pm.streetSuf.y", "pm.sufDir.y"),
+    stringsAsFactors = FALSE
+  )
+
+  # create data frame of current variables
+  working <- data.frame(
+    master.vars = c(pmVarsCurrent),
+    working.vars = c(pmVarsCurrent),
+    stringsAsFactors = FALSE
+  )
+
+  # join master and working data
+  joined <- dplyr::left_join(master, working, by = "master.vars")
+
+  # create vector of re-ordered variables
+  vars <- stats::na.omit(joined$working.vars)
+
+  out <- list(
+    pm.vars = c(vars),
+    source.vars = c(sourceVars)
+  )
+
+  return(out)
+
+}
