@@ -129,7 +129,7 @@ pm_identify_type <- function(.data, var, dict, locale){
     dplyr::mutate(pm.type = dplyr::case_when(
       pm.hasHouse == TRUE & (pm.hasIntersect == TRUE | pm.hasIntersect == FALSE) & pm.hasZip == TRUE ~ "full",
       pm.hasHouse == TRUE & (pm.hasIntersect == TRUE | pm.hasIntersect == FALSE) & pm.hasZip == FALSE ~ "short",
-      pm.hasHouse == FALSE & pm.hasIntersect == TRUE & pm.hasZip == FALSE ~ "intersection",
+      pm.hasHouse == FALSE & pm.hasIntersect == TRUE & (pm.hasZip == TRUE | pm.hasZip == FALSE) ~ "intersection",
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == TRUE  ~ "partial",
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == FALSE  ~ "unknown"
     )) %>%

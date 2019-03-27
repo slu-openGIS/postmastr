@@ -161,6 +161,26 @@ pm_intersect_wider <- function(.data){
     tidyr::unnest() %>%
     dplyr::select(-rowid) -> .data
 
+  # rename pm.city if found
+  if ("pm.city1" %in% names(.data) == TRUE){
+    .data <- dplyr::rename(.data, pm.city = pm.city1)
+  }
+
+  # rename pm.state if found
+  if ("pm.state1" %in% names(.data) == TRUE){
+    .data <- dplyr::rename(.data, pm.state = pm.state1)
+  }
+
+  # rename pm.zip if found
+  if ("pm.zip1" %in% names(.data) == TRUE){
+    .data <- dplyr::rename(.data, pm.zip = pm.zip1)
+  }
+
+  # rename pm.zip4 if found
+  if ("pm.zip41" %in% names(.data) == TRUE){
+    .data <- dplyr::rename(.data, pm.zip4 = pm.zip41)
+  }
+
   # return output
   return(.data)
 
@@ -170,6 +190,26 @@ pm_x_street <- function(x, id){
 
   # subset to first row only
   y <- dplyr::slice(x, 1L)
+
+  # remove pm.city if found
+  if ("pm.city" %in% names(y) == TRUE){
+    y <- dplyr::select(y, -pm.city)
+  }
+
+  # remove pm.state if found
+  if ("pm.state" %in% names(y) == TRUE){
+    y <- dplyr::select(y, -pm.state)
+  }
+
+  # remove pm.zip if found
+  if ("pm.zip" %in% names(y) == TRUE){
+    y <- dplyr::select(y, -pm.zip)
+  }
+
+  # remove pm.zip4 if found
+  if ("pm.zip4" %in% names(x) == TRUE){
+    y <- dplyr::select(y, -pm.zip4)
+  }
 
   # return output
   return(y)
