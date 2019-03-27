@@ -25,4 +25,6 @@ pm_prep(intersections, var = address, type = "street") %>%
   pm_streetSuf_parse() %>%
   pm_street_parse() -> houses_parsed
 
-pm_replace(intersections, street = houses_parsed, intersect = intersections_parsed)
+intersections2 <- pm_replace(intersections, street = houses_parsed, intersect = intersections_parsed)
+
+pm_rebuild(intersections2, output = "short", keep_parsed = "no")

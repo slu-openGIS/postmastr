@@ -11,6 +11,8 @@
 #'     for replacement by fully parsing the data.
 #' @param intersect A postmastr object created with \link{pm_prep} with intersections that has been readied
 #'     for replacement by fully parsing the data.
+#' @param operator A character scalar to be used as the intersection operator (between the 'x' and 'y' sides
+#'     of the intersection).
 #' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
 #'    has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 #'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
@@ -27,7 +29,7 @@
 #' @importFrom tidyr unnest
 #'
 #' @export
-pm_replace <- function(source, street, intersect, unnest = FALSE){
+pm_replace <- function(source, street, intersect, operator = "at", unnest = FALSE){
 
   # global bindings
   pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = NULL
@@ -68,21 +70,21 @@ pm_replace <- function(source, street, intersect, unnest = FALSE){
 
   } else if (missing(street) == FALSE & missing(intersect) == TRUE){
 
-    out <- pm_replace_street(street, source = source, side = side, unnest = unnest)
+    out <- pm_replace_street(street, source = source, unnest = unnest)
 
   } else if (missing(street) == TRUE & missing(intersect) == FALSE){
 
-    out <- pm_replace_intersect(intersect, source = source, side = side)
+    out <- pm_replace_intersect(intersect, source = source, operator = operator)
 
   } else if (missing(street) == FALSE & missing(intersect) == FALSE){
 
     source %>%
       dplyr::filter(pm.type != "intersection") %>%
-      pm_replace_street(street, source = ., side = side, unnest = unnest) -> street_sub
+      pm_replace_street(street, source = ., unnest = unnest) -> street_sub
 
     source %>%
       dplyr::filter(pm.type == "intersection") %>%
-      pm_replace_intersect(intersect, source = ., side = side) -> intersect_sub
+      pm_replace_intersect(intersect, source = ., operator = operator) -> intersect_sub
 
     dplyr::bind_rows(street_sub, intersect_sub) %>%
       dplyr::arrange(pm.id) -> out
@@ -93,7 +95,7 @@ pm_replace <- function(source, street, intersect, unnest = FALSE){
   out <- dplyr::rename(out, ...pm.id = pm.id, ...pm.uid = pm.uid, ...pm.type = pm.type)
 
   # re-order variables
-  vars <- pm_reorder_replaced(out)
+  vars <- pm_reorder_replaced(out, style = "replace")
 
   # re-order data
   out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, vars$pm.vars, vars$source.vars)
@@ -107,7 +109,7 @@ pm_replace <- function(source, street, intersect, unnest = FALSE){
 }
 
 #
-pm_replace_street <- function(.data, source, side, unnest){
+pm_replace_street <- function(.data, source, unnest){
 
   # remove logical variables from postmastr object as well as any missing all values
   .data %>%
@@ -149,12 +151,13 @@ pm_replace_street <- function(.data, source, side, unnest){
 }
 
 #
-pm_replace_intersect <- function(.data, source, side){
+pm_replace_intersect <- function(.data, source, operator){
 
   # remove logical variables from postmastr object as well as any missing all values
   .data %>%
     dplyr::select(-dplyr::starts_with("pm.has")) %>%
-    dplyr::select_if(function(x) !(all(is.na(x)))) -> .data
+    dplyr::select_if(function(x) !(all(is.na(x)))) %>%
+    dplyr::mutate(pm.intersect = "at") -> .data
 
   # combine data
   out <- dplyr::left_join(source, .data, by = "pm.uid")
@@ -168,16 +171,23 @@ pm_replace_intersect <- function(.data, source, side){
 #'
 #' @description Create a single address from parsed components.
 #'
+#' @details Re-constructed street addresses will can be either \code{"full"} or \code{"short"} depending
+#'     on the \code{output} parameter's argument. Intersections will always be re-constructed in full.
+#'
 #' @usage pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
 #'     keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
 #'
 #' @param .data An object with raw and parsed data created by \code{\link{pm_rebuild}}
-#' @param start Variable name to begin rebuilding process with, typically the house number
-#' @param end Variable name to end rebuilding process with, typically the street suffix or postal code
-#' @param new_address Optiona; name of new variable to store rebuilt address in. If not specified,
+#' @param output Describes the format of the output address. One of either \code{"full"} or \code{"short"}.
+#'     A short address contains, at the most, a house number, street directionals, a street name,
+#'     a street suffix, and a unit type and number. A full address contains all of the selements of a
+#'     short address as well as, at the most, a city, state, and postal code.
+#' @param new_address Optional; name of new variable to store rebuilt address in. If not specified,
 #'     the re-build addressed will be stored in \code{pm.address}.
 #' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 #'     name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
+#' @param include_units A logical scalar; if \code{TRUE} (default), unit data will be included in the
+#'     re-constructed address. If \code{FALSE}, units will not be included.
 #' @param keep_parsed Character string; if \code{"yes"}, all parsed elements will be
 #'     added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
 #'     \code{pm.state}, and postal code variables will be retained. Otherwise, if \code{"no"},
@@ -194,7 +204,7 @@ pm_replace_intersect <- function(.data, source, side){
 #'     current option is "us" but this is included to facilitate future expansion.
 #'
 #' @export
-pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
+pm_rebuild <- function(.data, output, new_address, include_commas = FALSE, include_units = TRUE,
                        keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us"){
 
   # global bindings
@@ -214,46 +224,218 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
     varQ <- rlang::quo(!! rlang::sym("pm.address"))
   }
 
-  # unquote start
-  if (!is.character(paramList$start)) {
-    startQ <- rlang::enquo(start)
-  } else if (is.character(paramList$start)) {
-    startQ <- rlang::quo(!! rlang::sym(start))
-  }
-
-  # unquote end
-  if (!is.character(paramList$end)) {
-    endQ <- rlang::enquo(end)
-  } else if (is.character(paramList$end)) {
-    endQ <- rlang::quo(!! rlang::sym(end))
-  }
-
-  # test end
-  endQN <- rlang::quo_name(rlang::enquo(end))
-
-  if (endQN == "end"){
-    if ("pm.zip4" %in% names(.data) == TRUE){
-      endQ <- rlang::quo(!! rlang::sym("pm.zip4"))
-    } else if ("pm.zip4" %in% names(.data) == FALSE){
-      endQ <- rlang::quo(!! rlang::sym("pm.zip"))
-    }
-  }
-
   # convert left_vars to expression
   if (missing(left_vars) == FALSE){
     left_varsE <- rlang::enexpr(left_vars)
   }
 
-  # move pm.houseRange
-  if (keep_parsed == "yes" & "pm.houseRange" %in% names(.data) == TRUE){
-    .data <- dplyr::select(.data, pm.id, pm.uid, pm.houseRange, dplyr::everything())
-  } else if ((keep_parsed == "no" | keep_parsed == "limited") & "pm.houseRange" %in% names(.data) == TRUE){
-    .data <- dplyr::select(.data, -pm.houseRange)
+  # determine rebuild type
+  types <- unique(.data$pm.type)
+
+  # rebuild addresses
+  if ("intersection" %in% types == FALSE){
+
+    # rebuild street addresses
+    .data %>%
+      dplyr::filter(pm.type != "intersection") %>%
+      pm_rebuild_street(output = output, include_commas = include_commas,
+                        include_units = include_units, keep_parsed = keep_parsed) -> out
+
+  } else if ("intersection" %in% types == TRUE & length(types) == 1){
+
+    # rebuild intersections
+    .data %>%
+      dplyr::filter(pm.type == "intersection") %>%
+      pm_rebuild_intersect(output = output) -> out
+
+  } else if ("intersection" %in% types == TRUE & length(types) > 1){
+
+    # rebuild street addresses
+    .data %>%
+      dplyr::filter(pm.type != "intersection") %>%
+      pm_rebuild_street(output = output, include_commas = include_commas,
+                        include_units = include_units, keep_parsed = keep_parsed) -> street_sub
+
+    # rebuild intersections
+    .data %>%
+      dplyr::filter(pm.type == "intersection") %>%
+      pm_rebuild_intersect(output = output) -> intersect_sub
+
+    # add back together
+    dplyr::bind_rows(street_sub, intersect_sub) %>%
+      dplyr::arrange(pm.id) -> out
+
   }
+
+  # rename ids
+  out <- dplyr::rename(out, ...pm.id = pm.id, ...pm.uid = pm.uid, ...pm.type = pm.type)
+
+  # remove parsed variables
+  if (keep_parsed == "no"){
+
+    # re-order data
+    if (side == "right"){
+
+      out %>%
+        dplyr::select(-dplyr::starts_with("pm.")) %>%
+        dplyr::select(-...temp_address, dplyr::everything()) -> out
+
+    } else if (side == "left" | side == "middle"){
+
+      out %>%
+        dplyr::select(-dplyr::starts_with("pm.")) %>%
+        dplyr::select(...pm.id, ...pm.uid, ...pm.type, ...temp_address, dplyr::everything()) -> out
+
+      if (side == "middle"){
+        out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, !!left_varsE, dplyr::everything())
+      }
+    }
+
+  } else if (keep_parsed == "yes"){
+
+    # determine variable order
+    vars <- pm_reorder_replaced(out, style = "rebuild")
+
+    # re-order data
+    if (side == "right"){
+      out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, vars$source.vars, ...temp_address, vars$pm.vars)
+    } else if (side == "left" | side == "middle"){
+
+      out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, ...temp_address, vars$pm.vars, vars$source.vars)
+
+      if (side == "middle"){
+        out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, !!left_varsE, dplyr::everything())
+      }
+    }
+  } else if (keep_parsed == "limited"){
+
+    # determine variable order
+    vars <- pm_reorder_replaced(out, style = "limited")
+
+    # re-order data
+    if (side == "right"){
+      out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, vars$source.vars, ...temp_address, vars$pm.vars)
+    } else if (side == "left" | side == "middle"){
+
+      out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, ...temp_address, vars$pm.vars, vars$source.vars)
+
+      if (side == "middle"){
+        out <- dplyr::select(out, ...pm.id, ...pm.uid, ...pm.type, !!left_varsE, dplyr::everything())
+      }
+    }
+  }
+
+  # rename ids if kept; drop if discarded
+  if (keep_ids == TRUE){
+    out <- dplyr::rename(out, pm.id = ...pm.id, pm.uid = ...pm.uid, pm.type = ...pm.type)
+  } else if (keep_ids == FALSE){
+    out <- dplyr::select(out, -...pm.id, -...pm.uid, -...pm.type)
+  }
+
+  # rename ...temp_address
+  out <- dplyr::rename(out, !!varQ := ...temp_address)
+
+  # return output
+  return(out)
+
+}
+
+pm_rebuild_street <- function(.data, output, include_commas, include_units, keep_parsed){
 
   # optionally add commas
   if (include_commas == TRUE & "pm.city" %in% names(.data) == TRUE){
     .data <- dplyr::mutate(.data, pm.city = stringr::str_c(", ", pm.city, ","))
+  }
+
+  # optionally remove units
+  if (include_units == FALSE){
+    if ("pm.unitType" %in% names(.data) == TRUE){
+      .data <- dplyr::select(.data, -pm.unitType)
+    }
+
+    if ("pm.unitNum" %in% names(.data) == TRUE){
+      .data <- dplyr::select(.data, -pm.unitNum)
+    }
+  }
+
+  # determine end
+  if (output == "short"){
+
+    if ("pm.unitNum" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.unitNum"))
+    } else if ("pm.unitType" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.unitType"))
+    } else if ("pm.sufDir" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.sufDir"))
+    } else if ("pm.streetSuf" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
+    } else if ("pm.street" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.street"))
+    }
+
+  } else if (output == "full"){
+
+    if ("pm.zip4" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.zip4"))
+    } else if ("pm.zip" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.zip"))
+    } else if ("pm.state" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.state"))
+    } else if ("pm.city" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.city"))
+    }
+
+  }
+
+  # move pm.houseRange
+  if (keep_parsed == "yes" & "pm.houseRange" %in% names(.data) == TRUE){
+    .data <- dplyr::select(.data, pm.id, pm.uid, pm.type, pm.houseRange, dplyr::everything())
+  } else if ((keep_parsed == "no" | keep_parsed == "limited") & "pm.houseRange" %in% names(.data) == TRUE){
+    .data <- dplyr::select(.data, -pm.houseRange)
+  }
+
+  # rebuild
+  .data %>%
+    tidyr::unite(...temp_address, pm.house:!!endQ, sep = " ", remove = FALSE) %>%
+    dplyr::mutate(...temp_address = stringr::str_replace_all(...temp_address, pattern = "\\bNA\\b", replacement = "")) %>%
+    dplyr::mutate(...temp_address = stringr::str_replace_all(...temp_address, pattern = " , ", replacement = ", ")) %>%
+    dplyr::mutate(...temp_address = stringr::str_squish(...temp_address)) %>%
+    dplyr::select(pm.id, pm.uid, pm.type, ...temp_address, dplyr::everything()) -> .data
+
+}
+
+pm_rebuild_intersect <- function(.data, output){
+
+  # determine start
+  if ("pm.preDir" %in% names(.data) == TRUE){
+    startQ <- rlang::quo(!! rlang::sym("pm.preDir"))
+  } else if ("pm.street" %in% names(.data) == TRUE){
+    startQ <- rlang::quo(!! rlang::sym("pm.street"))
+  }
+
+  # determine end
+  if (output == "full"){
+
+    if ("pm.zip4" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.zip4"))
+    } else if ("pm.zip" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.zip"))
+    } else if ("pm.state" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.state"))
+    } else if ("pm.city" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.city"))
+    }
+
+  } else if (output == "short"){
+
+    if ("pm.sufDir.y" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.sufDir.y"))
+    } else if ("pm.streetSuf.y" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.streetSuf.y"))
+    } else if ("pm.street.y" %in% names(.data) == TRUE){
+      endQ <- rlang::quo(!! rlang::sym("pm.street.y"))
+    }
+
   }
 
   # rebuild
@@ -262,7 +444,14 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
     dplyr::mutate(...temp_address = stringr::str_replace_all(...temp_address, pattern = "\\bNA\\b", replacement = "")) %>%
     dplyr::mutate(...temp_address = stringr::str_replace_all(...temp_address, pattern = " , ", replacement = ", ")) %>%
     dplyr::mutate(...temp_address = stringr::str_squish(...temp_address)) %>%
-    dplyr::select(pm.id, pm.uid, ...temp_address, dplyr::everything()) -> .data
+    dplyr::select(pm.id, pm.uid, pm.type, ...temp_address, dplyr::everything()) -> .data
+
+}
+
+
+pm_rebuild2 <- function(.data, start, end, new_address, include_commas = FALSE,
+                       keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us"){
+
 
   # rename ids
   .data <- dplyr::rename(.data, ...pm.id = pm.id, ...pm.uid = pm.uid)
@@ -395,7 +584,7 @@ pm_rebuild <- function(.data, start, end, new_address, include_commas = FALSE,
 }
 
 # re-order variables
-pm_reorder_replaced <- function(.data){
+pm_reorder_replaced <- function(.data, style){
 
   # create vector of current pm variables in data
   .data %>%
@@ -403,19 +592,36 @@ pm_reorder_replaced <- function(.data){
     names() -> pmVarsCurrent
 
   # create vector of original source data variables
-  .data %>%
-    dplyr::select(-dplyr::starts_with("pm."), -...pm.id, -...pm.uid, -...pm.type) %>%
-    names() -> sourceVars
+  if (style == "replace"){
+
+    .data %>%
+      dplyr::select(-dplyr::starts_with("pm."), -...pm.id, -...pm.uid, -...pm.type) %>%
+      names() -> sourceVars
+
+  } else if (style == "rebuild" | style == "limited"){
+
+    .data %>%
+      dplyr::select(-dplyr::starts_with("pm."), -...pm.id, -...pm.uid, -...pm.type, -...temp_address) %>%
+      names() -> sourceVars
+
+  }
 
   # master list of variables for pm objects
-  master <- data.frame(
-    master.vars = c("pm.house", "pm.houseRage","pm.houseFrac", "pm.houseSuf",
-                    "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
-                    "pm.unitType", "pm.unitNum",  "pm.city",
-                    "pm.state", "pm.zip", "pm.zip4",
-                    "pm.preDir.y", "pm.street.y", "pm.streetSuf.y", "pm.sufDir.y"),
-    stringsAsFactors = FALSE
-  )
+  if (style == "replace" | style == "rebuild"){
+    master <- data.frame(
+      master.vars = c("pm.house", "pm.houseRage","pm.houseFrac", "pm.houseSuf",
+                      "pm.preDir", "pm.street", "pm.streetSuf", "pm.sufDir",
+                      "pm.unitType", "pm.unitNum",  "pm.city",
+                      "pm.state", "pm.zip", "pm.zip4", "pm.intersect",
+                      "pm.preDir.y", "pm.street.y", "pm.streetSuf.y", "pm.sufDir.y"),
+      stringsAsFactors = FALSE
+    )
+  } else if (style == "limited"){
+    master <- data.frame(
+      master.vars = c("pm.city", "pm.state", "pm.zip", "pm.zip4"),
+      stringsAsFactors = FALSE
+    )
+  }
 
   # create data frame of current variables
   working <- data.frame(
