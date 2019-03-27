@@ -4,8 +4,8 @@
 \alias{pm_rebuild}
 \title{Re-construct Street Addressed from Parsed Elements}
 \usage{
-pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
-    keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
+pm_rebuild(.data, output, new_address, include_commas = FALSE, include_units = TRUE,
+   keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, locale = "us")
 }
 \arguments{
 \item{.data}{An object with raw and parsed data created by \code{\link{pm_rebuild}}}

@@ -293,7 +293,7 @@ pm_streetSuf_parse <- function(.data, dictionary, locale = "us"){
 pm_parse_suf_us <- function(.data, dictionary, locale = "us"){
 
   # global bindings
-  ...stDir = dir2.output = pm.preDir = NULL
+  ...stDir = dir2.output = pm.preDir = pm.hasStreetSuf = NULL
 
   # minimize dictionary
   dict <- paste(dictionary$suf.input, collapse = "|")

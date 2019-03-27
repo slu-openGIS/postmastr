@@ -4,7 +4,7 @@
 \alias{pm_replace}
 \title{Add Parsed Street Address Data to Source Data Set}
 \usage{
-pm_replace(source, street, intersect, side = "right", unnest = FALSE)
+pm_replace(source, street, intersect, operator = "at", unnest = FALSE)
 }
 \arguments{
 \item{source}{Original source data to merge clean addresses with.}

@@ -239,6 +239,9 @@ pm_check_vars_us <- function(.data, params){
 #' @export
 pm_mutate_raw <- function(.data, uid, var, new_val){
 
+  # global bindings
+  pm.uid = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 

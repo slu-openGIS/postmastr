@@ -86,7 +86,7 @@ pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
 #'
 #' @description Split intersections into x and y streets.
 #'
-#' @usage pm_intersect_parse(.data, dictionary, locale = "us")
+#' @usage pm_intersect_longer(.data, dictionary, locale = "us")
 #'
 #' @param .data A postmastr object created with \link{pm_prep}
 #' @param dictionary A tbl created with \code{pm_dictionary} to be used
@@ -96,6 +96,9 @@ pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
 #'
 #' @export
 pm_intersect_longer <- function(.data, dictionary, locale = "us"){
+
+  # global bindings
+  pm.address = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -135,8 +138,30 @@ pm_intersect_longer <- function(.data, dictionary, locale = "us"){
 
 #' Covert Intersections to Wide Form
 #'
+#' @description Convert a parsed intersection object into wide form.
+#'
+#' @usage pm_intersect_wider(.data, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep} that has also been
+#'    modified with \link{pm_intersect_longer} and parsed with the necessary functions.
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
 #' @export
-pm_intersect_wider <- function(.data){
+pm_intersect_wider <- function(.data, locale = "us"){
+
+  # global bindings
+  pm.uid = data = rowid = y = pm.city1 = pm.state1 = pm.zip1 = pm.zip41 = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
 
   # convert from long to wide
   .data %>%
@@ -188,6 +213,9 @@ pm_intersect_wider <- function(.data){
 
 pm_x_street <- function(x, id){
 
+  # global bindings
+  pm.city = pm.state = pm.zip = pm.zip4 = NULL
+
   # subset to first row only
   y <- dplyr::slice(x, 1L)
 
@@ -217,6 +245,9 @@ pm_x_street <- function(x, id){
 }
 
 pm_y_street <- function(x, id){
+
+  # global bindings
+  pm.preDir = pm.street = pm.streetSuf = pm.sufDir = NULL
 
   # subset to second row only
   x <- dplyr::slice(x, 2L)

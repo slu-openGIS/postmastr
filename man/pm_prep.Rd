@@ -4,7 +4,7 @@
 \alias{pm_prep}
 \title{Create postmastr Object for Parsing}
 \usage{
-pm_prep(.data, var)
+pm_prep(.data, var, type)
 }
 \arguments{
 \item{.data}{A source tibble that has already had identification

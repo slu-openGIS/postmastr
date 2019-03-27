@@ -19,6 +19,10 @@ cities <- pm_append(type = "city",
 sushi1 <- dplyr::filter(sushi1, name != "Drunken Fish - Ballpark Village")
 sushi2 <- dplyr::filter(sushi2, name != "Drunken Fish - Ballpark Village")
 
+# identify
+sushi1 <- pm_identify(sushi1, var = "address")
+sushi2 <- pm_identify(sushi2, var = "address")
+
 # test errors ------------------------------------------------
 
 test_that("correctly specified functions execute without error", {

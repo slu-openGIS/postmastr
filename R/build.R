@@ -4,7 +4,7 @@
 #'    that were created during the data cleaning process (i.e. \code{pm.hasHouse}, \code{pm.hasDir}, etc.)
 #'    are removed at this stage.
 #'
-#' @usage pm_replace(source, street, intersect, side = "right", unnest = FALSE)
+#' @usage pm_replace(source, street, intersect, operator = "at", unnest = FALSE)
 #'
 #' @param source Original source data to merge clean addresses with.
 #' @param street A postmastr object created with \link{pm_prep} with street addresses that has been readied
@@ -32,7 +32,7 @@
 pm_replace <- function(source, street, intersect, operator = "at", unnest = FALSE){
 
   # global bindings
-  pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = NULL
+  . = pm.id = pm.houseRange = pm.houseFrac = pm.house = pm.hasHouseFracRange = pm.type = pm.uid = ...pm.id = ...pm.uid = ...pm.type = NULL
 
   # check for objects and key variables
   if (missing(street) == FALSE){
@@ -111,6 +111,8 @@ pm_replace <- function(source, street, intersect, operator = "at", unnest = FALS
 #
 pm_replace_street <- function(.data, source, unnest){
 
+  pm.hasHouseFracRange = pm.house = pm.houseFrac = pm.houseRange = NULL
+
   # remove logical variables from postmastr object as well as any missing all values
   .data %>%
     dplyr::select(-dplyr::starts_with("pm.has")) %>%
@@ -174,8 +176,8 @@ pm_replace_intersect <- function(.data, source, operator){
 #' @details Re-constructed street addresses will can be either \code{"full"} or \code{"short"} depending
 #'     on the \code{output} parameter's argument. Intersections will always be re-constructed in full.
 #'
-#' @usage pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
-#'     keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
+#' @usage pm_rebuild(.data, output, new_address, include_commas = FALSE, include_units = TRUE,
+#'    keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, locale = "us")
 #'
 #' @param .data An object with raw and parsed data created by \code{\link{pm_rebuild}}
 #' @param output Describes the format of the output address. One of either \code{"full"} or \code{"short"}.
@@ -205,10 +207,10 @@ pm_replace_intersect <- function(.data, source, operator){
 #'
 #' @export
 pm_rebuild <- function(.data, output, new_address, include_commas = FALSE, include_units = TRUE,
-                       keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us"){
+                       keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, locale = "us"){
 
   # global bindings
-  pm.id = pm.uid = pm.houseRange = pm.city = ...temp_address = ...pm.id = ...pm.uid = NULL
+  pm.id = pm.uid = pm.houseRange = pm.city = ...temp_address = ...pm.id = ...pm.uid = pm.type = ...pm.type = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -342,6 +344,9 @@ pm_rebuild <- function(.data, output, new_address, include_commas = FALSE, inclu
 
 pm_rebuild_street <- function(.data, output, include_commas, include_units, keep_parsed){
 
+  # global bindings
+  ...temp_address = pm.city = pm.unitType = pm.unitNum = pm.id = pm.uid = pm.type = pm.houseRange = pm.house = NULL
+
   # optionally add commas
   if (include_commas == TRUE & "pm.city" %in% names(.data) == TRUE){
     .data <- dplyr::mutate(.data, pm.city = stringr::str_c(", ", pm.city, ","))
@@ -405,6 +410,9 @@ pm_rebuild_street <- function(.data, output, include_commas, include_units, keep
 }
 
 pm_rebuild_intersect <- function(.data, output, include_commas){
+
+  # global bindings
+  pm.city = pm.id = pm.uid = pm.type = ...pm.id = ...pm.uid = ...pm.type = ...temp_address = NULL
 
   # optionally add commas
   if (include_commas == TRUE & "pm.city" %in% names(.data) == TRUE){
@@ -478,6 +486,9 @@ pm_rebuild_intersect <- function(.data, output, include_commas){
 
 # re-order variables
 pm_reorder_replaced <- function(.data, style){
+
+  # global bindings
+  ...pm.id = ...pm.uid = ...pm.type = ...temp_address = NULL
 
   # create vector of current pm variables in data
   .data %>%

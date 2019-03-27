@@ -6,7 +6,14 @@ intersections <- tibble(
               "128 Main St", "1111 Main St", "987 Main St", "4579 Tower Grove Ave")
 )
 
+intersections <- tibble(
+  address = c("123 Main St", "4259 LINDELL BLVD",
+              "128 Main St", "1111 Main St", "987 Main St", "4579 Tower Grove Ave")
+)
+
 intersections <- pm_identify(intersections, var = address)
+
+pm_parse(intersections, input = "short", address = address, output = "short", keep_parsed = "no")
 
 pm_evaluate(intersections)
 

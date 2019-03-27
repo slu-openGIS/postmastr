@@ -5,10 +5,10 @@
 \title{Parse Street Addresses}
 \usage{
 pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
-    unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
-    keep_parsed, side = "right", left_vars, keep_ids = FALSE,
-    houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
-    state_dict, locale = "us")
+    operator = "at", unnest = FALSE, include_commas = FALSE, include_units = TRUE,
+    keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, houseSuf_dict,
+    dir_dict, street_dict, suffix_dict, unit_dict, city_dict, state_dict,
+    locale = "us")
 }
 \arguments{
 \item{.data}{A source data set to be parsed}
@@ -32,6 +32,9 @@ short address as well as a, at the most, a city, state, and postal code.}
 default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 "168th St" as opposed to "One Hundred Sixty Eigth St").}
 
+\item{operator}{A character scalar to be used as the intersection operator (between the 'x' and 'y' sides
+of the intersection).}
+
 \item{unnest}{A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
 has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 from a single observation to four observations, one for each house number). If \code{FALSE} (default),
@@ -40,7 +43,7 @@ the single observation will remain.}
 \item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
 
-\item{include_unit}{A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
+\item{include_units}{A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
 will be included in the output string. Otherwise if \code{FALSE}, the unit name and number
 will not be included.}
 
@@ -104,6 +107,9 @@ cities <- pm_append(type = "city",
 
 # add example data
 df <- sushi1
+
+# identify
+df <- pm_identify(df, var = address)
 
 # temporary code to subset unit
 df <- dplyr::filter(df, name != "Drunken Fish - Ballpark Village")
