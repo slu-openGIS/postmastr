@@ -308,13 +308,13 @@ pm_parse_zip_us <- function(.data){
   .data <- pm_has_zip4_us(.data)
 
   # parse zip+4 if necessary
-  if (any(.data$pm.hasZip4) == TRUE){
+  if (any(.data$pm.hasZip4, na.rm = TRUE) == TRUE){
 
     .data %>%
       pm_parse_zip4_us() %>%
       dplyr::select(-pm.hasZip4) -> .data
 
-  } else if (any(.data$pm.hasZip4) == FALSE){
+  } else if (any(.data$pm.hasZip4, na.rm = TRUE) == FALSE){
 
     .data <- dplyr::select(.data, -pm.hasZip4)
 
@@ -344,3 +344,4 @@ pm_parse_zip4_us <- function(.data){
     dplyr::mutate(pm.zip = ifelse(pm.hasZip4 == TRUE, stringr::word(pm.zip, 1, sep = "-"), pm.zip)) -> out
 
 }
+

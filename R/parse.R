@@ -5,10 +5,10 @@
 #'     have been created and tested against the data.
 #'
 #' @usage pm_parse(.data, input, address, output, new_address, ordinal = TRUE,
-#'     unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
-#'     keep_parsed, side = "right", left_vars, keep_ids = FALSE,
-#'     houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
-#'     state_dict, locale = "us")
+#'     operator = "at", unnest = FALSE, include_commas = FALSE, include_units = TRUE,
+#'     keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, houseSuf_dict,
+#'     dir_dict, street_dict, suffix_dict, unit_dict, city_dict, state_dict,
+#'     locale = "us")
 #'
 #' @param .data A source data set to be parsed
 #' @param input Describes the format of the source address. One of either \code{"full"} or \code{"short"}.
@@ -25,13 +25,15 @@
 #'     (i.e. "Second") will be converted and standardized to ordinal values (i.e. "2nd"). The
 #'     default is \code{TRUE} because it returns much more compact clean addresses (i.e.
 #'     "168th St" as opposed to "One Hundred Sixty Eigth St").
+#' @param operator A character scalar to be used as the intersection operator (between the 'x' and 'y' sides
+#'     of the intersection).
 #' @param unnest A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
 #'    has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted
 #'    from a single observation to four observations, one for each house number). If \code{FALSE} (default),
 #'    the single observation will remain.
 #' @param include_commas A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 #'     name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.
-#' @param include_unit A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
+#' @param include_units A logical scalar; if \code{TRUE} (default), the unit name and number (if given)
 #'     will be included in the output string. Otherwise if \code{FALSE}, the unit name and number
 #'     will not be included.
 #' @param keep_parsed Character string; if \code{"yes"}, all parsed elements will be
@@ -78,6 +80,9 @@
 #' # add example data
 #' df <- sushi1
 #'
+#' # identify
+#' df <- pm_identify(df, var = address)
+#'
 #' # temporary code to subset unit
 #' df <- dplyr::filter(df, name != "Drunken Fish - Ballpark Village")
 #'
@@ -97,9 +102,9 @@
 #' @importFrom rlang sym
 #'
 #' @export
-pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
-                     unnest = FALSE, include_commas = FALSE, include_unit = TRUE,
-                     keep_parsed, side = "right", left_vars, keep_ids = FALSE,
+pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE, operator = "at",
+                     unnest = FALSE, include_commas = FALSE, include_units = TRUE,
+                     keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE,
                      houseSuf_dict, dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
                      state_dict, locale = "us"){
 
@@ -108,6 +113,11 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
 
   # save parameters to list
   paramList <- as.list(match.call())
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("The variable 'pm.uid' is missing from the given object. Evaluate your data with pm_identify before proceeding.")
+  }
 
   # locale issues
   if (locale != "us"){
@@ -194,17 +204,76 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
   # }
 
   # temporary!
-  endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
+  # endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
 
-  # create id variables
-  .data %>%
-    pm_identify(var = !!varQ) -> source
+  # determine rebuild type
+  types <- unique(.data$pm.type)
+
+  # parse addresses
+  if ("intersection" %in% types == FALSE){
+
+    # parse streets
+    .data %>%
+      pm_prep(var = !!varQ, type = "street") %>%
+      pm_parse_street(input = input, ordinal = ordinal, houseSuf_dict = houseSuf_dict,
+                      dir_dict = dir_dict, street_dict = street_dict, suffix_dict = suffix_dict,
+                      unit_dict = unit_dict, city_dict = city_dict,
+                      state_dict = state_dict, locale = locale) -> out
+
+    out <- pm_replace(.data, street = out, unnest = unnest)
+
+  } else if ("intersection" %in% types == TRUE & length(types) == 1){
+
+    # parse intersections
+    .data %>%
+      pm_prep(var = !!varQ, type = "intersection") %>%
+      pm_parse_intersect(input = input, ordinal = ordinal,
+                         dir_dict = dir_dict, street_dict = street_dict,
+                         suffix_dict = suffix_dict, city_dict = city_dict,
+                         state_dict = state_dict, locale = locale) -> out
+
+    out <- pm_replace(.data, intersect = out, unnest = unnest)
+
+  } else if ("intersection" %in% types == TRUE & length(types) > 1){
+
+    # parse streets
+    .data %>%
+      pm_prep(var = !!varQ, type = "street") %>%
+      pm_parse_street(input = input, ordinal = ordinal, houseSuf_dict = houseSuf_dict,
+                      dir_dict = dir_dict, street_dict = street_dict, suffix_dict = suffix_dict,
+                      unit_dict = unit_dict, city_dict = city_dict,
+                      state_dict = state_dict, locale = locale) -> streets_sub
+
+    # parse intersections
+    .data %>%
+      pm_prep(var = !!varQ, type = "intersection") %>%
+      pm_parse_intersect(input = input, ordinal = ordinal,
+                         dir_dict = dir_dict, street_dict = street_dict,
+                         suffix_dict = suffix_dict, city_dict = city_dict,
+                         state_dict = state_dict, locale = locale) -> intersect_subs
+
+    out <- pm_replace(.data, street = streets_sub, intersect = intersect_subs, operator = operator, unnest = unnest)
+
+  }
+
+  # rebuilt
+  out <- pm_rebuild(out, output = output, new_address = !!newVarQ, include_commas = include_commas, include_units = include_units,
+                         keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids, locale = locale)
+
+  # return output
+  return(out)
+
+}
+
+#
+pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
+                            dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
+                            state_dict, locale = "us"){
 
   # parse based on style
-  if (input == "full" & output == "full"){
+  if (input == "full") {
 
-    source %>%
-      pm_prep(var = "address") %>%
+    .data %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
@@ -214,46 +283,51 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
       pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
-      pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_replace(source = source, unnest = unnest) %>%
-      pm_rebuild(start = pm.house, end = "end", new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
-                 locale = locale) -> out
+      pm_street_parse(dictionary = street_dict, ordinal = ordinal) -> out
 
-  } else if (input == "full" & output == "short") {
+  } else if (input == "short"){
 
-    source %>%
-      pm_prep(var = "address") %>%
+    .data %>%
+      pm_house_parse() %>%
+      pm_houseRange_parse() %>%
+      pm_houseFrac_parse() %>%
+      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
+      pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
+      pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
+      pm_street_parse(dictionary = street_dict, ordinal = ordinal) -> out
+
+  }
+
+  # return output
+  return(out)
+
+}
+
+#
+pm_parse_intersect <- function(.data, input, ordinal, dir_dict, street_dict,
+                            suffix_dict, city_dict, state_dict, locale = "us"){
+
+  # parse based on style
+  if (input == "full") {
+
+    .data %>%
+      pm_intersect_longer() %>%
       pm_postal_parse(locale = locale) %>%
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
-      pm_house_parse() %>%
-      pm_houseRange_parse() %>%
-      pm_houseFrac_parse() %>%
-      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_replace(source = source, unnest = unnest) %>%
-      pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
-                 locale = locale) -> out
+      pm_intersect_wider() -> out
 
-  } else if (input == "short" & output == "short"){
+  } else if (input == "short"){
 
-    source %>%
-      pm_prep(var = "address") %>%
-      pm_house_parse() %>%
-      pm_houseRange_parse() %>%
-      pm_houseFrac_parse() %>%
-      pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
+    .data %>%
+      pm_intersect_longer() %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
       pm_streetSuf_parse(dictionary = suffix_dict, locale = locale) %>%
       pm_street_parse(dictionary = street_dict, ordinal = ordinal) %>%
-      pm_replace(source = source, unnest = unnest) %>%
-      pm_rebuild(start = pm.house, end = !!endVarQ, new_address = !!newVarQ,
-                 keep_parsed = keep_parsed, side = side, left_vars = !!left_varsE, keep_ids = keep_ids,
-                 locale = locale) -> out
+      pm_intersect_wider() -> out
 
   }
 

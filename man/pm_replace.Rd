@@ -4,17 +4,19 @@
 \alias{pm_replace}
 \title{Add Parsed Street Address Data to Source Data Set}
 \usage{
-pm_replace(.data, source, side = "right", unnest = FALSE)
+pm_replace(source, street, intersect, operator = "at", unnest = FALSE)
 }
 \arguments{
-\item{.data}{A postmastr object created with \link{pm_prep} that has been readied
-for replacement by fully parsing the data.}
-
 \item{source}{Original source data to merge clean addresses with.}
 
-\item{side}{One of either \code{"left"} or \code{"right"} - should parsed data be placed to the left
-or right of the original data? Placing data to the left may be useful in particularly wide
-data sets.}
+\item{street}{A postmastr object created with \link{pm_prep} with street addresses that has been readied
+for replacement by fully parsing the data.}
+
+\item{intersect}{A postmastr object created with \link{pm_prep} with intersections that has been readied
+for replacement by fully parsing the data.}
+
+\item{operator}{A character scalar to be used as the intersection operator (between the 'x' and 'y' sides
+of the intersection).}
 
 \item{unnest}{A logical scalar; if \code{TRUE}, house ranges will be unnested (i.e. a house range that
 has been expanded to cover four addresses with \code{\link{pm_houseRange_parse}} will be converted

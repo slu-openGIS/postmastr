@@ -46,7 +46,7 @@
 pm_identify <- function(.data, var, intersect_dict, locale = "us"){
 
   # create bindings for global variables
-  . = pm.id = pm.uid = NULL
+  . = pm.id = pm.uid = pm.type = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -111,6 +111,9 @@ pm_identify <- function(.data, var, intersect_dict, locale = "us"){
 # Identify Address Type
 pm_identify_type <- function(.data, var, dict, locale){
 
+  # global bindings
+  pm.hasIntersect = pm.hasHouse = pm.hasZip = NULL
+
   # save parameters to list
   paramList <- as.list(match.call())
 
@@ -129,7 +132,7 @@ pm_identify_type <- function(.data, var, dict, locale){
     dplyr::mutate(pm.type = dplyr::case_when(
       pm.hasHouse == TRUE & (pm.hasIntersect == TRUE | pm.hasIntersect == FALSE) & pm.hasZip == TRUE ~ "full",
       pm.hasHouse == TRUE & (pm.hasIntersect == TRUE | pm.hasIntersect == FALSE) & pm.hasZip == FALSE ~ "short",
-      pm.hasHouse == FALSE & pm.hasIntersect == TRUE & pm.hasZip == FALSE ~ "intersection",
+      pm.hasHouse == FALSE & pm.hasIntersect == TRUE & (pm.hasZip == TRUE | pm.hasZip == FALSE) ~ "intersection",
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == TRUE  ~ "partial",
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == FALSE  ~ "unknown"
     )) %>%
@@ -144,6 +147,8 @@ pm_identify_type <- function(.data, var, dict, locale){
 #'
 #' @description Prints a tibble with the results of \code{\link{pm_identify}}'s assessment
 #'     of address types.
+#'
+#' @usage pm_evaluate(.data)
 #'
 #' @param .data A source tibble that has already had identification
 #'    numbers added using \link{pm_identify}.
@@ -160,6 +165,9 @@ pm_identify_type <- function(.data, var, dict, locale){
 #'
 #' @export
 pm_evaluate <- function(.data){
+
+  # global bindings
+  pm.type = count = pct = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -186,6 +194,8 @@ pm_evaluate <- function(.data){
 #' @description Subsets addresses that are marked as \code{"partial"} in \code{pm.type} so that
 #'    they can be individually evaluated and updated prior to standardization.
 #'
+#' @usage pm_type_partial(.data)
+#'
 #' @param .data A source tibble that has already had identification
 #'    numbers added using \link{pm_identify}.
 #'
@@ -193,6 +203,9 @@ pm_evaluate <- function(.data){
 #'
 #' @export
 pm_type_partial <- function(.data){
+
+  # global bindings
+  pm.type = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -212,6 +225,8 @@ pm_type_partial <- function(.data){
 #' @description Subsets addresses that are marked as \code{"unknown"} in \code{pm.type} so that
 #'    they can be individually evaluated and updated prior to standardization.
 #'
+#' @usage pm_type_unknown(.data)
+#'
 #' @param .data A source tibble that has already had identification
 #'    numbers added using \link{pm_identify}.
 #'
@@ -219,6 +234,9 @@ pm_type_partial <- function(.data){
 #'
 #' @export
 pm_type_unknown <- function(.data){
+
+  # global bindings
+  pm.type = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -246,7 +264,7 @@ pm_type_unknown <- function(.data){
 #'    but the accuracy of the parser may be limited. Addresses identified as intersections
 #'    will be returned when \code{type = "intersection"}.
 #'
-#' @usage pm_prep(.data, var)
+#' @usage pm_prep(.data, var, type)
 #'
 #' @param .data A source tibble that has already had identification
 #'    numbers added using \link{pm_identify}.
@@ -272,6 +290,9 @@ pm_type_unknown <- function(.data){
 #'
 #' @export
 pm_prep <- function(.data, var, type){
+
+  # global bindings
+  pm.type = NULL
 
   # create bindings for global variables
   pm.address = pm.uid = geometry = NULL

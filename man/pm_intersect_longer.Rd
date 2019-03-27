@@ -4,7 +4,7 @@
 \alias{pm_intersect_longer}
 \title{Convert Intersections to Long Form}
 \usage{
-pm_intersect_parse(.data, dictionary, locale = "us")
+pm_intersect_longer(.data, dictionary, locale = "us")
 }
 \arguments{
 \item{.data}{A postmastr object created with \link{pm_prep}}

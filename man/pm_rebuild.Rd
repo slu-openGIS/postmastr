@@ -4,21 +4,25 @@
 \alias{pm_rebuild}
 \title{Re-construct Street Addressed from Parsed Elements}
 \usage{
-pm_rebuild(.data, start, end, new_address, include_commas = FALSE,
-    keep_parsed, side = "right", left_vars, keep_ids = FALSE, locale = "us")
+pm_rebuild(.data, output, new_address, include_commas = FALSE, include_units = TRUE,
+   keep_parsed = "no", side = "right", left_vars, keep_ids = FALSE, locale = "us")
 }
 \arguments{
 \item{.data}{An object with raw and parsed data created by \code{\link{pm_rebuild}}}
 
-\item{start}{Variable name to begin rebuilding process with, typically the house number}
+\item{output}{Describes the format of the output address. One of either \code{"full"} or \code{"short"}.
+A short address contains, at the most, a house number, street directionals, a street name,
+a street suffix, and a unit type and number. A full address contains all of the selements of a
+short address as well as, at the most, a city, state, and postal code.}
 
-\item{end}{Variable name to end rebuilding process with, typically the street suffix or postal code}
-
-\item{new_address}{Optiona; name of new variable to store rebuilt address in. If not specified,
+\item{new_address}{Optional; name of new variable to store rebuilt address in. If not specified,
 the re-build addressed will be stored in \code{pm.address}.}
 
 \item{include_commas}{A logical scalar; if \code{TRUE}, a comma is added both before and after the city
 name in rebuild addresses. If \code{FALSE} (default), no punctuation is added.}
+
+\item{include_units}{A logical scalar; if \code{TRUE} (default), unit data will be included in the
+re-constructed address. If \code{FALSE}, units will not be included.}
 
 \item{keep_parsed}{Character string; if \code{"yes"}, all parsed elements will be
 added to the source data after replacement. If \code{"limited"}, only the \code{pm.city},
@@ -41,4 +45,8 @@ current option is "us" but this is included to facilitate future expansion.}
 }
 \description{
 Create a single address from parsed components.
+}
+\details{
+Re-constructed street addresses will can be either \code{"full"} or \code{"short"} depending
+    on the \code{output} parameter's argument. Intersections will always be re-constructed in full.
 }

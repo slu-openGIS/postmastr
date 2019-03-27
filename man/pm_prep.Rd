@@ -4,7 +4,7 @@
 \alias{pm_prep}
 \title{Create postmastr Object for Parsing}
 \usage{
-pm_prep(.data, var)
+pm_prep(.data, var, type)
 }
 \arguments{
 \item{.data}{A source tibble that has already had identification
@@ -12,7 +12,7 @@ numbers added using \link{pm_identify}.}
 
 \item{var}{A character variable containing address data to be parsed}
 
-\item{type}{The type of addresses to be parsed, one of either \code{"house"}
+\item{type}{The type of addresses to be parsed, one of either \code{"street"}
 or \code{"intersection"}}
 }
 \value{
@@ -28,8 +28,8 @@ Once identification numbers have been been added, this
 \details{
 Creation of the subset data is dependent on whether the data are
    house numbers or intersections. Any addresses identified as \code{"short"},
-   \code{"full"}, or \code{"partial"} will be returned when \code{type = "house"}.
-   Addresses that are identified as \code{"unknown"} will also be included in \code{"house"},
+   \code{"full"}, or \code{"partial"} will be returned when \code{type = "street"}.
+   Addresses that are identified as \code{"unknown"} will also be included in \code{"street"},
    but the accuracy of the parser may be limited. Addresses identified as intersections
    will be returned when \code{type = "intersection"}.
 }

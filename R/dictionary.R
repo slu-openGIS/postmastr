@@ -351,7 +351,7 @@ pm_dictionary_us_suffix <- function(append, filter){
 pm_dictionary_us_intersection <- function(append, filter){
 
   # global bindings
-  intersect.output = NULL
+  intersect.output = intersect.input = NULL
 
   # load data
   out <- postmastr::dic_us_intersect
