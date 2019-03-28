@@ -2,7 +2,7 @@ library(dplyr)
 devtools::load_all()
 
 intersections <- tibble(
-  address = c("123 Main St", "4259 LINDELL BLVD", "Main St and 1st Ave", "North Tucker at Market",
+  address = c("123 Main St", "4259 LINDELL BLVD", "Main St / 1st Ave", "North Tucker at Market",
               "128 Main St", "1111 Main St", "987 Main St", "4579 Tower Grove Ave")
 )
 
@@ -12,6 +12,8 @@ intersections <- tibble(
 )
 
 intersections <- pm_identify(intersections, var = address)
+
+
 
 pm_parse(intersections, input = "short", address = address, output = "short", keep_parsed = "no")
 

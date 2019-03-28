@@ -112,7 +112,7 @@ pm_identify <- function(.data, var, intersect_dict, locale = "us"){
 pm_identify_type <- function(.data, var, dict, locale){
 
   # global bindings
-  pm.hasIntersect = pm.hasHouse = pm.hasZip = NULL
+  pm.type = pm.hasIntersect = pm.hasHouse = pm.hasZip = NULL
 
   # save parameters to list
   paramList <- as.list(match.call())
@@ -136,6 +136,7 @@ pm_identify_type <- function(.data, var, dict, locale){
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == TRUE  ~ "partial",
       pm.hasHouse == FALSE & pm.hasIntersect == FALSE & pm.hasZip == FALSE  ~ "unknown"
     )) %>%
+    dplyr::mutate(pm.type = ifelse(is.na(pm.type) == TRUE, "unknown", pm.type)) %>%
     dplyr::select(-pm.hasIntersect, -pm.hasHouse, -pm.hasZip) -> .data
 
   # return output
@@ -339,6 +340,14 @@ pm_prep <- function(.data, var, type){
     dplyr::mutate(pm.address = stringr::str_replace_all(pm.address, pattern = ",", replace = "")) %>%
     dplyr::select(pm.uid, pm.address) %>%
     dplyr::as_tibble() -> .data
+
+  # replace forward slashes
+  .data %>%
+    dplyr::mutate(pm.address = stringr::str_replace_all(
+      string = pm.address,
+      pattern = "/",
+      replacement = " at ")) %>%
+    dplyr::mutate(pm.address = stringr::str_squish(pm.address)) -> .data
 
   # return output
   return(.data)

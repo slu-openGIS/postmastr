@@ -29,7 +29,7 @@
 pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.hasIntersect = NULL
+  pm.address = pm.hasIntersect = intersect.input = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -65,16 +65,25 @@ pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
     }
   }
 
+  # modify forward slash
+  if ("/" %in% dictionary$intersect.input == TRUE){
+    dict1 <- "/"
+
+    dictionary <- dplyr::filter(dictionary, intersect.input != "/")
+  }
 
   # minimize dictionary
   if (locale == "us"){
-    dict <- paste(dictionary$intersect.input, collapse = "|")
+    dict2 <- paste(dictionary$intersect.input, collapse = "|")
   }
 
   # check observations
   if (locale == "us"){
-    .data <- dplyr::mutate(.data, pm.hasIntersect = stringr::str_detect(!!varQ,
-                                                                 pattern = stringr::str_c("\\b(", dict, ")\\b")))
+    .data %>%
+      dplyr::mutate(pm.hasIntersect = stringr::str_detect(!!varQ, pattern = dict1)) %>%
+      dplyr::mutate(pm.hasIntersect = ifelse(stringr::str_detect(!!varQ,
+                                     pattern = stringr::str_c("\\b(", dict2, ")\\b")) == TRUE,
+                                     TRUE, pm.hasIntersect)) -> .data
   }
 
   # return output
