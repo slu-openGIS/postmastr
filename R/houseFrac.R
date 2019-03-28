@@ -27,7 +27,7 @@ pm_houseFrac_any <- function(.data){
 
   # test and create output
   .data <- pm_houseFrac_detect(.data)
-  out <- any(.data$pm.hasHouseFrac)
+  out <- any(.data$pm.hasHouseFrac, na.rm = TRUE)
 
   # return output
   return(out)
@@ -64,7 +64,7 @@ pm_houseFrac_all <- function(.data){
 
   # test and create output
   .data <- pm_houseFrac_detect(.data)
-  out <- all(.data$pm.hasHouseFrac)
+  out <- all(.data$pm.hasHouseFrac, na.rm = TRUE)
 
   # return output
   return(out)
