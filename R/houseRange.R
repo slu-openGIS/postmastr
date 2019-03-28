@@ -26,7 +26,7 @@ pm_houseRange_any <- function(.data){
 
   # test and create output
   .data <- pm_houseRange_detect(.data)
-  out <- any(.data$pm.hasHouseRange)
+  out <- any(.data$pm.hasHouseRange, na.rm = TRUE)
 
   # return output
   return(out)
@@ -61,7 +61,7 @@ pm_houseRange_all <- function(.data){
 
   # test and create output
   .data <- pm_houseRange_detect(.data)
-  out <- all(.data$pm.hasHouseRange)
+  out <- all(.data$pm.hasHouseRange, na.rm = TRUE)
 
   # return output
   return(out)
