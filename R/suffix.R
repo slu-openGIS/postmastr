@@ -40,7 +40,7 @@ pm_streetSuf_any <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- any(.data$pm.hasStreetSuf)
+  out <- any(.data$pm.hasStreetSuf, na.rm = TRUE)
 
   # return output
   return(out)
@@ -88,7 +88,7 @@ pm_streetSuf_all <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- all(.data$pm.hasStreetSuf)
+  out <- all(.data$pm.hasStreetSuf, na.rm = TRUE)
 
   # return output
   return(out)

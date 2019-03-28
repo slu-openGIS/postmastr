@@ -39,7 +39,7 @@ pm_houseSuf_any <- function(.data, dictionary, locale = "us"){
   .data <- pm_houseSuf_detect(.data, dictionary = dictionary, locale = locale)
 
   # create output
-  out <- any(.data$pm.hasHouseSuf)
+  out <- any(.data$pm.hasHouseSuf, na.rm = TRUE)
 
   # return output
   return(out)
@@ -87,7 +87,7 @@ pm_houseSuf_all <- function(.data, dictionary, locale = "us"){
   .data <- pm_houseSuf_detect(.data, dictionary = dictionary, locale = locale)
 
   # create output
-  out <- all(.data$pm.hasHouseSuf)
+  out <- all(.data$pm.hasHouseSuf, na.rm = TRUE)
 
   # return output
   return(out)

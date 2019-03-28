@@ -39,7 +39,7 @@ pm_streetDir_any <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- any(.data$pm.hasDir)
+  out <- any(.data$pm.hasDir, na.rm = TRUE)
 
   # return output
   return(out)
@@ -88,7 +88,7 @@ pm_streetDir_all <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- all(.data$pm.hasDir)
+  out <- all(.data$pm.hasDir, na.rm = TRUE)
 
   # return output
   return(out)

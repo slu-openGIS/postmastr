@@ -28,7 +28,7 @@ pm_city_any <- function(.data, dictionary){
   .data <- pm_city_detect(.data, dictionary = dictionary)
 
   # create output
-  out <- any(.data$pm.hasCity)
+  out <- any(.data$pm.hasCity, na.rm = TRUE)
 
   # return output
   return(out)
@@ -65,7 +65,7 @@ pm_city_all <- function(.data, dictionary){
   .data <- pm_city_detect(.data, dictionary = dictionary)
 
   # create output
-  out <- all(.data$pm.hasCity)
+  out <- all(.data$pm.hasCity, na.rm = TRUE)
 
   # return output
   return(out)

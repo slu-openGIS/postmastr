@@ -34,7 +34,7 @@ pm_state_any <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- any(.data$pm.hasState)
+  out <- any(.data$pm.hasState, na.rm = TRUE)
 
   # return output
   return(out)
@@ -76,7 +76,7 @@ pm_state_all <- function(.data, dictionary, locale = "us"){
   }
 
   # create output
-  out <- all(.data$pm.hasState)
+  out <- all(.data$pm.hasState, na.rm = TRUE)
 
   # return output
   return(out)

@@ -33,7 +33,7 @@ pm_postal_any <- function(.data, locale = "us"){
     .data <- pm_postal_detect(.data, locale = locale)
 
     # create output
-    out <- any(.data$pm.hasZip)
+    out <- any(.data$pm.hasZip, na.rm = TRUE)
   }
 
   # return output
@@ -77,7 +77,7 @@ pm_postal_all <- function(.data, locale = "us"){
     .data <- pm_postal_detect(.data, locale = locale)
 
     # create output
-    out <- all(.data$pm.hasZip)
+    out <- all(.data$pm.hasZip, na.rm = TRUE)
   }
 
   # return output
