@@ -99,7 +99,7 @@ pm_identify <- function(.data, var, intersect_dict, locale = "us"){
   } else if (reIdentify == TRUE){
 
     # identify address type
-    .data <- pm_identify_type(.data, var = !!varQ, dict = intersect_dict, locale = locale)
+    out <- pm_identify_type(.data, var = !!varQ, dict = intersect_dict, locale = locale)
 
   }
 
