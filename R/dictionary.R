@@ -48,7 +48,8 @@
 #'
 #' @examples
 #' # build state dictionary, title case only
-#' pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us")
+#' pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us",
+#'                                         output = c("full", "abbreviation")))
 #'
 #' # build state dictionary, title and upper case
 #' pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
@@ -81,7 +82,8 @@
 #' @importFrom dplyr filter
 #'
 #' @export
-pm_dictionary <- function(type, append, filter, case = c("title", "lower", "upper"), locale = "us"){
+pm_dictionary <- function(type, append, filter, case = c("title", "lower", "upper"), locale = "us",
+                          output = c("full", "abbreviation")){
 
   if (locale == "us"){
 
@@ -169,7 +171,18 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
 
       out <- pm_case(working, locale = locale, type = type, case = case)
 
-    }
+    } else if (type == "unit"){  ## working code for adding units to dictionary
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_unit(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_unit(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_unit(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_unit()
+      }
+      out <- pm_case(working, locale = locale, type = type, case = case) ## not sure if this line is needed
 
   }
 
@@ -332,6 +345,38 @@ pm_dictionary_us_dir <- function(append, filter){
   return(out)
 
 }
+
+
+# us aparemtnet/unit full nmaes and suffixes
+pm_dictionary_us_unit <- function(append, filter){
+
+  # global bindings
+  unit.output = NULL
+
+  # load data
+  out <- postmastr::dic_us_unit
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$unit.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, unit.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
 
 # us street suffixes
 pm_dictionary_us_suffix <- function(append, filter){
@@ -762,3 +807,27 @@ pm_append <- function(type, input, output, locale = "us"){
 #' head(dic_country)
 #'
 "dic_country"
+
+#' unit Suffix Dictionary, United States of America
+#'
+#' @description A list of abbreviations for full names for apartment/units suffix types for the
+#'     United States.
+#'
+#' @docType data
+#'
+#' @usage data(dic_us_unit)
+#'
+#' @format A tibble with 24 rows and 2 variables:
+#' \describe{
+#'   \item{suf.type}{suffix type}
+#'   \item{suf.output}{standard suffix abbreviation}
+#'   \item{suf.input}{standard full names and suffix abbreviations}
+#' }
+#'
+#' not sure I need this link
+#' @seealso \href{https://pe.usps.com/text/pub28/28apc_002.htm}{U.S. Postal Service, Publication 28, Appendix C1}
+#'
+#' @examples
+#' head(dic_us_unit)
+#'
+"dic_us_unit"
