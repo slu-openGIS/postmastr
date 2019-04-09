@@ -189,6 +189,7 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
   # return output
   return(out)
 
+  }
 }
 
 # us states
