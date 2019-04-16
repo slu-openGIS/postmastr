@@ -604,7 +604,7 @@ pm_convert_case <- function(.data, var, orderVar, case){
 pm_append <- function(type, input, output, locale = "us"){
 
   # global binding
-  state.output = state.input = city.output = city.input = NULL
+  state.output = state.input = city.output = city.input = unit.input= unit.output = NULL
 
   if (locale == "us"){
 
@@ -691,7 +691,17 @@ pm_append <- function(type, input, output, locale = "us"){
         con.input = c(input))
 
       # re-order observations
-      out <- out[order(out$houseSuf.input),]
+      out <- out[order(out$houseSuf.input),] # check that this should be house
+
+    }
+    else if (type == "unit"){
+
+      out <- dplyr::tibble(
+        unit.output = c(output),
+        unit.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$unit.input),]
 
     }
 

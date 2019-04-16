@@ -146,7 +146,7 @@ pm_unit_all <- function(.data, dictionary){
   .data <- pm_unit_detect(.data, dictionary = dictionary)
 
   # create output
-  out <- all(.data$pm.hasCity)
+  out <- all(.data$pm.hasUnit)
 
   # return output
   return(out)
@@ -186,7 +186,7 @@ pm_std_unit_us <- function(.data, var, dictionary){
 }
 
 #' Parse Unit
-#'  this description needs to be updated  originally taken from street
+#'
 #' @description Converts the remaining text of \code{pm.address} to title case and stores
 #'     it in a new variable named \code{pm.unit}.
 #'
@@ -206,10 +206,10 @@ pm_std_unit_us <- function(.data, var, dictionary){
 #' @return A tibble with a new character variable \code{pm.unit} that contains
 #'
 #' @export
-pm_street_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRUE, locale = "us"){
+pm_unit_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRUE, locale = "us"){
 
   # global bindings
-  pm.address = pm.street = NULL
+  pm.address = pm.unit = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -226,7 +226,7 @@ pm_street_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRU
   }
 
   # parse
-  .data <- dplyr::mutate(.data, pm.street = pm.address)
+  .data <- dplyr::mutate(.data, pm.unit = pm.address)
 
   # reorder output
   vars <- pm_reorder(.data)
@@ -238,12 +238,12 @@ pm_street_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRU
   }
 
   # standardize street names
-  .data <- pm_street_std(.data, var = "pm.street", dictionary = dictionary, ordinal = ordinal, locale = locale)
+  .data <- pm_unit_std(.data, var = "pm.unit", dictionary = dictionary, ordinal = ordinal, locale = locale)
 
   # optionally drop pm.address
   if (drop == TRUE){
 
-    .data <- dplyr::select(.data, -pm.address)
+    .data <- dplyr::select(.data, -pm.unit)
 
   }
 
@@ -251,4 +251,70 @@ pm_street_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRU
   return(.data)
 
 }
+
+
+#' Detect Presence of unit
+#'
+#' @description Determine the presence of units names or abbreviations
+#'
+#'
+#' @usage pm_unit_detect(.data, dictionary, locale = "us")
+#'
+#' @param .data A postmastr object created with \link{pm_prep}
+#' @param dictionary A tbl created with \code{pm_append} to be used
+#'     as a master list for units
+#' @param locale A string indicating the country these data represent; the only
+#'    current option is \code{"us"} but this is included to facilitate future expansion.
+#'
+#' @return A tibble with a new logical variable \code{pm.hasunit} that is
+#'     \code{TRUE} if a unitfrom the given dictionary is found at the beginning
+#'     of the address and \code{FALSE} otherwise.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom stringr str_c
+#' @importFrom stringr str_detect
+#'
+#' @export
+pm_unit_detect <- function(.data, dictionary, locale = "us"){
+
+  # create bindings for global variables
+  pm.address = pm.hasState = NULL
+
+  # check for object and key variables
+  if (pm_has_uid(.data) == FALSE){
+    stop("The variable 'pm.uid' is missing from the given object. Create a postmastr object with pm_identify and pm_prep before proceeding.")
+  }
+
+  if (pm_has_address(.data) == FALSE){
+    stop("The variable 'pm.address' is missing from the given object. Create a postmastr object with pm_prep before proceeding.")
+  }
+
+  # locale issues
+  if (locale != "us"){
+    stop("At this time, the only locale supported is 'us'. This argument is included to facilitate further expansion.")
+  }
+
+  # missing dictionary
+  if (missing(dictionary) == TRUE){
+    stop("A house suffix dictionary created with pm_append is required.")
+  }
+
+  # minimize dictionary
+  if (locale == "us"){
+    dict <- paste(dictionary$unit.input, collapse = "|")
+  }
+
+  # check observations
+  if (locale == "us"){
+    .data <- dplyr::mutate(.data, pm.hasUnit = stringr::str_detect(pm.address,
+                                                                       pattern = stringr::str_c("^\\b(", dict, ")\\b")))
+  }
+
+  # return output
+  return(.data)
+
+}
+
+
 

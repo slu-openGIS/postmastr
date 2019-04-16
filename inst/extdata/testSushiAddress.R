@@ -13,7 +13,7 @@ postmastr::sushi2 %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) -> sushi2
 
-sushi2_min <- pm_prep(sushi2, var = "address", type = )
+sushi2_min <- pm_prep(sushi2, var = "address",  type = "street")
 
 sushi2_alpha <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 R Olive St", pm.address))
 sushi2_alpha <- pm_house_parse(sushi2_alpha)
@@ -21,7 +21,25 @@ sushi2_alpha <- pm_house_parse(sushi2_alpha)
 houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear", "F", "R"), output = c("Front", "Rear", "Front", "Rear"))
 
 pm_houseSuf_any(sushi2_alpha, dictionary = houseSufs)
+pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs) # this is how to test for unites functions
+#########################
+
+unitvector <- c("Apartment","Basement","Building","Department","Floor","Front","Hanger","key","Lobby","Lot",
+               "Lower","Office","Penthouse","Pier","Rear","Room","Side","Slip","Space","Stop","Suite","Trailer",
+               "Unit","Upper","APT","BSMT**","BLDG","DEPT","FL","FRNT**","HNGR","KEY","LBBY**","LOT","LOWR**","OFC**","PH**",
+              "PIER","REAR**","RM","SIDE**","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR**")
+
+head(sushi2_alpha) # need to reorganize for testing
+unitdictionarytest  <- pm_append(type = "unit", input = unitvector, output = unitvector)
+pm_unit_any(sushi2_alpha, dictionary = unitdictionarytest)
+pm_unit_all(sushi2_alpha, dictionary = unitdictionarytest)
+
+
+
+################
+
 pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
+
 
 pm_houseSuf_detect(sushi2_alpha, dictionary = houseSufs)
 
