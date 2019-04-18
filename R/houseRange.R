@@ -277,6 +277,11 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
       dplyr::mutate(pm.house = ifelse(is.na(pm.house2) == FALSE, pm.house2, pm.house)) %>%
       dplyr::select(-pm.house2, -pm.houseShort, -pm.houseVal) -> .data
 
+    # address reversed ranges
+    .data <- dplyr::mutate(.data, pm.house = ifelse(as.numeric(pm.houseLow) > as.numeric(pm.houseHigh),
+                                                    stringr::str_c(pm.houseHigh, "-", pm.houseLow),
+                                                    pm.house))
+
     # remove pm.houseDetect if not present initially
     if (rangeDetect == FALSE){
       .data <- dplyr::select(.data, -pm.hasHouseRange)
