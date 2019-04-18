@@ -117,11 +117,6 @@ pm_intersect_longer <- function(.data, dictionary, locale = "us"){
     }
   }
 
-  # modify ampersand
-  if ("&" %in% dictionary$intersect.input == TRUE){
-    dictionary <- dplyr::mutate(dictionary, intersect.input = ifelse(intersect.input == "&", "\\&", intersect.input))
-  }
-
   # minimize dictionary
   if (locale == "us"){
     dict <- paste(dictionary$intersect.input, collapse = "|")
@@ -131,7 +126,10 @@ pm_intersect_longer <- function(.data, dictionary, locale = "us"){
   if (locale == "us"){
 
     .data %>%
-      dplyr::mutate(pm.address = stringr::str_split(string = pm.address, pattern = stringr::str_c("[\\b(", dict, ")\\b]"))) %>%
+      dplyr::mutate(pm.address = stringr::str_replace(string = pm.address,
+                                                      pattern = stringr::str_c("[\\b(", "&", ")\\b]"),
+                                                      replacement = " at ")) %>%
+      dplyr::mutate(pm.address = stringr::str_split(string = pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b"))) %>%
       tidyr::unnest() %>%
       mutate(pm.address = stringr::str_trim(pm.address)) -> .data
 
