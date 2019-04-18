@@ -283,7 +283,7 @@ pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
       pm_state_parse(dictionary = state_dict, locale = locale) %>%
       pm_city_parse(dictionary = city_dict, locale = locale) %>%
       pm_house_parse() %>%
-      pm_houseRange_parse() %>%
+      pm_houseRange_parse(expand_range = unnest) %>%
       pm_houseFrac_parse() %>%
       pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
@@ -294,7 +294,7 @@ pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
 
     .data %>%
       pm_house_parse() %>%
-      pm_houseRange_parse() %>%
+      pm_houseRange_parse(expand_range = unnest) %>%
       pm_houseFrac_parse() %>%
       pm_houseSuf_parse(dictionary = houseSuf_dict) %>%
       pm_streetDir_parse(dictionary = dir_dict, locale = locale) %>%
