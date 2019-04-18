@@ -65,25 +65,17 @@ pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
     }
   }
 
-  # modify forward slash
-  if ("/" %in% dictionary$intersect.input == TRUE){
-    dict1 <- "/"
-
-    dictionary <- dplyr::filter(dictionary, intersect.input != "/")
-  }
-
   # minimize dictionary
   if (locale == "us"){
-    dict2 <- paste(dictionary$intersect.input, collapse = "|")
+    dict <- paste(dictionary$intersect.input, collapse = "|")
   }
 
   # check observations
   if (locale == "us"){
     .data %>%
-      dplyr::mutate(pm.hasIntersect = stringr::str_detect(!!varQ, pattern = dict1)) %>%
       dplyr::mutate(pm.hasIntersect = ifelse(stringr::str_detect(!!varQ,
-                                     pattern = stringr::str_c("\\b(", dict2, ")\\b")) == TRUE,
-                                     TRUE, pm.hasIntersect)) -> .data
+                                     pattern = stringr::str_c("[\\b(", dict, ")\\b]")) == TRUE,
+                                     TRUE, FALSE)) -> .data
   }
 
   # return output
@@ -125,6 +117,11 @@ pm_intersect_longer <- function(.data, dictionary, locale = "us"){
     }
   }
 
+  # modify ampersand
+  if ("&" %in% dictionary$intersect.input == TRUE){
+    dictionary <- dplyr::mutate(dictionary, intersect.input = ifelse(intersect.input == "&", "\\&", intersect.input))
+  }
+
   # minimize dictionary
   if (locale == "us"){
     dict <- paste(dictionary$intersect.input, collapse = "|")
@@ -134,7 +131,7 @@ pm_intersect_longer <- function(.data, dictionary, locale = "us"){
   if (locale == "us"){
 
     .data %>%
-      dplyr::mutate(pm.address = stringr::str_split(string = pm.address, pattern = stringr::str_c("\\b(", dict, ")\\b"))) %>%
+      dplyr::mutate(pm.address = stringr::str_split(string = pm.address, pattern = stringr::str_c("[\\b(", dict, ")\\b]"))) %>%
       tidyr::unnest() %>%
       mutate(pm.address = stringr::str_trim(pm.address)) -> .data
 
