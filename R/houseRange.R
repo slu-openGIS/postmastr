@@ -278,12 +278,12 @@ pm_houseRange_parse <- function(.data, expand_range = TRUE, locale = "us"){
       dplyr::select(-pm.house2, -pm.houseShort, -pm.houseVal) -> .data
 
     # address reversed ranges
-    .data %>%
-      dplyr::mutate(pm.houseLow2 = ifelse(as.numeric(pm.houseLow) > as.numeric(pm.houseHigh), pm.houseHigh, NA)) %>%
-      dplyr::mutate(pm.houseHigh2 = ifelse(as.numeric(pm.houseLow) > as.numeric(pm.houseHigh), pm.houseLow, NA)) %>%
-      dplyr::mutate(pm.houseLow = ifelse(is.na(pm.houseLow2) == FALSE, pm.houseLow2, pm.houseLow)) %>%
-      dplyr::mutate(pm.houseHigh = ifelse(is.na(pm.houseHigh2) == FALSE, pm.houseHigh2, pm.houseHigh)) %>%
-      dplyr::select(-pm.houseLow2, -pm.houseHigh2) -> .data
+    #.data %>%
+    #  dplyr::mutate(pm.houseLow2 = ifelse(suppressWarnings(as.numeric(pm.houseLow)) > suppressWarnings(as.numeric(pm.houseHigh)), pm.houseHigh, NA)) %>%
+    #  dplyr::mutate(pm.houseHigh2 = ifelse(suppressWarnings(as.numeric(pm.houseLow)) > suppressWarnings(as.numeric(pm.houseHigh)), pm.houseLow, NA)) %>%
+    #  dplyr::mutate(pm.houseLow = ifelse(is.na(pm.houseLow2) == FALSE, pm.houseLow2, pm.houseLow)) %>%
+    #  dplyr::mutate(pm.houseHigh = ifelse(is.na(pm.houseHigh2) == FALSE, pm.houseHigh2, pm.houseHigh)) %>%
+    #  dplyr::select(-pm.houseLow2, -pm.houseHigh2) -> .data
 
     # remove pm.houseDetect if not present initially
     if (rangeDetect == FALSE){
