@@ -74,8 +74,13 @@ pm_intersect_detect <- function(.data, var, dictionary, locale = "us"){
   if (locale == "us"){
     .data %>%
       dplyr::mutate(pm.hasIntersect = ifelse(stringr::str_detect(!!varQ,
-                                     pattern = stringr::str_c("[\\b(", dict, ")\\b]")) == TRUE,
-                                     TRUE, FALSE)) -> .data
+                                     pattern = stringr::str_c("\\b(", dict, ")\\b")) == TRUE,
+                                     TRUE, FALSE)) %>%
+      dplyr::mutate(pm.hasIntersect = ifelse(stringr::str_detect(!!varQ,
+                                     pattern = stringr::str_c("[\\b(", "&", ")\\b]")) == TRUE,
+                                     TRUE, pm.hasIntersect)) %>%
+      dplyr::mutate(pm.hasIntersect = ifelse(stringr::str_detect(!!varQ, pattern = "/") == TRUE,
+                                             TRUE, pm.hasIntersect)) -> .data
   }
 
   # return output
