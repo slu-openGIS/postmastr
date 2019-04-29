@@ -4,11 +4,6 @@ library(dplyr)
 library(tidycensus)
 devtools::load_all()
 
-# APT returetns APT
-# apartment returnt APT both are acceptable inputes
-# make sure return is in tytpe case "Apt" first letter is upper case
-# look into #123 or # 123 are both valide should return as ture in unit detect
-
 postmastr::sushi2 %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) -> sushi2
@@ -21,18 +16,22 @@ sushi2_alpha <- pm_house_parse(sushi2_alpha)
 houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear", "F", "R"), output = c("Front", "Rear", "Front", "Rear"))
 
 pm_houseSuf_any(sushi2_alpha, dictionary = houseSufs)
-pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs) # this is how to test for unites functions
+pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
 #########################
 
 unitvector <- c("Apartment","Basement","Building","Department","Floor","Front","Hanger","key","Lobby","Lot",
                "Lower","Office","Penthouse","Pier","Rear","Room","Side","Slip","Space","Stop","Suite","Trailer",
-               "Unit","Upper","APT","BSMT**","BLDG","DEPT","FL","FRNT**","HNGR","KEY","LBBY**","LOT","LOWR**","OFC**","PH**",
-              "PIER","REAR**","RM","SIDE**","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR**")
+               "Unit","Upper","APT","BSMT","BLDG","DEPT","FL","FRNT","HNGR","KEY","LBBY","LOT","LOWR","OFC","PH",
+              "PIER","REAR","RM","SIDE","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR")
 
-head(sushi2_alpha) # need to reorganize for testing
+# head(sushi2_alpha) # need to reorganize for testing
 unitdictionarytest  <- pm_append(type = "unit", input = unitvector, output = unitvector)
+# function looks good returing TRUE false output
 pm_unit_any(sushi2_alpha, dictionary = unitdictionarytest)
+# function looks good returing TRUE false output
 pm_unit_all(sushi2_alpha, dictionary = unitdictionarytest)
+# function looks good returing colume vector of ture false
+pm_unit_detect(sushi2_alpha, dictionary = unitdictionarytest)
 
 
 

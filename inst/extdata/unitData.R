@@ -4,8 +4,8 @@
 unit.full <- c("Apartment","Basement","Building","Department","Floor","Front","Hanger","key","Lobby","Lot",
                "Lower","Office","Penthouse","Pier","Rear","Room","Side","Slip","Space","Stop","Suite","Trailer",
                "Unit","Upper")
-unit.abv <- c("APT","BSMT**","BLDG","DEPT","FL","FRNT**","HNGR","KEY","LBBY**","LOT","LOWR**","OFC**","PH**",
-              "PIER","REAR**","RM","SIDE**","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR**")
+unit.abv <- c("APT","BSMT","BLDG","DEPT","FL","FRNT","HNGR","KEY","LBBY","LOT","LOWR","OFC","PH",
+              "PIER","REAR","RM","SIDE","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR")
 
 # set up data from with optional output of abv or full
 if(output == "full") {
