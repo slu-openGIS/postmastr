@@ -1,7 +1,3 @@
-install.packages("tidycensus")
-install.packages("usethis")
-library(dplyr)
-library(tidycensus)
 devtools::load_all()
 
 postmastr::sushi2 %>%
@@ -17,38 +13,6 @@ houseSufs <- pm_append(type = "house suffix", input = c("Front", "Rear", "F", "R
 
 pm_houseSuf_any(sushi2_alpha, dictionary = houseSufs)
 pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
-#########################
-
-unitvector <- c("Apartment","Basement","Building","Department","Floor","Front","Hanger","key","Lobby","Lot",
-               "Lower","Office","Penthouse","Pier","Rear","Room","Side","Slip","Space","Stop","Suite","Trailer",
-               "Unit","Upper","APT","BSMT","BLDG","DEPT","FL","FRNT","HNGR","KEY","LBBY","LOT","LOWR","OFC","PH",
-              "PIER","REAR","RM","SIDE","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR")
-postmastr::sushi1 %>%
-  pm_identify(var = address) %>%
-  filter(pm.uid %in% c(3:4) == FALSE) -> sushi1
-
-sushi1 <- pm_prep(sushi1, var = "address",  type = "street")
-
-# need to test again min
-# head(sushi2_alpha) # need to reorganize for testing
-unitdictionarytest  <- pm_append(type = "unit", input = unitvector, output = unitvector)
-# function looks good returing TRUE false output
-
-pm_unit_any(sushi2_alpha, dictionary = unitdictionarytest)
-
-pm_unit_any(sushi2_min, dictionary = unitdictionarytest)
-pm_unit_any(sushi2_min, dictionary = unitdictionarytest)
-
-# function looks good returing TRUE false output
-pm_unit_all(sushi2_alpha, dictionary = unitdictionarytest)
-# function looks good returing colume vector of ture false
-pm_unit_detect(sushi2_alpha, dictionary = unitdictionarytest)
-pm_unit_detect(sushi1, dictionary = unitdictionarytest) # fialed test
-
-
-
-################
-
 pm_houseSuf_all(sushi2_alpha, dictionary = houseSufs)
 
 
@@ -329,4 +293,34 @@ postmastr::sushi1 %>%
            address = address,
            output = "short",
            city_dict = cities)
+
+# adding some testing for pm units
+
+unitvector <- c("Apartment","Basement","Building","Department","Floor","Front","Hanger","key","Lobby","Lot",
+                "Lower","Office","Penthouse","Pier","Rear","Room","Side","Slip","Space","Stop","Suite","Trailer",
+                "Unit","Upper","APT","BSMT","BLDG","DEPT","FL","FRNT","HNGR","KEY","LBBY","LOT","LOWR","OFC","PH",
+                "PIER","REAR","RM","SIDE","SLIP","SPC","STOP","STE","TRLR","UNIT","UPPR")
+postmastr::sushi1 %>%
+  pm_identify(var = address) %>%
+  filter(pm.uid %in% c(3:4) == FALSE) -> sushi1
+
+sushi1 <- pm_prep(sushi1, var = "address",  type = "street")
+
+# need to test again min
+# head(sushi2_alpha) # need to reorganize for testing
+unitdictionarytest  <- pm_append(type = "unit", input = unitvector, output = unitvector)
+# function looks good returing TRUE false output
+
+pm_unit_any(sushi2_alpha, dictionary = unitdictionarytest)
+
+pm_unit_any(sushi2_min, dictionary = unitdictionarytest)
+pm_unit_any(sushi2_min, dictionary = unitdictionarytest)
+
+# function looks good returing TRUE false output
+pm_unit_all(sushi2_alpha, dictionary = unitdictionarytest)
+# function looks good returing colume vector of ture false
+pm_unit_detect(sushi2_alpha, dictionary = unitdictionarytest)
+pm_unit_detect(sushi1, dictionary = unitdictionarytest) # fialed test
+
+
 
