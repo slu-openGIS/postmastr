@@ -279,7 +279,7 @@ pm_unit_parse <- function(.data, dictionary = NULL, ordinal = TRUE, drop = TRUE,
 pm_unit_detect <- function(.data, dictionary, locale = "us"){
 
   # create bindings for global variables
-  pm.address = pm.hasState = NULL
+  pm.address = pm.hasUnit = NULL
 
   # check for object and key variables
   if (pm_has_uid(.data) == FALSE){
@@ -297,7 +297,7 @@ pm_unit_detect <- function(.data, dictionary, locale = "us"){
 
   # missing dictionary
   if (missing(dictionary) == TRUE){
-    stop("A house suffix dictionary created with pm_append is required.")
+    stop("A unit dictionary created with pm_append is required.")
   }
 
   # minimize dictionary
@@ -308,7 +308,7 @@ pm_unit_detect <- function(.data, dictionary, locale = "us"){
   # check observations
   if (locale == "us"){
     .data <- dplyr::mutate(.data, pm.hasUnit = stringr::str_detect(pm.address,
-                                                                       pattern = stringr::str_c("^\\b(", dict, ")\\b")))
+                                                                       pattern = stringr::str_c("\\b(", dict, ")\\b")))
   }
 
   # return output
