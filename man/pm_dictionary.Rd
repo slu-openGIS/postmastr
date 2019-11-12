@@ -57,7 +57,8 @@ The city dictionary functionality is powered by the \link[tidycensus]{get_acs} f
 }
 \examples{
 # build state dictionary, title case only
-pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us")
+pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us",
+                                        output = c("full", "abbreviation")))
 
 # build state dictionary, title and upper case
 pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")

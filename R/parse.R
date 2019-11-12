@@ -200,11 +200,11 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
   }
 
   # include units?  this looks like part of whats needed Bayard
-   if (include_unit == TRUE){
+   if (include_units == TRUE){
 
     endVarQ <- rlang::quo(!! rlang::sym("pm.unitNum"))
 
-   } else if (include_unit == FALSE){
+   } else if (include_units == FALSE){
 
     endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
 

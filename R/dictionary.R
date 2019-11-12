@@ -818,27 +818,3 @@ pm_append <- function(type, input, output, locale = "us"){
 #' head(dic_country)
 #'
 "dic_country"
-
-#' unit Suffix Dictionary, United States of America
-#'
-#' @description A list of abbreviations for full names for apartment/units suffix types for the
-#'     United States.
-#'
-#' @docType data
-#'
-#' @usage data(dic_us_unit)
-#'
-#' @format A tibble with 24 rows and 2 variables:
-#' \describe{
-#'   \item{suf.type}{suffix type}
-#'   \item{suf.output}{standard suffix abbreviation}
-#'   \item{suf.input}{standard full names and suffix abbreviations}
-#' }
-#'
-#' not sure I need this link
-#' @seealso \href{https://pe.usps.com/text/pub28/28apc_002.htm}{U.S. Postal Service, Publication 28, Appendix C1}
-#'
-#' @examples
-#' head(dic_us_unit)
-#'
-"dic_us_unit"
