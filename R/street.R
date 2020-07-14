@@ -193,14 +193,14 @@ pm_street_ord_us <- function(.data, var){
   .data <- dplyr::rename(.data, ...street := !!varQ)
 
   # create dictionary of numeric words
-  dict <- c("One", "First", "Two", "Second", "Three", "Third", "Fourth", "Four",
-            "Five", "Fifth", "Sixth", "Six", "Seventh", "Seven", "Eighth", "Eight", "Nine",
-            "Ninth", "Tenth", "Ten", "Eleven", "Eleventh", "Twelve", "Twelfth",
-            "Thirteenth", "Thirteen", "Fourteenth", "Fourteen", "Fifteenth", "Fifteen",
-            "Sixteenth", "Sixteen", "Seventeenth", "Seventeen", "Eighteenth", "Eighteen",
-            "Nineteenth", "Nineteen", "Twenty", "Twentieth", "Thirty", "Thirtieth",
-            "Forty", "Fortieth", "Fifty", "Fiftieth", "Sixty", "Sixtieth",
-            "Seventy", "Seventieth", "Eighty", "Eightieth", "Ninety", "Ninetieth")
+  dict <- c("First", "Second", "Third", "Fourth",
+            "Fifth", "Sixth", "Seventh", "Eighth",
+            "Ninth", "Tenth", "Eleventh", "Twelfth",
+            "Thirteenth", "Fourteenth", "Fifteenth",
+            "Sixteenth", "Seventeenth", "Eighteenth",
+            "Nineteenth", "Twentieth", "Thirtieth",
+            "Fortieth", "Fiftieth",  "Sixtieth",
+            "Seventieth", "Eightieth", "Ninetieth")
 
   # minimize dictionary
   dict <- paste(dict, collapse = "|")
@@ -237,7 +237,8 @@ pm_street_ord_us <- function(.data, var){
   if ("sf" %in% class(yesOrd) == TRUE){
     .data <- rbind(noOrd, yesOrd)
   } else if ("sf" %in% class(yesOrd) == FALSE){
-    .data <- dplyr::bind_rows(noOrd, yesOrd)
+    .data <- rbind(noOrd, yesOrd)
+    # .data <- dplyr::bind_rows(noOrd, yesOrd)
   }
 
   # clean-up
