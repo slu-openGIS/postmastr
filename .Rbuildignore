@@ -11,3 +11,4 @@
 ^\.travis
 ^appveyor\.yml$
 ^codecov\.yml$
+^postmastr\.Rproj$

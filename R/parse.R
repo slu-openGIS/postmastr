@@ -161,6 +161,9 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
   if (missing(state_dict) == TRUE){
     state_dict <- NULL
   }
+  if (missing(unit_dict) == TRUE){
+    unit_dict <- NULL
+  }
 
   # unquote variable
   add <- paramList$address
@@ -196,16 +199,16 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
     left_varsE <- rlang::quo(!! rlang::sym("...skip"))
   }
 
-  # include units?
-  # if (include_unit == TRUE){
+  # include units?  this looks like part of whats needed Bayard
+   if (include_units == TRUE){
 
-  #  endVarQ <- rlang::quo(!! rlang::sym("pm.unitNum"))
+    endVarQ <- rlang::quo(!! rlang::sym("pm.unitNum"))
 
-  # } else if (include_unit == FALSE){
+   } else if (include_units == FALSE){
 
-  #  endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
+    endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))
 
-  # }
+   }
 
   # temporary!
   # endVarQ <- rlang::quo(!! rlang::sym("pm.streetSuf"))

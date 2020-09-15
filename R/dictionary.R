@@ -48,7 +48,8 @@
 #'
 #' @examples
 #' # build state dictionary, title case only
-#' pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us")
+#' pm_dictionary(type = "state", filter = "MO", case = "title", locale = "us",
+#'                                         output = c("full", "abbreviation")))
 #'
 #' # build state dictionary, title and upper case
 #' pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
@@ -81,7 +82,8 @@
 #' @importFrom dplyr filter
 #'
 #' @export
-pm_dictionary <- function(type, append, filter, case = c("title", "lower", "upper"), locale = "us"){
+pm_dictionary <- function(type, append, filter, case = c("title", "lower", "upper"), locale = "us",
+                          output = c("full", "abbreviation")){
 
   if (locale == "us"){
 
@@ -169,13 +171,25 @@ pm_dictionary <- function(type, append, filter, case = c("title", "lower", "uppe
 
       out <- pm_case(working, locale = locale, type = type, case = case)
 
-    }
+    } else if (type == "unit"){  ## working code for adding units to dictionary
+
+      if (missing(append) == FALSE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_unit(append = append, filter = filter)
+      } else if (missing(append) == FALSE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_unit(append = append)
+      } else if (missing(append) == TRUE & missing(filter) == FALSE){
+        working <- pm_dictionary_us_unit(filter = filter)
+      } else if (missing(append) == TRUE & missing(filter) == TRUE){
+        working <- pm_dictionary_us_unit()
+      }
+      out <- pm_case(working, locale = locale, type = type, case = case) ## not sure if this line is needed
 
   }
 
   # return output
   return(out)
 
+  }
 }
 
 # us states
@@ -332,6 +346,38 @@ pm_dictionary_us_dir <- function(append, filter){
   return(out)
 
 }
+
+
+# us aparemtnet/unit full nmaes and suffixes
+pm_dictionary_us_unit <- function(append, filter){
+
+  # global bindings
+  unit.output = NULL
+
+  # load data
+  out <- postmastr::dic_us_unit
+
+  # optionally append
+  if (missing(append) == FALSE){
+
+    # bind rows
+    out <- dplyr::bind_rows(out, append)
+
+    # re-order observations
+    out <- out[order(out$unit.output),]
+
+  }
+
+  # optionally filter
+  if (missing(filter) == FALSE){
+    out <- dplyr::filter(out, unit.output %in% filter)
+  }
+
+  # return output
+  return(out)
+
+}
+
 
 # us street suffixes
 pm_dictionary_us_suffix <- function(append, filter){
@@ -558,7 +604,7 @@ pm_convert_case <- function(.data, var, orderVar, case){
 pm_append <- function(type, input, output, locale = "us"){
 
   # global binding
-  state.output = state.input = city.output = city.input = NULL
+  state.output = state.input = city.output = city.input = unit.input= unit.output = NULL
 
   if (locale == "us"){
 
@@ -645,7 +691,17 @@ pm_append <- function(type, input, output, locale = "us"){
         con.input = c(input))
 
       # re-order observations
-      out <- out[order(out$houseSuf.input),]
+      out <- out[order(out$houseSuf.input),] # check that this should be house
+
+    }
+    else if (type == "unit"){
+
+      out <- dplyr::tibble(
+        unit.output = c(output),
+        unit.input = c(input))
+
+      # re-order observations
+      out <- out[order(out$unit.input),]
 
     }
 
