@@ -4,7 +4,7 @@ postmastr::sushi2 %>%
   pm_identify(var = address) %>%
   filter(pm.uid %in% c(3:4) == FALSE) -> sushi2
 
-sushi2_min <- pm_prep(sushi2, var = "address")
+sushi2_min <- pm_prep(sushi2, var = "address", type = "short")
 
 sushi2_alpha <- dplyr::mutate(sushi2_min, pm.address = ifelse(pm.uid == 1, "3407 R Olive St", pm.address))
 sushi2_alpha <- pm_house_parse(sushi2_alpha)

@@ -219,7 +219,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
     # parse streets
     .data %>%
       pm_prep(var = !!varQ, type = "street") %>%
-      pm_parse_street(input = input, ordinal = ordinal, houseSuf_dict = houseSuf_dict,
+      pm_parse_street(input = input, ordinal = ordinal, unnest = unnest, houseSuf_dict = houseSuf_dict,
                       dir_dict = dir_dict, street_dict = street_dict, suffix_dict = suffix_dict,
                       unit_dict = unit_dict, city_dict = city_dict,
                       state_dict = state_dict, locale = locale) -> out
@@ -243,7 +243,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
     # parse streets
     .data %>%
       pm_prep(var = !!varQ, type = "street") %>%
-      pm_parse_street(input = input, ordinal = ordinal, houseSuf_dict = houseSuf_dict,
+      pm_parse_street(input = input, ordinal = ordinal, unnest = unnest, houseSuf_dict = houseSuf_dict,
                       dir_dict = dir_dict, street_dict = street_dict, suffix_dict = suffix_dict,
                       unit_dict = unit_dict, city_dict = city_dict,
                       state_dict = state_dict, locale = locale) -> streets_sub
@@ -270,7 +270,7 @@ pm_parse <- function(.data, input, address, output, new_address, ordinal = TRUE,
 }
 
 #
-pm_parse_street <- function(.data, input, ordinal, houseSuf_dict,
+pm_parse_street <- function(.data, input, ordinal, unnest, houseSuf_dict,
                             dir_dict, street_dict, suffix_dict, unit_dict, city_dict,
                             state_dict, locale = "us"){
 
