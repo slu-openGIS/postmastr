@@ -221,6 +221,7 @@ For the `sushi1` data, the required dictionaries are:
 > dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
 > mo <- pm_dictionary(type = "state", filter = "MO", case = c("title", "upper"), locale = "us")
 > cities <- pm_append(type = "city",
++                       pm_identify(address) %>%
 +                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", 
 +                                 "St. Louis", "SAINT LOUIS", "Webster Groves"),
 +                       output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
@@ -332,7 +333,7 @@ If no street address in the given data set contains one of the grammatical eleme
 There are two initial preparatory steps that *must* be taken with these data. First, we want to ensure that they have a unique identification number for each row (to preserve the original sort order; `pm.id`) as well as a unique identification number for each *unique* street address string (`pm.uid`). These can both be applied using `pm.identify()`:
 
 ```r
-> sushi1 <- pm_identify(sushi1, var = "address")
+> sushi1 <- pm_identify(sushi1, var = "address", type = "street")
 > sushi1
 # A tibble: 30 x 5
    pm.id pm.uid name                            address                                           visit   
@@ -377,21 +378,21 @@ Notice that all extraneous information has been removed, and that there are now 
 Once we have our data prepared, we can begin working our way down the order of operations list. To see if is possible to skip a step, we should first use the appropriate `pm_any_` function. With the `sushi1_min` data, it will return `TRUE` because postal codes are present in the data:
 
 ```r
-> pm_any_postal(sushi1_min)
+> pm_postal_any(sushi1_min)
 [1] TRUE
 ```
 
 We can also use `pm_all_` functions to determine whether all of the addresses have a postal code:
 
 ```r
-> pm_all_postal(sushi1_min)
+> pm_postal_all(sushi1_min)
 [1] TRUE
 ```
 
 If this returned a `FALSE` result, we would want to use `pm_has` and `pm_no_` functions to explore whether postal codes are not being detected because they (a) actually do not exist or (b) are not being found because they are mis-formatted. Since we get a `TRUE` result, we can move on to parsing. If `pm_parse_postal()` detects the presence of carrier routes (the four-digit additions to the typical five-digit zip-codes), it will parse those as well so that two postal code columns (`pm.zip` and `pm.zip4`) are returned:
 
 ```r
-> sushi1_min <- pm_parse_postal(sushi1_min)
+> sushi1_min <- pm_postal_parse(sushi1_min)
 > sushi1_min
 # A tibble: 24 x 4
    pm.uid pm.address                           pm.zip pm.zip4
@@ -427,16 +428,16 @@ To parse the cities out of `pm.address`, we'll start by creating a state-level d
 With our dictionary created in the object `moDict`, we can use that to test whether state names or abbreviations are found at the end of our address string with `pm_any_state()` and `pm_all_state()`:
 
 ```r
-> pm_any_state(sushi1_min, dictionary = moDict)
+> pm_state_any(sushi1_min, dictionary = moDict)
 [1] TRUE
-> pm_all_state(sushi1_min, dictionary = moDict)
+> pm_state_all(sushi1_min, dictionary = moDict)
 [1] FALSE
 ```
 
 These results indicate that our dictionary is returning matches, but that our list of possible inputs is not complete. We can explore the un-matched streets with `pm_no_state()` to determining whether these observations (a) actually do not contain states or (b) are not being matched because an entry is missing from our dictionary:
 
 ```r
-> pm_no_state(sushi1_min, dictionary = moDict)
+> pm_state_none(sushi1_min, dictionary = moDict)
 # A tibble: 1 x 4
   pm.uid pm.address                            pm.zip pm.zip4
    <int> <chr>                                 <chr>  <chr>  
@@ -459,14 +460,14 @@ Our dictionary does not contain `MISSOURI`, only `Missouri`, so we'll need to ad
 For more complex mis-matches, we would want to use `pm_append()` to construct an appendix and then re-build our dictionary with that appendix included. We can verify that our dictionary is now complete by repeating our use of `pm_all_state()`:
 
 ```r
-> pm_all_state(sushi1_min, dictionary = moDict)
+> pm_state_all(sushi1_min, dictionary = moDict)
 [1] TRUE
 ```
 
 With a `TRUE` result, we are ready to parse state names and abbreviations out of our data:
 
 ```r
-> sushi1_min <- pm_parse_state(sushi1_min, dictionary = moDict)
+> sushi1_min <- pm_state_parse(sushi1_min, dictionary = moDict)
 > sushi1_min
 # A tibble: 24 x 5
    pm.uid pm.address                        pm.state pm.zip pm.zip4
@@ -497,16 +498,16 @@ cityDict <- pm_append(type = "city",
 We'll then use `pm_any_city()` and `pm_all_city()` to verify that our dictionary is working and complete:
 
 ```r
-> pm_any_city(sushi1_min, dictionary = cityDict)
+> pm_city_any(sushi1_min, dictionary = cityDict)
 [1] TRUE
-> pm_all_city(sushi1_min, dictionary = cityDict)
+> pm_city_all(sushi1_min, dictionary = cityDict)
 [1] FALSE
 ```
 
 As with the state data, we can use `pm_no_city()` to identify why our dictionary is incomplete (or verify that some addresses do not contain cities):
 
 ```r
-> pm_no_city(sushi1_min, dictionary = cityDict)
+> pm_city_none(sushi1_min, dictionary = cityDict)
 # A tibble: 2 x 5
   pm.uid pm.address                   pm.state pm.zip pm.zip4
    <int> <chr>                        <chr>    <chr>  <chr>  
@@ -521,14 +522,14 @@ There are two city names in all upper-case. We'll re-create our dictionary, addi
 +                       input = c("Brentwood", "Clayton", "CLAYTON", "Maplewood", 
 +                                 "St. Louis", "SAINT LOUIS", "Webster Groves"),
 +                       output = c(NA, NA, "Clayton", NA, NA, "St. Louis", NA))
-> pm_all_city(sushi1_min, dictionary = cityDict)
+> pm_city_all(sushi1_min, dictionary = cityDict)
 [1] TRUE
 ```
 
 We can now move on to parsing using `pm_parse_city()`:
 
 ```r
-> sushi1_min <- pm_parse_city(sushi1_min, dictionary = cityDict)
+> sushi1_min <- pm_city_parse(sushi1_min, dictionary = cityDict)
 > sushi1_min
 # A tibble: 24 x 6
    pm.uid pm.address              pm.city   pm.state pm.zip pm.zip4
@@ -554,11 +555,11 @@ The column `pm.city` has been added to our data set and city names have been par
 Since the example data do not contain fractional addresses or house suffix values, parsing them is straightforward (dealing with less common street addresses will be the subject of an additional vignette). We'll use an abbreviated version of the sushi data that do not contain city, state, or postal code data. These are sushi restaurants located within the City of St. Louis proper:
 
 ```r
-> postmastr::sushi2 %>%
+> sushi2 <- postmastr::sushi2 %>%
 +   dplyr::filter(name != "Drunken Fish - Ballpark Village") %>%
-+   pm_identify(var = address) -> sushi2
++   pm_identify(var = address)
 >
-> sushi2_min <- pm_prep(sushi2, var = address)
+> sushi2_min <- pm_prep(sushi2, var = "address", type = "street")
 >
 > sushi2_min
 # A tibble: 11 x 2
@@ -707,7 +708,7 @@ The replacement process includes an `unnest` argument, which will convert the ho
 With our addresses replaced, we can then rebuild address strings them with `pm.rebuild()`:
 
 ```r
-> sushi2_parsed <- pm_rebuild(sushi2_parsed, start = pm.house, end = pm.streetSuf, keep_parsed = "no")
+> sushi2_parsed <- pm_rebuild(sushi2_parsed, "short", keep_parsed = "no")
 >
 > sushi2_parsed
 # A tibble: 15 x 4
