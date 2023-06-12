@@ -342,12 +342,14 @@ pm_prep <- function(.data, var, type){
     dplyr::as_tibble() -> .data
 
   # replace forward slashes
-  .data %>%
-    dplyr::mutate(pm.address = stringr::str_replace_all(
-      string = pm.address,
-      pattern = "/",
-      replacement = " at ")) %>%
-    dplyr::mutate(pm.address = stringr::str_squish(pm.address)) -> .data
+  if (type == "intersection"){
+    .data %>%
+      dplyr::mutate(pm.address = stringr::str_replace_all(
+        string = pm.address,
+        pattern = "/",
+        replacement = " at ")) %>%
+      dplyr::mutate(pm.address = stringr::str_squish(pm.address)) -> .data
+    }
 
   # return output
   return(.data)
